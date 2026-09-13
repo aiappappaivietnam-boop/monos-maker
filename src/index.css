@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply antialiased text-[#202124] bg-[#f8f9fa] selection:bg-[#1a73e8]/20;
+    font-family: 'Google Sans', 'Roboto', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    letter-spacing: -0.02em;
+    color: inherit;
+  }
+}
+
+@layer utilities {
+  .google-card {
+    @apply bg-white border border-[#dadce0] rounded-2xl transition-all duration-200;
+  }
+  .google-card-hover {
+    @apply hover:border-[#1a73e8]/40 hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.3),0_4px_8px_3px_rgba(60,64,67,0.15)];
+  }
+  .google-btn-primary {
+    @apply bg-[#1a73e8] hover:bg-[#1557d0] text-white font-medium rounded-full px-5 py-2.5 shadow-[0_1px_2px_0_rgba(60,64,67,0.3),0_1px_3px_1px_rgba(60,64,67,0.15)] hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.3),0_4px_8px_3px_rgba(60,64,67,0.15)] transition-all cursor-pointer inline-flex items-center justify-center gap-2;
+  }
+  .google-btn-secondary {
+    @apply bg-white hover:bg-[#f1f3f4] text-[#1a73e8] border border-[#dadce0] font-medium rounded-full px-4 py-2 hover:border-[#1a73e8]/40 transition-all cursor-pointer inline-flex items-center justify-center gap-2;
+  }
+  .google-chip {
+    @apply px-3.5 py-1.5 rounded-full text-xs font-medium border border-[#dadce0] bg-white text-[#3c4043] hover:bg-[#f1f3f4] transition-all cursor-pointer inline-flex items-center gap-1.5;
+  }
+  .google-chip-active {
+    @apply bg-[#e8f0fe] text-[#1a73e8] border-[#1a73e8] font-semibold;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
+}
+
+/* Dedicated Print / PDF Export Styles */
+@media print {
+  body {
+    background: white !important;
+    color: #202124 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide everything except the print container */
+  body > div:not(#print-root) {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 15mm 12mm 15mm 12mm;
+  }
+}

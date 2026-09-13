@@ -1,0 +1,8 @@
+{
+  "name": "Furnitureos-09",
+  "description": "Website cung cấp báo giá dịch vụ thiết kế sản phẩm, số hóa và triển khai nền tảng PIM với tính năng tính tổng tự động.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
