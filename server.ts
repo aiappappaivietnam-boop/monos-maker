@@ -4,7 +4,9 @@ import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 
 const app = express();
-const PORT = 3000;
+// Monosmaker owns port 3004. The legacy WEBSITE stays on 3000,
+// while B+ON, The DAD, and HC-Pro use their separate preview ports.
+const PORT = 3004;
 
 // Enable JSON body parsing with large limit for image data
 app.use(express.json({ limit: '50mb' }));
