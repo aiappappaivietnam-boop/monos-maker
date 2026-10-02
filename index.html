@@ -525,12 +525,10 @@
       .milestone-unscheduled-item{align-items:flex-start;flex-direction:column}
     }
 
-    .proposal-attachment-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
-    .proposal-attachment-grid .attachment-card { min-height:190px; }
     .proposal-link-input { border-top:1px dashed var(--line); padding-top:10px; margin-top:2px; }
     .proposal-link-input input { width:100%; border:1px solid var(--line); border-radius:9px; padding:8px 10px; background:#fff; color:var(--ink); font-size:12px; }
     .proposal-fee-head { display:grid; grid-template-columns:1.3fr .75fr .75fr 36px; gap:8px; color:var(--muted); font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
-    @media (max-width:980px){.proposal-attachment-grid{grid-template-columns:1fr}.proposal-fee-head{display:none}}
+    @media (max-width:980px){.proposal-fee-head{display:none}}
 
     .step-num.proposal { background: #fff7ed; color: #c2410c; }
     .proposal-summary { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:22px; }
@@ -2800,7 +2798,7 @@
   var proposals = [];
   var milestonesByProject = {};
   var designFilesByProject = {};
-  var proposalPendingAttachments = { perspectives: [], layouts: [], moodboards: [], links: { perspectives: '', layouts: '', moodboards: '' } };
+  var proposalPendingAttachments = { files: [], link: '' };
   var proposalAttachmentProject = null;
   var activeProjectName = null;
   var activeSubTab = 'overview';
@@ -2851,18 +2849,27 @@
 
   // QUẢN LÝ FILE CHO DESIGN PROPOSAL
   function emptyProposalAttachmentState() {
-    return { perspectives: [], layouts: [], moodboards: [], links: { perspectives: '', layouts: '', moodboards: '' } };
+    return { files: [], link: '' };
   }
 
+  // Proposal dùng một khu vực attachment chung. Các hồ sơ cũ từng được chia
+  // theo loại vẫn được gom lại để không làm mất dữ liệu khi nâng cấp giao diện.
   function cloneProposalAttachmentState(value) {
     var source = value || {};
-    var links = source.links || {};
-    return {
-      perspectives: Array.isArray(source.perspectives) ? source.perspectives.map(function(x){ return Object.assign({}, x); }) : [],
-      layouts: Array.isArray(source.layouts) ? source.layouts.map(function(x){ return Object.assign({}, x); }) : [],
-      moodboards: Array.isArray(source.moodboards) ? source.moodboards.map(function(x){ return Object.assign({}, x); }) : [],
-      links: { perspectives: String(links.perspectives || ''), layouts: String(links.layouts || ''), moodboards: String(links.moodboards || '') }
-    };
+    var files = Array.isArray(source.files) ? source.files.map(function(x){ return Object.assign({}, x); }) : [];
+    ['perspectives', 'layouts', 'moodboards'].forEach(function(type){
+      if (Array.isArray(source[type])) {
+        source[type].forEach(function(file){ files.push(Object.assign({}, file)); });
+      }
+    });
+    var link = String(source.link || '').trim();
+    if (!link && source.links) {
+      link = ['perspectives', 'layouts', 'moodboards']
+        .map(function(type){ return String(source.links[type] || '').trim(); })
+        .filter(Boolean)
+        .join('\n');
+    }
+    return { files: files, link: link };
   }
 
   function syncProposalAttachments(proposal, projectName) {
@@ -3026,36 +3033,29 @@
     showToast('Đã xóa file thiết kế.');
   }
 
-  function proposalAttachmentEmptyLabel(type) {
-    if (type === 'perspectives') return 'Chưa có file phối cảnh';
-    if (type === 'layouts') return 'Chưa có file layout';
-    return 'Chưa có file ambiance moodboard';
-  }
-
-  function renderProposalAttachmentChips(type) {
-    var files = proposalPendingAttachments[type] || [];
-    if (!files.length) return '<div class="empty-attachment-placeholder">' + proposalAttachmentEmptyLabel(type) + '</div>';
-    var icon = type === 'perspectives' ? '🖼️' : type === 'layouts' ? '📐' : '🎨';
+  function renderProposalAttachmentChips() {
+    var files = proposalPendingAttachments.files || [];
+    if (!files.length) return '<div class="empty-attachment-placeholder">Chưa có tệp Proposal nào được đính kèm</div>';
     return files.map(function(file, index){
-      return '<div class="file-chip"><div class="file-chip-info"><span>' + icon + ' ' + escapeHtml(file.name || 'Tệp Proposal') + '</span><span class="file-chip-size">(' + formatBytes(file.size) + ')</span></div><button type="button" class="file-chip-remove" onclick="removeProposalAttachment(\'' + type + '\', ' + index + ')">✕</button></div>';
+      return '<div class="file-chip"><div class="file-chip-info"><span>📎 ' + escapeHtml(file.name || 'Tệp Proposal') + '</span><span class="file-chip-size">(' + formatBytes(file.size) + ')</span></div><button type="button" class="file-chip-remove" aria-label="Xóa tệp" onclick="removeProposalAttachment(' + index + ')">✕</button></div>';
     }).join('');
   }
 
-  function handleProposalFileUpload(event, type) {
+  function handleProposalFileUpload(event) {
     var selected = Array.from((event && event.target && event.target.files) || []);
     if (!selected.length) return;
-    selected.forEach(function(file){ proposalPendingAttachments[type].push({ name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }); });
-    var holder = document.getElementById('proposal-files-' + type);
-    if (holder) holder.innerHTML = renderProposalAttachmentChips(type);
-    showToast('📎 Đã đính kèm file cho ' + (type === 'perspectives' ? 'Phối cảnh' : type === 'layouts' ? 'Layout' : 'Ambiance Moodboard'));
+    selected.forEach(function(file){ proposalPendingAttachments.files.push({ name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }); });
+    var holder = document.getElementById('proposal-files');
+    if (holder) holder.innerHTML = renderProposalAttachmentChips();
+    showToast('📎 Đã đính kèm ' + selected.length + ' tệp Proposal.');
     event.target.value = '';
   }
 
-  function removeProposalAttachment(type, index) {
-    if (proposalPendingAttachments[type]) proposalPendingAttachments[type].splice(index, 1);
-    var holder = document.getElementById('proposal-files-' + type);
-    if (holder) holder.innerHTML = renderProposalAttachmentChips(type);
-    showToast('Đã xóa file Proposal.');
+  function removeProposalAttachment(index) {
+    if (proposalPendingAttachments.files) proposalPendingAttachments.files.splice(index, 1);
+    var holder = document.getElementById('proposal-files');
+    if (holder) holder.innerHTML = renderProposalAttachmentChips();
+    showToast('Đã xóa tệp Proposal.');
   }
 
   function persistActiveProject(projectName) {
@@ -4186,10 +4186,11 @@
               '<div class="field col-full"><label>Phạm vi Proposal</label><textarea id="proposal_scope" placeholder="Ví dụ: Thiết kế nội thất toàn bộ căn hộ, concept, 3D sơ bộ, hồ sơ layout...">' + escapeHtml(proposalData.scope || '') + '</textarea></div>' +
               '<div class="field col-full"><label>Phương án sơ bộ / Ý tưởng thiết kế</label><textarea id="proposal_concept" style="min-height:120px" placeholder="Mô tả concept, phong cách, vật liệu chủ đạo, giải pháp công năng...">' + escapeHtml(proposalData.concept || '') + '</textarea></div>' +
             '</div>' +
-            '<div class="proposal-attachment-grid" style="margin-top:16px">' +
-              '<div class="attachment-card"><div class="attachment-head"><label>🖼️ Phối cảnh</label><label class="upload-btn-label">📎 Đính kèm<input type="file" multiple accept="image/*,.pdf" style="display:none" onchange="handleProposalFileUpload(event, \'perspectives\')"></label></div><div class="file-chip-list" id="proposal-files-perspectives">' + renderProposalAttachmentChips('perspectives') + '</div><div class="proposal-link-input"><input id="proposal_link_perspectives" value="' + escapeHtmlAttr((proposalData.attachments && proposalData.attachments.links && proposalData.attachments.links.perspectives) || '') + '" placeholder="Hoặc dán link file phối cảnh"></div></div>' +
-              '<div class="attachment-card"><div class="attachment-head"><label>📐 Layout</label><label class="upload-btn-label">📎 Đính kèm<input type="file" multiple accept=".dwg,.dxf,.pdf,.jpg,.png" style="display:none" onchange="handleProposalFileUpload(event, \'layouts\')"></label></div><div class="file-chip-list" id="proposal-files-layouts">' + renderProposalAttachmentChips('layouts') + '</div><div class="proposal-link-input"><input id="proposal_link_layouts" value="' + escapeHtmlAttr((proposalData.attachments && proposalData.attachments.links && proposalData.attachments.links.layouts) || '') + '" placeholder="Hoặc dán link file layout"></div></div>' +
-              '<div class="attachment-card"><div class="attachment-head"><label>🎨 Ambiance moodboard</label><label class="upload-btn-label">📎 Đính kèm<input type="file" multiple accept="image/*,.pdf" style="display:none" onchange="handleProposalFileUpload(event, \'moodboards\')"></label></div><div class="file-chip-list" id="proposal-files-moodboards">' + renderProposalAttachmentChips('moodboards') + '</div><div class="proposal-link-input"><input id="proposal_link_moodboards" value="' + escapeHtmlAttr((proposalData.attachments && proposalData.attachments.links && proposalData.attachments.links.moodboards) || '') + '" placeholder="Hoặc dán link ambiance moodboard"></div></div>' +
+            '<div class="attachment-card attachment-unified-card" style="margin-top:16px">' +
+              '<div class="attachment-head"><div><label>📎 Tệp đính kèm Proposal</label><p>Đính kèm chung mọi file của Proposal: phối cảnh, layout, ambiance moodboard, PDF, CAD và tài liệu liên quan.</p></div><span class="tag blue">Attachment</span></div>' +
+              '<label class="attachment-unified-upload"><input type="file" multiple accept="image/*,video/*,.dwg,.dxf,.dwf,.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" onchange="handleProposalFileUpload(event)"><span><strong>＋ Chọn file để đính kèm</strong><span>Kéo thả hoặc chọn nhiều file từ máy tính</span></span></label>' +
+              '<div class="file-chip-list" id="proposal-files">' + renderProposalAttachmentChips() + '</div>' +
+              '<div class="proposal-link-input"><input id="proposal_attachment_link" value="' + escapeHtmlAttr(proposalPendingAttachments.link || '') + '" placeholder="Hoặc dán link thư mục / file Proposal (Google Drive, Dropbox...)"></div>' +
             '</div>' +
             '<div class="field" style="margin-top:16px"><label>Ghi chú / Điều kiện thực hiện</label><textarea id="proposal_notes" placeholder="Tiến độ, số vòng chỉnh sửa, điều kiện thanh toán, các nội dung chưa bao gồm...">' + escapeHtml(proposalData.notes || '') + '</textarea></div>' +
           '</div>' +
@@ -4637,13 +4638,8 @@
   }
 
   function proposalAttachmentSummary(proposal) {
-    var a = proposal && proposal.attachments ? proposal.attachments : {};
-    var p = (a.perspectives || []).length;
-    var l = (a.layouts || []).length;
-    var m = (a.moodboards || []).length;
-    var links = a.links || {};
-    var linkCount = [links.perspectives, links.layouts, links.moodboards].filter(Boolean).length;
-    return 'Phối cảnh: ' + p + ' file · Layout: ' + l + ' file · Moodboard: ' + m + ' file' + (linkCount ? ' · ' + linkCount + ' link' : '');
+    var a = cloneProposalAttachmentState(proposal && proposal.attachments);
+    return 'Tệp Proposal: ' + a.files.length + ' file' + (a.link ? ' · Có link đính kèm' : '');
   }
 
   function formatCurrency(value) {
@@ -4883,9 +4879,7 @@
         '<div class="proposal-doc-section">' +
           '<h4>3. Danh mục hồ sơ & Tệp đính kèm gửi khách</h4>' +
           '<div style="background:#fafbfc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;font-size:13px;">' +
-            '<div>• <b>Hồ sơ phối cảnh (Perspectives):</b> ' + ((proposal.attachments && proposal.attachments.perspectives && proposal.attachments.perspectives.length) ? (proposal.attachments.perspectives.length + ' file đính kèm') : 'Theo file đính kèm chính thức') + (proposal.attachments && proposal.attachments.links && proposal.attachments.links.perspectives ? (' [Link: ' + escapeHtml(proposal.attachments.links.perspectives) + ']') : '') + '</div>' +
-            '<div style="margin-top:6px;">• <b>Bản vẽ mặt bằng bố trí công năng (Layout 2D):</b> ' + ((proposal.attachments && proposal.attachments.layouts && proposal.attachments.layouts.length) ? (proposal.attachments.layouts.length + ' file bản vẽ') : 'Theo file đính kèm chính thức') + (proposal.attachments && proposal.attachments.links && proposal.attachments.links.layouts ? (' [Link: ' + escapeHtml(proposal.attachments.links.layouts) + ']') : '') + '</div>' +
-            '<div style="margin-top:6px;">• <b>Bảng mẫu vật liệu & Ambiance Moodboard:</b> ' + ((proposal.attachments && proposal.attachments.moodboards && proposal.attachments.moodboards.length) ? (proposal.attachments.moodboards.length + ' file moodboard') : 'Theo file đính kèm chính thức') + (proposal.attachments && proposal.attachments.links && proposal.attachments.links.moodboards ? (' [Link: ' + escapeHtml(proposal.attachments.links.moodboards) + ']') : '') + '</div>' +
+            '<div>• <b>Tệp Proposal đính kèm:</b> ' + (cloneProposalAttachmentState(proposal.attachments).files.length ? (cloneProposalAttachmentState(proposal.attachments).files.length + ' file đính kèm') : 'Theo file đính kèm chính thức') + (cloneProposalAttachmentState(proposal.attachments).link ? (' [Link: ' + escapeHtml(cloneProposalAttachmentState(proposal.attachments).link).replace(/\n/g, '<br>') + ']') : '') + '</div>' +
           '</div>' +
         '</div>' +
 
@@ -4956,11 +4950,9 @@ function saveWorkspaceProposal(e) {
       concept: document.getElementById('proposal_concept').value.trim(),
       notes: document.getElementById('proposal_notes').value.trim(),
       items: items,
-      attachments: cloneProposalAttachmentState(Object.assign({}, proposalPendingAttachments, { links: {
-        perspectives: document.getElementById('proposal_link_perspectives').value.trim(),
-        layouts: document.getElementById('proposal_link_layouts').value.trim(),
-        moodboards: document.getElementById('proposal_link_moodboards').value.trim()
-      }})),
+      attachments: cloneProposalAttachmentState(Object.assign({}, proposalPendingAttachments, {
+        link: document.getElementById('proposal_attachment_link').value.trim()
+      })),
       total: calculateProposalTotal(),
       savedAt: new Date().toISOString()
     };
