@@ -1490,6 +1490,35 @@
     }
     .overview-section-heading h3 { font-size: 15px; font-weight: 800; color: var(--ink); }
     .overview-section-heading p { color: var(--muted); font-size: 12px; }
+    .project-progress-card {
+      background: linear-gradient(135deg, #172333 0%, #24364b 100%);
+      color: #fff;
+      border-radius: var(--r);
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 12px 30px rgba(18,25,33,.12);
+    }
+    .project-progress-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:16px; }
+    .project-progress-kicker { color:#bfdbfe; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+    .project-progress-head h3 { color:#fff; font-size:18px; margin-top:4px; }
+    .project-progress-head p { color:#cbd5e1; font-size:12px; margin-top:4px; }
+    .project-progress-percent { flex-shrink:0; text-align:right; }
+    .project-progress-percent strong { display:block; font-size:26px; line-height:1; color:var(--lime); }
+    .project-progress-percent span { color:#cbd5e1; font-size:11px; }
+    .project-progress-bar { height:8px; background:rgba(255,255,255,.14); border-radius:99px; overflow:hidden; margin-bottom:16px; }
+    .project-progress-bar i { display:block; height:100%; background:linear-gradient(90deg,var(--lime),#60a5fa); border-radius:inherit; }
+    .project-progress-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .project-progress-step { position:relative; min-width:0; padding:10px 11px; border:1px solid rgba(255,255,255,.12); border-radius:10px; background:rgba(255,255,255,.06); }
+    .project-progress-step strong { display:block; font-size:12px; color:#f8fafc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .project-progress-step span { display:block; color:#cbd5e1; font-size:10.5px; margin-top:3px; }
+    .project-progress-step.done { background:rgba(34,197,94,.16); border-color:rgba(134,239,172,.35); }
+    .project-progress-step.active { background:rgba(59,130,246,.25); border-color:rgba(147,197,253,.65); box-shadow:inset 0 -2px 0 #93c5fd; }
+    @media(max-width:760px){
+      .project-progress-head { flex-direction:column; }
+      .project-progress-percent { text-align:left; }
+      .project-progress-steps { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:480px){ .project-progress-steps { grid-template-columns:1fr; } }
 
     /* CONCEPT & DESIGN FILES VIEWER STYLES */
     .concept-viewer-panel {
@@ -3532,6 +3561,19 @@
     var approvedProposal = isProposalApproved(b.project_name);
     updateWorkspaceProjectStatuses(data);
 
+    var projectProgress = milestoneProgress(b.project_name, b, s, proposal);
+    var currentProjectMilestone = projectProgress.list.find(function(item) { return item.status === 'active'; });
+    var progressStepData = [
+      { label:'Tiếp xúc khách hàng', status: approvedProposal ? 'done' : (proposal ? 'active' : 'active'), detail: approvedProposal ? 'Đã duyệt Proposal' : (proposal ? 'Chờ khách duyệt' : s ? 'Đang hoàn thiện Proposal' : 'Đang thu thập thông tin') },
+      { label:'Thiết kế Concept', status: approvedProposal ? (projectProgress.list.find(function(item){ return item.id === 'design_concept'; }) || {}).status || 'active' : 'pending', detail: approvedProposal ? 'Bước triển khai đầu tiên' : 'Chờ duyệt Proposal' },
+      { label:'Thiết kế Cơ phát', status: (projectProgress.list.find(function(item){ return item.id === 'design_schematic'; }) || {}).status || 'pending', detail: approvedProposal ? 'Sau khi hoàn tất Concept' : 'Chưa mở' },
+      { label:'Thiết kế Khai triển / Thi công', status: (projectProgress.list.find(function(item){ return item.id === 'design_development'; }) || {}).status === 'done' ? 'done' : 'pending', detail: 'Các giai đoạn tiếp theo' }
+    ];
+    var progressStepMarkup = progressStepData.map(function(item, index) {
+      var icon = item.status === 'done' ? '✓' : item.status === 'active' ? '●' : '○';
+      return '<div class="project-progress-step ' + item.status + '"><strong>' + icon + ' ' + item.label + '</strong><span>' + item.detail + '</span></div>';
+    }).join('');
+
     if (badge) {
       var progress = milestoneProgress(b.project_name, b, s, proposal);
       var currentMilestone = progress.list.find(function(item) { return item.status === 'active'; });
@@ -3547,6 +3589,11 @@
     // ==========================================
     if (activeSubTab === 'overview') {
       body.innerHTML = 
+        '<div class="project-progress-card">' +
+          '<div class="project-progress-head"><div><div class="project-progress-kicker">Trạng thái dự án đang chọn</div><h3>' + escapeHtml(b.project_name) + '</h3><p>' + (currentProjectMilestone ? 'Đang thực hiện: ' + escapeHtml(currentProjectMilestone.title) : 'Đã hoàn tất toàn bộ tiến trình') + '</p></div><div class="project-progress-percent"><strong>' + projectProgress.pct + '%</strong><span>' + projectProgress.done + '/' + projectProgress.total + ' mốc hoàn tất</span></div></div>' +
+          '<div class="project-progress-bar"><i style="width:' + projectProgress.pct + '%"></i></div>' +
+          '<div class="project-progress-steps">' + progressStepMarkup + '</div>' +
+        '</div>' +
         '<!-- THỐNG KÊ NHANH CHO DỰ ÁN NÀY -->' +
         '<div class="stats-row">' +
           '<div class="stat-box">' +
