@@ -1853,6 +1853,177 @@
       line-height: 1.4;
       max-width: 540px;
     }
+
+    /* APPLE-INSPIRED VISUAL SYSTEM
+       Clean surfaces, calm spacing, system typography and restrained color. */
+    :root {
+      --navy: #1d1d1f;
+      --navy-light: #2c2c2e;
+      --ink: #1d1d1f;
+      --muted: #6e6e73;
+      --paper: #f5f5f7;
+      --surface: #ffffff;
+      --line: #d2d2d7;
+      --line-hover: #a1a1a6;
+      --lime: #0071e3;
+      --lime-hover: #0077ed;
+      --lime-subtle: #eaf3ff;
+      --blue: #0071e3;
+      --blue-subtle: #eaf3ff;
+      --green: #34c759;
+      --green-subtle: #e9f9ee;
+      --amber: #ff9f0a;
+      --amber-subtle: #fff4df;
+      --purple: #af52de;
+      --purple-subtle: #f7edfc;
+      --r: 14px;
+      --shadow: 0 4px 18px rgba(0, 0, 0, .055);
+      --shadow-hover: 0 10px 28px rgba(0, 0, 0, .09);
+    }
+    html { background: var(--paper); }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      letter-spacing: -.01em;
+      -webkit-font-smoothing: antialiased;
+    }
+    .app { grid-template-columns: 248px minmax(0, 1fr); }
+    .sidebar {
+      background: rgba(250, 250, 252, .94);
+      color: var(--ink);
+      padding: 24px 16px 16px;
+      border-right: 1px solid #e5e5ea;
+      box-shadow: 1px 0 0 rgba(0,0,0,.015);
+      backdrop-filter: blur(20px);
+    }
+    .brand { gap: 11px; padding: 3px 8px 22px; margin-bottom: 22px; border-bottom-color: #e5e5ea; }
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 4px 10px rgba(0,113,227,.2);
+    }
+    .brand-text h2 { color: var(--ink); font-size: 14px; letter-spacing: .11em; }
+    .brand-text p { color: var(--muted); font-size: 9px; letter-spacing: .08em; }
+    .nav-label { color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+    .nav-menu { gap: 4px; }
+    .nav-item {
+      color: #515154;
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav-item:hover { background: #e9e9eb; color: var(--ink); }
+    .nav-item.active {
+      background: var(--blue-subtle);
+      color: var(--blue);
+      font-weight: 650;
+      box-shadow: none;
+    }
+    .nav-item .badge { background: #e5e5ea; color: #515154; }
+    .nav-item.active .badge { background: var(--blue); color: #fff; }
+    .side-note { border-color: #e5e5ea; background: #fff; border-radius: 12px; padding: 12px; }
+    .side-note b { color: var(--ink); }
+    .side-note p { color: var(--muted); }
+    .side-footer { border-top-color: #e5e5ea; padding-top: 16px; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--blue); font-size: 12px; }
+    .user-info b { color: var(--ink); font-weight: 650; }
+    .user-info span { color: var(--muted); }
+    .main { max-width: 1320px; padding: 32px 42px 72px; }
+    .topbar h1 { font-size: 30px; letter-spacing: -.04em; font-weight: 700; }
+    .topbar p { color: var(--muted); }
+    .wp-active-project-bar {
+      border-color: #d2d2d7;
+      border-radius: 14px;
+      box-shadow: 0 3px 14px rgba(0,0,0,.035);
+      padding: 15px 18px;
+    }
+    .project-picker label { color: var(--ink); font-size: 13px; font-weight: 650; }
+    .project-select {
+      border-color: #c7c7cc;
+      background: #f5f5f7;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .project-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,113,227,.14); }
+    .wp-nav-stages-bar { background: transparent; border: 0; padding: 0; gap: 9px; }
+    .wp-stage-block { background: #fff; border-color: #e5e5ea; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.025); }
+    .wp-stage-block.active-stage { border-color: #b8d7f7; background: #f7fbff; }
+    .wp-tab-btn { color: #6e6e73; font-weight: 500; }
+    .wp-tab-btn:hover { color: var(--ink); background: #f2f2f7; }
+    .wp-tab-btn.active { color: var(--blue); background: #eaf3ff; box-shadow: none; }
+    .wp-tab-btn.stage-tab.active { background: var(--blue); color: #fff; box-shadow: 0 3px 9px rgba(0,113,227,.2); }
+    .wp-stage-badge { font-weight: 700; letter-spacing: .025em; }
+    .pipeline-container, .block-card, .history-card, .milestone-panel, .action-bar {
+      border-color: #e5e5ea;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    .pipeline-container { padding: 20px 22px; }
+    .pipeline-header h3, .block-title h3 { font-weight: 650; }
+    .step-card { border-color: #d2d2d7; border-radius: 12px; background: #fbfbfd; box-shadow: none; }
+    .step-card:hover { border-color: #9dc8f2; background: #fff; transform: none; box-shadow: 0 5px 16px rgba(0,0,0,.06); }
+    .step-card.active-step { border-color: #8fc2f2; background: #f5faff; box-shadow: inset 0 0 0 1px #d7eaff; }
+    .step-num { border-radius: 9px; }
+    .step-arrow { color: #a1a1a6; }
+    .stats-row { gap: 12px; }
+    .stat-box { border-color: #e5e5ea; border-radius: 12px; padding: 15px 17px; box-shadow: none; }
+    .stat-box small { color: var(--muted); font-weight: 600; letter-spacing: .035em; }
+    .stat-box b { font-size: 17px; font-weight: 650; }
+    .block-card { padding: 22px 24px; margin-bottom: 18px; }
+    .block-header { gap: 11px; margin-bottom: 18px; padding-bottom: 13px; border-bottom-color: #e5e5ea; }
+    .block-badge { border-radius: 7px; font-size: 10px; padding: 4px 8px; }
+    .field label { font-weight: 600; }
+    .field input, .field select, .field textarea {
+      border-color: #d2d2d7;
+      background: #f5f5f7;
+      border-radius: 9px;
+      padding: 10px 12px;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,.12); }
+    .btn { border-radius: 9px; font-size: 14px; font-weight: 600; padding: 10px 17px; box-shadow: none; }
+    .btn:hover { transform: none; }
+    .btn-lime, .btn-blue { background: var(--blue); color: #fff; box-shadow: 0 3px 10px rgba(0,113,227,.18); }
+    .btn-lime:hover, .btn-blue:hover { background: var(--lime-hover); }
+    .btn-navy { background: #1d1d1f; color: #fff; }
+    .btn-navy:hover { background: #2c2c2e; }
+    .btn-ghost { background: #fff; border-color: #d2d2d7; color: var(--ink); }
+    .btn-ghost:hover { background: #f5f5f7; border-color: #a1a1a6; }
+    .tag { border-radius: 99px; padding: 4px 9px; font-weight: 650; }
+    .history-card { margin-top: 28px; padding: 22px 24px; }
+    .history-table th { background: #f5f5f7; color: var(--muted); }
+    .history-table td { border-bottom-color: #e5e5ea; }
+    .attachment-card, .proposal-check, .design-spec-box { border-color: #d2d2d7; border-radius: 11px; background: #fbfbfd; }
+    .modal-overlay { background: rgba(0,0,0,.38); backdrop-filter: blur(12px); }
+    .modal-card { border-radius: 16px; box-shadow: 0 24px 70px rgba(0,0,0,.2); }
+    .modal-header, .modal-footer { background: #fbfbfd; border-color: #e5e5ea; }
+    .modal-close { border-radius: 50%; background: #e5e5ea; }
+    .modal-body { padding: 22px; }
+    .project-progress-card { background: linear-gradient(135deg, #ffffff 0%, #f2f8ff 100%); color: var(--ink); border: 1px solid #d7eaff; box-shadow: var(--shadow); }
+    .project-progress-kicker { color: var(--blue); }
+    .project-progress-head h3 { color: var(--ink); }
+    .project-progress-head p, .project-progress-percent span { color: var(--muted); }
+    .project-progress-percent strong { color: var(--blue); }
+    .project-progress-bar { background: #e5e5ea; }
+    .project-progress-bar i { background: var(--blue); }
+    .project-progress-step { border-color: #e5e5ea; background: rgba(255,255,255,.75); }
+    .project-progress-step strong { color: var(--ink); }
+    .project-progress-step span { color: var(--muted); }
+    .project-progress-step.done { background: #f0fbf3; border-color: #b7e5c2; }
+    .project-progress-step.active { background: #eaf3ff; border-color: #9dc8f2; box-shadow: inset 0 -2px 0 var(--blue); }
+    .milestone-view-switch, .concept-view-mode-toggle { background: #f5f5f7; border-color: #d2d2d7; border-radius: 9px; }
+    .milestone-view-switch button.active, .concept-mode-btn.active { background: #fff; color: var(--ink); box-shadow: 0 2px 5px rgba(0,0,0,.08); }
+    .milestone-calendar-card, .concept-list-table-wrap { border-color: #e5e5ea; border-radius: 12px; }
+    .milestone-calendar-toolbar, .milestone-calendar-weekdays, .concept-list-table th { background: #f5f5f7; }
+    .toast { border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,.16); }
+    @media (max-width: 980px) { .sidebar { background: #fbfbfd; } .main { padding: 26px 22px 60px; } }
 </style>
 </head>
 <body>
