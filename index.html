@@ -1102,7 +1102,12 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      max-width: min(560px, calc(100vw - 32px));
     }
+    .toast.actionable { pointer-events: auto; flex-wrap: wrap; }
+    .toast.actionable #toast-text { flex: 1 1 280px; line-height: 1.45; }
+    .toast-action { border: 1px solid rgba(255,255,255,.45); border-radius: 8px; padding: 7px 10px; background: #fff; color: #172333; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
+    .toast-action:hover { background: #eff6ff; }
     .toast.show {
       transform: translateY(0);
       opacity: 1;
@@ -2680,6 +2685,7 @@
 <div id="toast" class="toast">
   <span class="toast-icon">✓</span>
   <span id="toast-text">Đã lưu thành công!</span>
+  <button type="button" class="toast-action" id="toast-action" style="display:none" onclick="runToastAction()">Mở mục cần làm</button>
 </div>
 
 <script>
@@ -2832,6 +2838,7 @@
   var activeSubTab = 'overview';
   var milestoneDisplayMode = 'timeline';
   var milestoneCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  var toastActionHandler = null;
   var pendingAttachments = { photos: [], videos: [], drawings: [], documents: [] };
   var pendingAttachmentProject = null;
   var teamMembers = [
@@ -3014,7 +3021,7 @@
     }
     var current = getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.id === stageName; });
     if (!current || current.status !== 'active') {
-      showToast('Vui lòng hoàn tất giai đoạn thiết kế trước đó.');
+      showMilestoneBlockedToast(getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.status === 'active'; }));
       return;
     }
     if (!isProposalApproved(data.brief.project_name)) {
@@ -3023,7 +3030,7 @@
     }
     var current = getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.id === stageName; });
     if (!current || current.status !== 'active') {
-      showToast('Vui lòng hoàn tất giai đoạn thiết kế trước đó.');
+      showMilestoneBlockedToast(getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.status === 'active'; }));
       return;
     }
     var record = getDesignStageRecord(data.brief.project_name, designStageFileKey(stageName));
@@ -3689,7 +3696,8 @@
     }
     var current = getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.id === id; });
     if (!current || current.status !== 'active') {
-      showToast(current && current.status === 'done' ? 'Mốc này đã hoàn tất.' : 'Vui lòng hoàn tất mốc đang xử lý trước.');
+      if (current && current.status === 'done') showToast('Mốc này đã hoàn tất.');
+      else showMilestoneBlockedToast(getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.status === 'active'; }));
       return;
     }
     if (id === 'survey' && !data.survey) {
@@ -3714,7 +3722,7 @@
     var projectName = data.brief.project_name;
     var current = getProjectMilestones(projectName, data.brief, data.survey, data.proposal).find(function(item){ return item.id === id; });
     if (!current || current.status !== 'active') {
-      showToast('Vui lòng hoàn tất mốc đang xử lý trước.');
+      showMilestoneBlockedToast(getProjectMilestones(projectName, data.brief, data.survey, data.proposal).find(function(item){ return item.status === 'active'; }));
       return;
     }
     if (id === 'proposal_approve') {
@@ -5246,10 +5254,35 @@ function saveWorkspaceProposal(e) {
   function showToast(msg) {
     var toast = document.getElementById('toast');
     document.getElementById('toast-text').textContent = msg;
+    var action = document.getElementById('toast-action');
+    toastActionHandler = null;
+    if (action) action.style.display = 'none';
+    toast.classList.remove('actionable');
     toast.classList.add('show');
     setTimeout(function() {
       toast.classList.remove('show');
     }, 3000);
+  }
+
+  function showMilestoneBlockedToast(current) {
+    var title = current && current.title ? current.title : 'mốc đang xử lý';
+    var toast = document.getElementById('toast');
+    var text = document.getElementById('toast-text');
+    var action = document.getElementById('toast-action');
+    if (!toast || !text) return;
+    toastActionHandler = current && current.id ? function(){ openMilestoneRequirement(current.id); } : null;
+    text.textContent = 'Chưa thể hoàn tất mục này. Trước tiên cần hoàn tất: ' + title + '. ' + (current ? milestoneRequirement(current) : '');
+    if (action && toastActionHandler) action.style.display = 'inline-flex';
+    toast.classList.add('actionable', 'show');
+    setTimeout(function(){ toast.classList.remove('show'); toast.classList.remove('actionable'); }, 5000);
+  }
+
+  function runToastAction() {
+    var handler = toastActionHandler;
+    var toast = document.getElementById('toast');
+    if (toast) { toast.classList.remove('show', 'actionable'); }
+    toastActionHandler = null;
+    if (handler) handler();
   }
 
   // CẬP NHẬT CÁC BẢNG DANH SÁCH BRIEF & SURVEY
