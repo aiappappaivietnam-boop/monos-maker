@@ -1112,6 +1112,36 @@
     .toast-action { border: 1px solid rgba(255,255,255,.45); border-radius: 8px; padding: 7px 10px; background: #fff; color: #172333; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
     .toast-action:hover { background: #eff6ff; }
     .realtime-save-status { display:inline-flex; align-items:center; gap:6px; color:var(--green); font-size:12px; font-weight:750; }
+    /* Nút giả lập nhanh luôn có mặt trên mọi form để test và lưu dữ liệu mẫu. */
+    .demo-fab {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      z-index: 900;
+      width: 58px;
+      height: 58px;
+      border: 4px solid #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #ff3b30;
+      color: #fff;
+      font-size: 23px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(255, 59, 48, .32), 0 2px 8px rgba(0, 0, 0, .16);
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+    .demo-fab:hover {
+      background: #d70015;
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 11px 26px rgba(255, 59, 48, .4), 0 3px 10px rgba(0, 0, 0, .18);
+    }
+    .demo-fab:active { transform: scale(.96); }
+    .demo-fab:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+    @media (max-width: 620px) {
+      .demo-fab { right: 18px; bottom: 18px; width: 54px; height: 54px; }
+    }
     .toast.show {
       transform: translateY(0);
       opacity: 1;
@@ -2689,6 +2719,11 @@
   <button type="button" class="toast-action" id="toast-action" style="display:none" onclick="runToastAction()">Mở mục cần làm</button>
 </div>
 
+<!-- NÚT GIẢ LẬP ĐIỀN VÀ LƯU NHANH: DÙNG ĐƯỢC TRÊN TẤT CẢ CÁC FORM -->
+<button type="button" id="floating-demo-btn" class="demo-fab" onclick="simulateCurrentForm()" aria-label="Giả lập điền và lưu nhanh" title="Giả lập điền và lưu nhanh">
+  <span aria-hidden="true">⚡</span>
+</button>
+
 <script>
 
   // QUẢN LÝ MODAL THÊM DỰ ÁN MỚI
@@ -3615,6 +3650,7 @@
       if (btnMilestones) btnMilestones.classList.add('active');
       renderStandaloneMilestones();
     }
+    updateFloatingDemoButton();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -3624,6 +3660,53 @@
     activeSubTab = tabName;
     syncWorkspaceSubTabUi();
     renderSingleProjectWorkspace();
+    updateFloatingDemoButton();
+  }
+
+  // Cập nhật ngữ cảnh cho nút đỏ giả lập nhanh.
+  function updateFloatingDemoButton() {
+    var button = document.getElementById('floating-demo-btn');
+    if (!button) return;
+    var label = 'Giả lập điền và lưu nhanh';
+    var workplace = document.getElementById('view-workplace');
+    var briefView = document.getElementById('view-brief');
+    var surveyView = document.getElementById('view-survey');
+    if (workplace && workplace.style.display !== 'none') {
+      var labels = {
+        brief: 'Giả lập Brief và lưu nhanh',
+        survey: 'Giả lập khảo sát và lưu nhanh',
+        proposal: 'Giả lập Proposal và lưu nhanh',
+        design_concept: 'Giả lập hồ sơ Concept và lưu nhanh',
+        design_schematic: 'Giả lập hồ sơ Cơ phát và lưu nhanh',
+        design_development: 'Giả lập hồ sơ Khai triển và lưu nhanh',
+        design_construction: 'Giả lập hồ sơ Thi công và lưu nhanh'
+      };
+      label = labels[activeSubTab] || 'Giả lập dự án và lưu nhanh';
+    } else if (briefView && briefView.style.display !== 'none') {
+      label = 'Giả lập Brief và lưu nhanh';
+    } else if (surveyView && surveyView.style.display !== 'none') {
+      label = 'Giả lập khảo sát và lưu nhanh';
+    }
+    button.title = label;
+    button.setAttribute('aria-label', label);
+  }
+
+  // Một nút duy nhất cho mọi form: tự nhận biết form đang mở, điền dữ liệu mẫu
+  // ngẫu nhiên và lưu ngay bằng cùng cơ chế realtime của từng biểu mẫu.
+  function simulateCurrentForm() {
+    var workplace = document.getElementById('view-workplace');
+    var briefView = document.getElementById('view-brief');
+    var surveyView = document.getElementById('view-survey');
+    if (workplace && workplace.style.display !== 'none') {
+      if (activeSubTab === 'brief') return fillWorkspaceBriefDemo();
+      if (activeSubTab === 'survey') return fillWorkspaceSurveyDemo();
+      if (activeSubTab === 'proposal') return fillWorkspaceProposalDemo();
+      if (activeSubTab.indexOf('design_') === 0) return fillWorkspaceDesignDemo(activeSubTab);
+      if (activeSubTab === 'overview' || activeSubTab === 'milestones') return simulateInitProject();
+    }
+    if (briefView && briefView.style.display !== 'none') return fillAndSaveDemoBrief();
+    if (surveyView && surveyView.style.display !== 'none') return fillDemoSurvey();
+    return simulateInitProject();
   }
 
   // CẬP NHẬT MENU CHỌN DỰ ÁN CHO WORKSPACE
@@ -5901,6 +5984,109 @@ function saveWorkspaceProposal(e) {
     showToast('⚡ Đã giả lập điền thông tin và đính kèm đầy đủ tệp khảo sát!');
   }
 
+  function randomDemoNumber(min, max) {
+    return Math.floor(min + Math.random() * (max - min + 1));
+  }
+
+  // Giả lập nhanh ngay trong Brief đang mở ở Workspace.
+  function fillWorkspaceBriefDemo() {
+    var form = document.getElementById('wp-brief-form');
+    var data = getActiveProjectData();
+    if (!form || !data || !data.brief) {
+      simulateInitProject();
+      activeSubTab = 'brief';
+      renderSingleProjectWorkspace();
+      return;
+    }
+    var b = data.brief;
+    var samples = [
+      { client:'Chị Mai Thanh Hà', phone:'0903 246 ' + randomDemoNumber(100, 999), email:'maiha.demo@example.com', area:'168 m²', style:'Japandi ấm áp', note:'Gia đình 4 người, ưu tiên ánh sáng tự nhiên và lưu trữ kín.' },
+      { client:'Anh Trần Quốc Bảo', phone:'0918 530 ' + randomDemoNumber(100, 999), email:'quocbao.demo@example.com', area:'240 m²', style:'Modern Tropical', note:'Cần không gian tiếp khách rộng, bếp mở và vật liệu bền.' },
+      { client:'Công ty An Phúc', phone:'028 7304 ' + randomDemoNumber(100, 999), email:'anphuc.demo@example.com', area:'420 m²', style:'Contemporary Creative', note:'Cần khu làm việc nhóm, phòng họp linh hoạt và pantry.' }
+    ];
+    var sample = samples[randomDemoNumber(0, samples.length - 1)];
+    var set = function(id, value) { var el = document.getElementById(id); if (el) el.value = value; };
+    var staff = teamMembers[randomDemoNumber(0, teamMembers.length - 1)];
+    set('wp_brief_staff', staff.name + ' — ' + staff.role);
+    set('wp_brief_date', new Date().toISOString().slice(0, 10));
+    set('wp_client_name', sample.client);
+    set('wp_client_phone', sample.phone);
+    set('wp_client_email', sample.email);
+    set('wp_client_address', 'Khu đô thị mẫu, TP.HCM');
+    set('wp_client_notes', sample.note);
+    set('wp_project_area', sample.area);
+    set('wp_project_style', sample.style);
+    set('wp_project_budget', '1.8 - 2.' + randomDemoNumber(1, 9) + ' tỷ VNĐ');
+    set('wp_project_brief_detail', 'Phòng khách liên thông bếp; ưu tiên công năng linh hoạt, vật liệu dễ bảo trì và ánh sáng ấm.');
+    saveWorkspaceBriefRealtime(form);
+    showToast('⚡ Đã giả lập và tự động lưu Brief cho dự án đang mở.');
+  }
+
+  // Giả lập nhanh ngay trong khảo sát hiện trạng của dự án đang mở.
+  function fillWorkspaceSurveyDemo() {
+    var form = document.getElementById('wp-survey-form');
+    var data = getActiveProjectData();
+    if (!form || !data || !data.brief) {
+      simulateInitProject();
+      activeSubTab = 'survey';
+      renderSingleProjectWorkspace();
+      return;
+    }
+    var staff = teamMembers[randomDemoNumber(0, teamMembers.length - 1)];
+    var set = function(id, value) { var el = document.getElementById(id); if (el) el.value = value; };
+    set('wp_surveyor_name', staff.name + ' — ' + staff.role);
+    set('wp_survey_time', new Date().toISOString().slice(0, 10));
+    set('wp_survey_location', data.brief.project_address || 'Địa chỉ công trình đang cập nhật');
+    set('wp_survey_notes', 'Hiện trạng bàn giao thô; đã kiểm tra lối tiếp cận, trần, sàn, hộp kỹ thuật và vị trí cấp thoát nước.');
+    set('wp_survey_photos', 'https://drive.google.com/demo-survey-photos-' + randomDemoNumber(100, 999));
+    set('wp_survey_videos', 'https://drive.google.com/demo-survey-video-' + randomDemoNumber(100, 999));
+    set('wp_survey_drawings', 'BV-HIENTRANG-REV0' + randomDemoNumber(1, 9) + '.dwg / .pdf');
+    set('wp_survey_documents', 'Biên bản bàn giao và quy định thi công của công trình');
+    pendingAttachments = {
+      photos: [{ name:'HienTrang_' + randomDemoNumber(100, 999) + '.jpg', size: 2400000 }],
+      videos: [{ name:'Walkthrough_' + randomDemoNumber(100, 999) + '.mp4', size: 18000000 }],
+      drawings: [{ name:'BanVe_HienTrang_REV02.dwg', size: 5200000 }],
+      documents: [{ name:'BienBan_BanGiao.pdf', size: 1200000 }]
+    };
+    var holder = document.getElementById('list-wp-photos');
+    if (holder) holder.innerHTML = renderAllAttachmentChips({ attachments: pendingAttachments });
+    saveWorkspaceSurveyRealtime(form);
+    showToast('⚡ Đã giả lập và tự động lưu hồ sơ khảo sát.');
+  }
+
+  function fillWorkspaceProposalDemo() {
+    var data = getActiveProjectData();
+    if (!data || !data.brief) {
+      simulateInitProject();
+      activeSubTab = 'proposal';
+      renderSingleProjectWorkspace();
+      return;
+    }
+    generateStandardProposal();
+    showToast('⚡ Đã giả lập, tạo Proposal chuẩn và tự động lưu Design Fee.');
+  }
+
+  function fillWorkspaceDesignDemo(stageName) {
+    var data = getActiveProjectData();
+    if (!data || !data.brief) {
+      simulateInitProject();
+      activeSubTab = stageName;
+      renderSingleProjectWorkspace();
+      return;
+    }
+    var record = getDesignStageRecord(data.brief.project_name, designStageFileKey(stageName));
+    record.files.push({
+      name: stageName.replace('design_', '').toUpperCase() + '_Demo_' + randomDemoNumber(100, 999) + '.pdf',
+      size: 1800000,
+      type: 'application/pdf',
+      addedAt: new Date().toISOString(),
+      author: data.brief.brief_staff || 'Team member'
+    });
+    persistDesignFiles();
+    renderSingleProjectWorkspace();
+    showToast('⚡ Đã giả lập và lưu file cho ' + stageName + '.');
+  }
+
   function escapeHtml(str) {
     if (!str) return '';
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -5935,6 +6121,7 @@ function saveWorkspaceProposal(e) {
     updateProjectSelect();
     populateBriefTeamMemberSelects((briefs[0] && briefs[0].brief_staff) || '');
     populateSurveyTeamMemberSelect((defaultSampleSurvey && defaultSampleSurvey.surveyor_name) || '');
+    updateFloatingDemoButton();
   })();
 </script>
 
