@@ -4603,7 +4603,7 @@
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
           '</div>' +
-          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button></div></div>' +
+          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-blue" style="margin-left:12px" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button></div></div>' +
         '</form>';
       calculateProposalTotal();
       bindRealtimeForms();
