@@ -1979,9 +1979,14 @@
           <p>Thu thập thông tin tiếp nhận Brief, hồ sơ khách hàng và định hướng thiết kế dự án.</p>
         </div>
         <div>
-          <button type="button" class="btn btn-ghost" onclick="fillDemoBrief()">
-            ⚡ Điền nhanh dữ liệu mẫu
-          </button>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+            <button type="button" class="btn btn-ghost" onclick="fillDemoBrief()">
+              ⚡ Điền nhanh dữ liệu mẫu ngẫu nhiên
+            </button>
+            <button type="button" class="btn btn-lime" onclick="fillAndSaveDemoBrief()">
+              🧪 Giả lập gặp khách & lưu Brief
+            </button>
+          </div>
         </div>
       </div>
 
@@ -2342,7 +2347,10 @@
     <form id="form-quick-add-project" onsubmit="saveQuickAddProject(event)">
       <div class="modal-body">
         <div style="background:var(--lime-subtle);border:1px solid #d9f99d;border-radius:12px;padding:12px 14px;color:#3f6212;font-size:12.5px;">
-          💡 Sau khi thêm, dự án sẽ được <b>tự động chọn và hiển thị ngay trên Workspace</b> theo chuỗi tiến trình: <b>Tổng quan</b> → <b>Brief</b> → <b>Khảo sát hiện trạng</b>.
+          💡 Đây là nơi tạo hồ sơ ngay sau buổi gặp khách. Bạn có thể nhập nhanh rồi điền Brief đầy đủ trong bước tiếp theo; dự án sẽ tự động được mở trong Workspace.
+          <div style="margin-top:10px;display:flex;justify-content:flex-end;">
+            <button type="button" class="btn btn-ghost" style="padding:7px 12px;font-size:12px;background:#fff;border-color:#d9f99d;color:#3f6212;" onclick="fillDemoQuickAddProject()">⚡ Giả lập gặp khách & điền nhanh</button>
+          </div>
         </div>
 
         <div class="grid-2">
@@ -2538,6 +2546,30 @@
     switchView('workplace');
     renderSingleProjectWorkspace();
     showToast('🚀 Đã thêm dự án mới: ' + pName + ' và mở trong Workspace!');
+  }
+
+  function fillDemoQuickAddProject() {
+    var form = document.getElementById('form-quick-add-project');
+    if (!form) return;
+    var samples = [
+      { project:'Căn hộ River Park', client:'Chị Mai Thanh Hà', phone:'0903 246 781', type:'Căn hộ chung cư', area:'168 m²', address:'Long Biên, Hà Nội', notes:'Gặp khách lần đầu, cần lên Brief về 3 phòng ngủ và phong cách Japandi.' },
+      { project:'Townhouse The Palm', client:'Anh Trần Quốc Bảo', phone:'0918 530 642', type:'Nhà phố / Shophouse', area:'240 m²', address:'Sơn Trà, Đà Nẵng', notes:'Khách cần không gian tiếp khách, bếp mở và 4 phòng ngủ.' },
+      { project:'An Phúc Creative Office', client:'Công ty An Phúc', phone:'028 7304 9816', type:'Văn phòng làm việc', area:'420 m²', address:'Quận 1, TP.HCM', notes:'Khách hàng doanh nghiệp, cần ghi nhận nhanh yêu cầu về khu làm việc và phòng họp.' },
+      { project:'Villa Pine Hill', client:'Anh Vũ Minh Khang', phone:'0977 418 265', type:'Biệt thự / Villa', area:'510 m²', address:'Bảo Lộc, Lâm Đồng', notes:'Khách muốn nhà nghỉ dưỡng cuối tuần, ưu tiên vật liệu tự nhiên và tầm nhìn vườn.' }
+    ];
+    var sample = samples[Math.floor(Math.random() * samples.length)];
+    var suffix = Math.floor(100 + Math.random() * 900);
+    form.modal_project_name.value = sample.project + ' #' + suffix;
+    form.modal_client_name.value = sample.client;
+    form.modal_client_phone.value = sample.phone;
+    form.modal_project_type.value = sample.type;
+    form.modal_project_area.value = sample.area;
+    form.modal_project_address.value = sample.address;
+    form.modal_project_notes.value = sample.notes;
+    populateBriefTeamMemberSelects('Nguyễn Minh');
+    form.modal_brief_staff.value = 'Nguyễn Minh — Lead Designer';
+    form.modal_brief_date.value = new Date().toISOString().slice(0, 10);
+    showToast('⚡ Đã điền bộ dữ liệu gặp khách ngẫu nhiên.');
   }
 
   // DỮ LIỆU MẪU SẴN CÓ ĐỂ WORKSPACE LUÔN CÓ DỰ ÁN LOAD RA CÁC TAB
@@ -5065,22 +5097,40 @@ function saveWorkspaceProposal(e) {
   // ĐIỀN DỮ LIỆU TEST NHANH
   function fillDemoBrief() {
     var f = document.getElementById('form-brief');
-    populateBriefTeamMemberSelects('Nguyễn Minh');
-    f.brief_staff.value = 'Nguyễn Minh — Lead Designer';
+    if (!f) return;
+    var samples = [
+      { staff:'Nguyễn Minh — Lead Designer', client:'Chị Mai Thanh Hà', phone:'0903 246 781', email:'maiha.studio@example.com', clientAddress:'Thảo Điền, TP. Thủ Đức', notes:'Gia đình 4 người, ưu tiên nhiều ánh sáng và không gian lưu trữ kín.', project:'Căn hộ River Park - Hà Nội', type:'Căn hộ chung cư', address:'Tòa R2, Khu đô thị River Park, Long Biên, Hà Nội', area:'168 m²', style:'Japandi ấm áp', budget:'1.2 - 1.6 tỷ VNĐ', detail:'Phòng khách liên thông bếp; 03 phòng ngủ; cần góc làm việc yên tĩnh và tủ giày lớn.' },
+      { staff:'Lê Vy — Interior Designer', client:'Anh Trần Quốc Bảo', phone:'0918 530 642', email:'quocbao.home@example.com', clientAddress:'Hải Châu, Đà Nẵng', notes:'Khách thường xuyên tiếp bạn bè, cần bếp và bàn ăn có thể mở rộng.', project:'Townhouse The Palm - Đà Nẵng', type:'Nhà phố / Shophouse', address:'Đường Võ Nguyên Giáp, Sơn Trà, Đà Nẵng', area:'240 m²', style:'Modern Tropical', budget:'1.8 - 2.3 tỷ VNĐ', detail:'Tầng 1 là khu sinh hoạt chung; 04 phòng ngủ; ưu tiên thông gió tự nhiên và vật liệu bền.' },
+      { staff:'Ngọc Anh — Project Manager', client:'Công ty An Phúc', phone:'028 7304 9816', email:'office.anphuc@example.com', clientAddress:'Quận 1, TP.HCM', notes:'Cần hình ảnh chuyên nghiệp, khu họp linh hoạt và không gian làm việc nhóm.', project:'An Phúc Creative Office', type:'Văn phòng làm việc', address:'Nguyễn Huệ, Quận 1, TP.HCM', area:'420 m²', style:'Contemporary Creative', budget:'2.4 - 3.1 tỷ VNĐ', detail:'Open office 45 chỗ; 03 phòng họp; pantry; khu tiếp khách và khu phone booth.' },
+      { staff:'Trần Linh — FF&E Designer', client:'Anh Vũ Minh Khang', phone:'0977 418 265', email:'khang.villa@example.com', clientAddress:'Bảo Lộc, Lâm Đồng', notes:'Muốn không gian nghỉ dưỡng cuối tuần, nhiều vật liệu tự nhiên và tầm nhìn vườn.', project:'Villa Pine Hill - Bảo Lộc', type:'Biệt thự / Villa', address:'Đồi chè Tâm Châu, Bảo Lộc, Lâm Đồng', area:'510 m²', style:'Rustic Contemporary', budget:'3.6 - 4.5 tỷ VNĐ', detail:'Phòng khách nhìn ra vườn; bếp lớn; 04 phòng ngủ; có phòng đọc sách và hiên ngoài trời.' }
+    ];
+    var sample = samples[Math.floor(Math.random() * samples.length)];
+    var suffix = Math.floor(100 + Math.random() * 900);
+    populateBriefTeamMemberSelects(sample.staff);
+    f.brief_staff.value = sample.staff;
     f.brief_date.value = new Date().toISOString().slice(0, 10);
-    f.client_name.value = "Anh Nguyễn Hoàng Long";
-    f.client_phone.value = "0909 888 999";
-    f.client_email.value = "hoanglong.residence@gmail.com";
-    f.client_address.value = "Lakeview City, Phường An Phú, TP. Thủ Đức, TP.HCM";
-    f.client_notes.value = "Gia đình có 2 vợ chồng và 2 con nhỏ. Thích không gian rộng rãi, thoáng đãng, nhiều ánh sáng tự nhiên và trao đổi qua Zalo nhóm.";
-    f.project_name.value = "Villa Lakeview City - Nhà phố 1 Trệt 2 Lầu";
-    f.project_type.value = "Biệt thự / Villa";
-    f.project_address.value = "Đường Song Hành, Khu đô thị Lakeview City, TP. Thủ Đức";
-    f.project_area.value = "320 m² (1 trệt 2 lầu + sân thượng)";
-    f.project_style.value = "Modern Warm Minimalism (Tối giản hiện đại & ấm cúng)";
-    f.project_budget.value = "2.5 - 3.0 tỷ VNĐ";
-    f.project_brief_detail.value = "1. Tầng 1: Phòng khách thông tầng mở liền bếp đảo trung tâm, phòng ăn 8 ghế.\n2. Tầng 2: 01 Phòng Master lớn có walk-in closet và bồn tắm nằm; 01 phòng làm việc.\n3. Tầng 3: 02 Phòng ngủ cho 2 con nhỏ, phòng sinh hoạt chung.\n4. Vật liệu ưu tiên: Gỗ sồi tự nhiên sơn lau mờ, đá travertine, sơn hiệu ứng bê tông lụa.";
-    showToast('⚡ Đã điền dữ liệu mẫu Brief!');
+    f.client_name.value = sample.client;
+    f.client_phone.value = sample.phone;
+    f.client_email.value = sample.email;
+    f.client_address.value = sample.clientAddress;
+    f.client_notes.value = sample.notes;
+    f.project_name.value = sample.project + ' #' + suffix;
+    f.project_type.value = sample.type;
+    f.project_address.value = sample.address;
+    f.project_area.value = sample.area;
+    f.project_style.value = sample.style;
+    f.project_budget.value = sample.budget;
+    f.project_brief_detail.value = sample.detail;
+    showToast('⚡ Đã điền một bộ dữ liệu Brief ngẫu nhiên. Kiểm tra rồi bấm Lưu lại Brief.');
+  }
+
+  function fillAndSaveDemoBrief() {
+    fillDemoBrief();
+    setTimeout(function() {
+      var form = document.getElementById('form-brief');
+      if (form && form.checkValidity()) form.requestSubmit();
+      else showToast('Kiểm tra các trường bắt buộc trước khi lưu Brief.');
+    }, 80);
   }
 
   function fillDemoSurvey() {
