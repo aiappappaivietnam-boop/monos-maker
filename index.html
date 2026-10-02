@@ -4603,7 +4603,7 @@
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
           '</div>' +
-          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-blue" style="margin-left:12px" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button></div></div>' +
+          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div><span class="realtime-save-status">✓ Tự động lưu khi nhập</span></div></div>' +
         '</form>';
       calculateProposalTotal();
       bindRealtimeForms();
@@ -4714,17 +4714,13 @@
               curr.headline + ' · ' + curr.desc +
             '</p>' +
           '</div>' +
-          '<div>' +
-            (isApproved ? (
-              (isStageDone ? (
-                '<button type="button" class="btn btn-ghost" style="background:#fff;" onclick="updateMilestone(\'' + activeSubTab + '\',\'confirm\')">✓ Đã xác nhận hoàn thành</button>'
-              ) : (
-                '<button type="button" class="btn btn-lime" onclick="updateMilestone(\'' + activeSubTab + '\',\'confirm\')">✓ Đánh dấu hoàn thành ' + curr.name + '</button>'
-              ))
+          (isApproved ? (
+            (isStageDone ? (
+              '<div><button type="button" class="btn btn-ghost" style="background:#fff;" onclick="updateMilestone(\'' + activeSubTab + '\',\'confirm\')">✓ Đã xác nhận hoàn thành</button></div>'
             ) : (
-              '<button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">Khách duyệt Proposal & Chi phí → Bắt đầu thiết kế</button>'
-            )) +
-          '</div>' +
+              '<div><button type="button" class="btn btn-lime" onclick="updateMilestone(\'' + activeSubTab + '\',\'confirm\')">✓ Đánh dấu hoàn thành ' + curr.name + '</button></div>'
+            ))
+          ) : '') +
         '</div>' +
 
         '<div class="grid-3">' +
