@@ -2623,7 +2623,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-ghost" onclick="closeProposalDocModal()">Đóng</button>
-      <button type="button" class="btn btn-navy" onclick="printProposalDoc()">🖨️ In / Xuất PDF gửi khách</button>
+      <button type="button" class="btn btn-navy" onclick="printProposalDoc()">📄 Xuất PDF báo giá / In</button>
       <button type="button" class="btn btn-blue" onclick="confirmSendProposalFromModal()">📤 Xác nhận gửi khách & cập nhật Milestone</button>
     </div>
   </div>
@@ -2803,7 +2803,7 @@
   var proposals = [];
   var milestonesByProject = {};
   var designFilesByProject = {};
-  var proposalPendingAttachments = { files: [], link: '' };
+  var proposalPendingAttachments = { files: [], link: '', feePdfs: [] };
   var proposalAttachmentProject = null;
   var activeProjectName = null;
   var activeSubTab = 'overview';
@@ -2854,7 +2854,7 @@
 
   // QUẢN LÝ FILE CHO DESIGN PROPOSAL
   function emptyProposalAttachmentState() {
-    return { files: [], link: '' };
+    return { files: [], link: '', feePdfs: [] };
   }
 
   // Proposal dùng một khu vực attachment chung. Các hồ sơ cũ từng được chia
@@ -2874,7 +2874,8 @@
         .filter(Boolean)
         .join('\n');
     }
-    return { files: files, link: link };
+    var feePdfs = Array.isArray(source.feePdfs) ? source.feePdfs.map(function(x){ return Object.assign({}, x); }) : [];
+    return { files: files, link: link, feePdfs: feePdfs };
   }
 
   function syncProposalAttachments(proposal, projectName) {
@@ -3061,6 +3062,41 @@
     var holder = document.getElementById('proposal-files');
     if (holder) holder.innerHTML = renderProposalAttachmentChips();
     showToast('Đã xóa tệp Proposal.');
+  }
+
+  function renderProposalFeePdfChips() {
+    var files = proposalPendingAttachments.feePdfs || [];
+    if (!files.length) return '<div class="empty-attachment-placeholder">Chưa có PDF báo giá được đính kèm</div>';
+    return files.map(function(file, index){
+      return '<div class="file-chip"><div class="file-chip-info"><span>📄 ' + escapeHtml(file.name || 'Báo giá Proposal.pdf') + '</span><span class="file-chip-size">(' + formatBytes(file.size) + ')</span></div><button type="button" class="file-chip-remove" aria-label="Xóa PDF báo giá" onclick="removeProposalFeePdf(' + index + ')">✕</button></div>';
+    }).join('');
+  }
+
+  function handleProposalFeePdfUpload(event) {
+    var selected = Array.from((event && event.target && event.target.files) || []);
+    if (!selected.length) return;
+    var invalid = selected.filter(function(file){
+      return String(file.type || '').toLowerCase() !== 'application/pdf' && !/\.pdf$/i.test(file.name || '');
+    });
+    if (invalid.length) {
+      showToast('⚠️ Chỉ được đính kèm file PDF báo giá.');
+      event.target.value = '';
+      return;
+    }
+    selected.forEach(function(file){
+      proposalPendingAttachments.feePdfs.push({ name: file.name, size: file.size, type: file.type || 'application/pdf', lastModified: file.lastModified });
+    });
+    var holder = document.getElementById('proposal-fee-pdf-files');
+    if (holder) holder.innerHTML = renderProposalFeePdfChips();
+    showToast('📎 Đã đính kèm ' + selected.length + ' PDF báo giá.');
+    event.target.value = '';
+  }
+
+  function removeProposalFeePdf(index) {
+    if (proposalPendingAttachments.feePdfs) proposalPendingAttachments.feePdfs.splice(index, 1);
+    var holder = document.getElementById('proposal-fee-pdf-files');
+    if (holder) holder.innerHTML = renderProposalFeePdfChips();
+    showToast('Đã xóa PDF báo giá đính kèm.');
   }
 
   function persistActiveProject(projectName) {
@@ -4198,12 +4234,17 @@
               '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá vẫn có thể chỉnh sửa trước khi lưu.</span></div>' +
               '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
             '</div>' +
+            '<div class="attachment-card attachment-unified-card" style="margin:0 0 16px">' +
+              '<div class="attachment-head"><div><label>📄 PDF báo giá đã xuất</label><p>Sau khi bấm Xuất PDF, tải file báo giá vào đây để lưu cùng hồ sơ Proposal của dự án.</p></div><span class="tag blue">Quotation PDF</span></div>' +
+              '<label class="attachment-unified-upload" style="min-height:72px"><input type="file" multiple accept="application/pdf,.pdf" onchange="handleProposalFeePdfUpload(event)"><span><strong>＋ Đính kèm PDF báo giá</strong><span>Chỉ nhận file .pdf · Có thể chọn nhiều phiên bản</span></span></label>' +
+              '<div class="file-chip-list" id="proposal-fee-pdf-files">' + renderProposalFeePdfChips() + '</div>' +
+            '</div>' +
             '<div class="proposal-fee-head"><span>Loại</span><span>Hạng mục thiết kế</span><span>Số lượng / đơn vị</span><span>Đơn giá (VNĐ)</span><span></span></div>' +
             '<div id="proposal-line-items" class="proposal-line-items">' + rows + '</div>' +
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
           '</div>' +
-          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><button type="submit" class="btn btn-lime">💾 Lưu Design Proposal & Design Fee</button><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem File Proposal gửi khách</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
+          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><button type="submit" class="btn btn-lime">💾 Lưu Design Proposal & Design Fee</button><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem & Xuất PDF báo giá</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
         '</form>';
       calculateProposalTotal();
       return;
@@ -4635,7 +4676,7 @@
 
   function proposalAttachmentSummary(proposal) {
     var a = cloneProposalAttachmentState(proposal && proposal.attachments);
-    return 'Tệp Proposal: ' + a.files.length + ' file' + (a.link ? ' · Có link đính kèm' : '');
+    return 'Tệp Proposal: ' + a.files.length + ' file' + (a.link ? ' · Có link đính kèm' : '') + (a.feePdfs.length ? ' · PDF báo giá: ' + a.feePdfs.length : '');
   }
 
   function formatCurrency(value) {
@@ -4950,6 +4991,7 @@
           '<h4>3. Danh mục hồ sơ & Tệp đính kèm gửi khách</h4>' +
           '<div style="background:#fafbfc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;font-size:13px;">' +
             '<div>• <b>Tệp Proposal đính kèm:</b> ' + (cloneProposalAttachmentState(proposal.attachments).files.length ? (cloneProposalAttachmentState(proposal.attachments).files.length + ' file đính kèm') : 'Theo file đính kèm chính thức') + (cloneProposalAttachmentState(proposal.attachments).link ? (' [Link: ' + escapeHtml(cloneProposalAttachmentState(proposal.attachments).link).replace(/\n/g, '<br>') + ']') : '') + '</div>' +
+            '<div style="margin-top:6px;">• <b>PDF báo giá đã xuất:</b> ' + (cloneProposalAttachmentState(proposal.attachments).feePdfs.length ? (cloneProposalAttachmentState(proposal.attachments).feePdfs.length + ' file PDF đã lưu cùng hồ sơ') : 'Chưa đính kèm file PDF') + '</div>' +
           '</div>' +
         '</div>' +
 
