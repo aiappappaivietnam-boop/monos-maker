@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quản lý Thiết kế Nội thất — FORMWORK</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2318222b'/%3E%3Cpath d='M18 18h28v8H26v8h16v8H26v12h-8V18Z' fill='%23c9f36a'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --navy: #121921;
@@ -34,10 +31,13 @@
       --shadow-hover: 0 16px 36px rgba(18, 25, 33, 0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, button, input, select, textarea {
+      /* Font hệ thống có đầy đủ bộ ký tự tiếng Việt, kể cả khi chạy local/offline. */
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Arial, sans-serif;
+    }
     body {
       background: var(--paper);
       color: var(--ink);
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       font-size: 14.5px;
       line-height: 1.5;
       min-height: 100vh;
@@ -1335,6 +1335,10 @@
         border: none !important;
         padding: 0 !important;
         box-shadow: none !important;
+        font-family: "Segoe UI", Arial, sans-serif !important;
+      }
+      #modal-proposal-doc, #modal-proposal-doc * {
+        font-family: "Segoe UI", Arial, sans-serif !important;
       }
     }
 
