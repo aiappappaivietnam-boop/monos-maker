@@ -293,6 +293,8 @@
       align-items: center;
       gap: 6px;
     }
+    .wp-status-stack { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+    .wp-status-detail { color:var(--muted); font-size:11px; font-weight:700; text-align:right; }
 
     /* WORKSPACE TABS (TỔNG QUAN ĐỨNG TRƯỚC BRIEF TỪ KHÁCH HÀNG) */
     .wp-nav-tabs {
@@ -1416,6 +1418,9 @@
       background: #eff6ff;
     }
     .wp-stage-badge {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
@@ -1424,6 +1429,7 @@
       border-radius: 7px;
       white-space: nowrap;
     }
+    .wp-stage-status { display:inline-flex; align-items:center; padding:3px 7px; border-radius:99px; background:rgba(255,255,255,.72); font-size:10px; letter-spacing:0; text-transform:none; }
     .wp-stage-badge.contact {
       background: #dbeafe;
       color: #1e40af;
@@ -1438,6 +1444,10 @@
       border-radius: 8px;
       white-space: nowrap;
     }
+    .wp-tab-status { display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; border-radius:99px; font-size:10px; font-weight:800; background:#f1f5f9; color:#64748b; }
+    .wp-tab-status.done { background:var(--green-subtle); color:var(--green); }
+    .wp-tab-status.active { background:var(--blue-subtle); color:var(--blue); }
+    .wp-tab-status.pending { background:#f1f5f9; color:#94a3b8; }
     .wp-tab-btn.stage-tab.active {
       background: var(--blue);
       color: #fff;
@@ -1467,6 +1477,8 @@
     @media (max-width: 620px) {
       .wp-stage-badge { width: 100%; }
       .wp-tab-btn.stage-tab { flex: 1 1 auto; justify-content: flex-start; }
+      .wp-status-stack { align-items:flex-start; width:100%; }
+      .wp-status-detail { text-align:left; }
     }
 
     .overview-section-heading {
@@ -1898,8 +1910,9 @@
           </select>
         </div>
 
-        <div id="wp-single-project-badge-wrap">
+        <div id="wp-single-project-badge-wrap" class="wp-status-stack">
           <span class="project-quick-badge tag green" id="wp-status-badge">✓ Đang mở</span>
+          <small class="wp-status-detail" id="wp-status-detail">Chưa chọn trạng thái</small>
         </div>
       </div>
 
@@ -1912,18 +1925,18 @@
 
         <!-- GIAI ĐOẠN 1: TIẾP XÚC KHÁCH HÀNG (Brief, Khảo sát hiện trạng, Proposal) -->
         <div class="wp-stage-block" id="stage-group-contact">
-          <span class="wp-stage-badge contact">Giai đoạn Tiếp xúc khách hàng</span>
+          <span class="wp-stage-badge contact">Giai đoạn Tiếp xúc khách hàng <span class="wp-stage-status" id="wp-contact-status">—</span></span>
           <button class="wp-tab-btn stage-tab" id="tab-btn-brief" onclick="switchWorkspaceSubTab('brief')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            1. Brief khách hàng
+            1. Brief khách hàng <span class="wp-tab-status pending" id="wp-tab-status-brief">○</span>
           </button>
           <button class="wp-tab-btn stage-tab" id="tab-btn-survey" onclick="switchWorkspaceSubTab('survey')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            2. Khảo sát hiện trạng
+            2. Khảo sát hiện trạng <span class="wp-tab-status pending" id="wp-tab-status-survey">○</span>
           </button>
           <button class="wp-tab-btn stage-tab" id="tab-btn-proposal" onclick="switchWorkspaceSubTab('proposal')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
-            3. Proposal & Báo giá
+            3. Proposal & Báo giá <span class="wp-tab-status pending" id="wp-tab-status-proposal">○</span>
           </button>
         </div>
 
@@ -1931,18 +1944,18 @@
 
         <!-- GIAI ĐOẠN 2: THIẾT KẾ (Concept, Cơ phát, Khai triển, Thi công) -->
         <div class="wp-stage-block" id="stage-group-design">
-          <span class="wp-stage-badge design">Giai đoạn Thiết kế</span>
+          <span class="wp-stage-badge design">Giai đoạn Thiết kế <span class="wp-stage-status" id="wp-design-status">—</span></span>
           <button class="wp-tab-btn stage-tab" id="tab-btn-design_concept" onclick="switchWorkspaceSubTab('design_concept')">
-            🎨 1. Thiết kế Concept
+            🎨 1. Thiết kế Concept <span class="wp-tab-status pending" id="wp-tab-status-design_concept">○</span>
           </button>
           <button class="wp-tab-btn stage-tab" id="tab-btn-design_schematic" onclick="switchWorkspaceSubTab('design_schematic')">
-            📐 2. Thiết kế Cơ phát
+            📐 2. Thiết kế Cơ phát <span class="wp-tab-status pending" id="wp-tab-status-design_schematic">○</span>
           </button>
           <button class="wp-tab-btn stage-tab" id="tab-btn-design_development" onclick="switchWorkspaceSubTab('design_development')">
-            🖼️ 3. Thiết kế Khai triển
+            🖼️ 3. Thiết kế Khai triển <span class="wp-tab-status pending" id="wp-tab-status-design_development">○</span>
           </button>
           <button class="wp-tab-btn stage-tab" id="tab-btn-design_construction" onclick="switchWorkspaceSubTab('design_construction')">
-            🔨 4. Thiết kế Thi công
+            🔨 4. Thiết kế Thi công <span class="wp-tab-status pending" id="wp-tab-status-design_construction">○</span>
           </button>
         </div>
       </div>
@@ -2901,6 +2914,41 @@
     if (groupDesign) groupDesign.classList.toggle('active-stage', activeSubTab.indexOf('design_') === 0);
   }
 
+  function updateWorkspaceProjectStatuses(data) {
+    var ids = ['brief', 'survey', 'proposal', 'design_concept', 'design_schematic', 'design_development', 'design_construction'];
+    var milestoneData = data && data.brief ? milestoneProgress(data.brief.project_name, data.brief, data.survey, data.proposal) : { list: [] };
+    var milestoneMap = {};
+    (milestoneData.list || []).forEach(function(item) { milestoneMap[item.id] = item; });
+    var hasBrief = !!(data && data.brief);
+    var hasSurvey = !!(data && data.survey);
+    var hasProposal = !!(data && data.proposal);
+    var approved = hasBrief && isProposalApproved(data.brief.project_name);
+    var statusFor = function(id) {
+      if (id === 'brief') return hasBrief ? 'done' : 'active';
+      if (id === 'survey') return hasSurvey ? 'done' : (hasBrief ? 'active' : 'pending');
+      if (id === 'proposal') return hasProposal ? (approved ? 'done' : 'active') : (hasSurvey ? 'active' : 'pending');
+      var item = milestoneMap[id];
+      if (item && item.status === 'done') return 'done';
+      if (approved && id === 'design_concept') return item && item.status === 'active' ? 'active' : 'active';
+      return 'pending';
+    };
+    var labelFor = function(status) { return status === 'done' ? '✓' : status === 'active' ? '•' : '○'; };
+    ids.forEach(function(id) {
+      var el = document.getElementById('wp-tab-status-' + id);
+      if (!el) return;
+      var status = statusFor(id);
+      el.className = 'wp-tab-status ' + status;
+      el.textContent = labelFor(status);
+      el.title = status === 'done' ? 'Đã hoàn tất' : status === 'active' ? 'Đang xử lý' : 'Chờ thực hiện';
+    });
+    var contact = document.getElementById('wp-contact-status');
+    var design = document.getElementById('wp-design-status');
+    var contactStatus = approved ? 'Đã hoàn tất' : hasProposal ? 'Proposal' : hasSurvey ? 'Khảo sát' : hasBrief ? 'Brief' : 'Chưa bắt đầu';
+    var designStatus = approved ? (milestoneMap.design_construction && milestoneMap.design_construction.status === 'done' ? 'Hoàn tất' : 'Đang triển khai') : 'Chờ khách duyệt';
+    if (contact) contact.textContent = contactStatus;
+    if (design) design.textContent = designStatus;
+  }
+
   // QUẢN LÝ FILE ĐÍNH KÈM CHO FORM KHẢO SÁT HIỆN TRẠNG
   function emptyAttachmentState() {
     return { photos: [], videos: [], drawings: [], documents: [] };
@@ -3074,6 +3122,8 @@
   function onSelectSingleProject(val) {
     if (!val) return;
     persistActiveProject(val);
+    var selected = briefs.find(function(item) { return item.project_name === val; });
+    updateWorkspaceProjectStatuses(selected ? getActiveProjectData() : null);
     renderSingleProjectWorkspace();
     showToast('Đã load dự án: ' + val + ' vào tất cả các tab!');
   }
@@ -3453,6 +3503,9 @@
         badge.textContent = 'Chưa có dự án';
         badge.className = 'project-quick-badge tag';
       }
+      var emptyStatusDetail = document.getElementById('wp-status-detail');
+      if (emptyStatusDetail) emptyStatusDetail.textContent = 'Chưa có dự án để theo dõi';
+      updateWorkspaceProjectStatuses(null);
       body.innerHTML = '<div style="background:#fff;border:1.5px dashed var(--line);border-radius:var(--r);padding:60px 24px;text-align:center;color:var(--muted);">' +
         '<div style="font-size:36px;margin-bottom:10px">📁</div>' +
         '<b style="color:var(--ink);font-size:17px;display:block">Chưa có dự án nào trong Workspace</b>' +
@@ -3477,15 +3530,16 @@
     syncProposalAttachments(proposal, b.project_name);
 
     var approvedProposal = isProposalApproved(b.project_name);
+    updateWorkspaceProjectStatuses(data);
 
     if (badge) {
-      if (s) {
-        badge.textContent = proposal ? '✓ Hoàn thành đến Proposal' : '✓ Hoàn thành Brief & Khảo sát';
-        badge.className = 'project-quick-badge tag green';
-      } else {
-        badge.textContent = s ? '⏳ Sẵn sàng lập Proposal' : '⏳ Đang chờ Khảo sát hiện trạng';
-        badge.className = 'project-quick-badge tag amber';
-      }
+      var progress = milestoneProgress(b.project_name, b, s, proposal);
+      var currentMilestone = progress.list.find(function(item) { return item.status === 'active'; });
+      var badgeDone = approvedProposal ? '✓ Đã chuyển sang Thiết kế' : (proposal ? '✓ Đã có Proposal' : (s ? '✓ Đã khảo sát' : '✓ Đã có Brief'));
+      badge.textContent = badgeDone;
+      badge.className = 'project-quick-badge tag ' + (approvedProposal || proposal || s ? 'green' : 'amber');
+      var statusDetail = document.getElementById('wp-status-detail');
+      if (statusDetail) statusDetail.textContent = currentMilestone ? 'Đang làm: ' + currentMilestone.title : 'Đã hoàn tất toàn bộ tiến trình';
     }
 
     // ==========================================
