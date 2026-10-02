@@ -527,14 +527,19 @@
 
     .proposal-link-input { border-top:1px dashed var(--line); padding-top:10px; margin-top:2px; }
     .proposal-link-input input { width:100%; border:1px solid var(--line); border-radius:9px; padding:8px 10px; background:#fff; color:var(--ink); font-size:12px; }
-    .proposal-fee-head { display:grid; grid-template-columns:1.3fr .75fr .75fr 36px; gap:8px; color:var(--muted); font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
-    @media (max-width:980px){.proposal-fee-head{display:none}}
+    .proposal-fee-head { display:grid; grid-template-columns:.72fr 1.35fr .72fr .78fr 36px; gap:8px; color:var(--muted); font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
+    .proposal-ai-pricing { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:14px 0 16px; padding:12px 14px; border:1px solid #dbeafe; border-radius:12px; background:linear-gradient(135deg,#f8fbff,#eff6ff); }
+    .proposal-ai-pricing-copy { min-width:0; }
+    .proposal-ai-pricing-copy strong { display:block; color:#1e3a8a; font-size:12.5px; }
+    .proposal-ai-pricing-copy span { display:block; margin-top:3px; color:#64748b; font-size:11.5px; line-height:1.45; }
+    .proposal-ai-pricing .btn { flex-shrink:0; }
+    @media (max-width:980px){.proposal-fee-head{display:none}.proposal-ai-pricing{align-items:flex-start;flex-direction:column}.proposal-line{grid-template-columns:1fr 1.5fr 1fr 1fr 36px}.proposal-line input{min-width:0}}
 
     .step-num.proposal { background: #fff7ed; color: #c2410c; }
     .proposal-summary { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:22px; }
     .proposal-summary .stat-box { min-height:108px; }
     .proposal-line-items { display:grid; gap:8px; margin-top:10px; }
-    .proposal-line { display:grid; grid-template-columns:1.3fr .75fr .75fr 36px; gap:8px; align-items:center; }
+    .proposal-line { display:grid; grid-template-columns:.72fr 1.35fr .72fr .78fr 36px; gap:8px; align-items:center; }
     .proposal-line input { width:100%; border:1px solid var(--line); border-radius:9px; padding:9px 10px; background:#fafbfc; color:var(--ink); }
     .proposal-line button { border:0; background:#fee2e2; color:#b91c1c; border-radius:8px; height:34px; cursor:pointer; }
     .proposal-total { display:flex; justify-content:flex-end; gap:18px; align-items:center; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:16px; font-weight:800; }
@@ -4135,14 +4140,7 @@
     // ==========================================
     if (activeSubTab === 'proposal') {
       var proposalData = proposal || { project_name: b.project_name, scope: '', concept: '', notes: '', free_text: '', items: [], total: 0, savedAt: '', attachments: emptyProposalAttachmentState() };
-      var rows = (proposalData.items || []).map(function(item, index){
-        return '<div class="proposal-line" data-proposal-row="' + index + '">' +
-          '<input name="proposal_item" value="' + escapeHtmlAttr(item.item || '') + '" placeholder="Hạng mục / không gian thực hiện">' +
-          '<input name="proposal_qty" value="' + escapeHtmlAttr(item.qty || '1') + '" placeholder="SL / đơn vị">' +
-          '<input name="proposal_price" value="' + escapeHtmlAttr(item.price || '') + '" placeholder="Design Fee (VNĐ)">' +
-          '<button type="button" onclick="this.parentElement.remove();calculateProposalTotal()">✕</button>' +
-        '</div>';
-      }).join('');
+      var rows = renderProposalFeeRows(proposalData.items || []);
       body.innerHTML =
         '<form onsubmit="saveWorkspaceProposal(event)">' +
           '<!-- BLOCK NHẬP DỮ LIỆU DẠNG FREE ĐỂ AI TỔNG HỢP PROPOSAL -->' +
@@ -4195,8 +4193,12 @@
             '<div class="field" style="margin-top:16px"><label>Ghi chú / Điều kiện thực hiện</label><textarea id="proposal_notes" placeholder="Tiến độ, số vòng chỉnh sửa, điều kiện thanh toán, các nội dung chưa bao gồm...">' + escapeHtml(proposalData.notes || '') + '</textarea></div>' +
           '</div>' +
           '<div class="block-card">' +
-            '<div class="block-header"><span class="block-badge blue">DESIGN FEE</span><div class="block-title"><h3>Báo giá Thiết kế</h3><p>Nhập các hạng mục trong phạm vi thực hiện và Design Fee tương ứng</p></div></div>' +
-            '<div class="proposal-fee-head"><span>Hạng mục thiết kế</span><span>Số lượng / đơn vị</span><span>Design Fee (VNĐ)</span><span></span></div>' +
+            '<div class="block-header"><span class="block-badge blue">DESIGN FEE</span><div class="block-title"><h3>Báo giá Thiết kế theo hạng mục</h3><p>AI đọc Brief, khảo sát và nhu cầu không gian để sắp xếp báo giá theo template chuẩn</p></div></div>' +
+            '<div class="proposal-ai-pricing">' +
+              '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá vẫn có thể chỉnh sửa trước khi lưu.</span></div>' +
+              '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
+            '</div>' +
+            '<div class="proposal-fee-head"><span>Loại</span><span>Hạng mục thiết kế</span><span>Số lượng / đơn vị</span><span>Đơn giá (VNĐ)</span><span></span></div>' +
             '<div id="proposal-line-items" class="proposal-line-items">' + rows + '</div>' +
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
@@ -4618,13 +4620,7 @@
     proposal.scope = 'Thiết kế nội thất ' + type + ' diện tích ' + area + ', bao gồm phương án concept, layout công năng, phối cảnh không gian chính, ambiance moodboard và hồ sơ báo giá Design Fee.';
     proposal.concept = 'Định hướng ' + style + '. AI tổng hợp từ Brief khách hàng và khảo sát hiện trạng: ' + surveyNote + '. Ưu tiên giải pháp công năng, vật liệu, ánh sáng và trải nghiệm sử dụng phù hợp ngân sách.';
     proposal.notes = 'Proposal chuẩn gồm: 01 phương án concept, layout mặt bằng, phối cảnh các không gian chính, ambiance moodboard, danh mục phạm vi thiết kế và báo giá Design Fee. Các nội dung phát sinh sẽ được xác nhận riêng.';
-    proposal.items = [
-      { item: 'Concept & định hướng thiết kế', qty: '1 gói', price: '15000000' },
-      { item: 'Layout mặt bằng công năng', qty: '1 gói', price: '18000000' },
-      { item: 'Phối cảnh 3D các không gian chính', qty: '1 gói', price: '35000000' },
-      { item: 'Ambiance moodboard & vật liệu', qty: '1 gói', price: '12000000' },
-      { item: 'Hồ sơ Proposal & thuyết trình phương án', qty: '1 gói', price: '10000000' }
-    ];
+    proposal.items = buildAIDesignFeeItems(b, s, '');
     proposal.total = proposal.items.reduce(function(sum, item){ return sum + Number(item.price || 0); }, 0);
     proposal.aiGenerated = true;
     proposal.generatedAt = new Date().toISOString();
@@ -4647,6 +4643,106 @@
     return amount.toLocaleString('vi-VN') + ' VNĐ';
   }
 
+  function roundDesignFee(value) {
+    return String(Math.max(0, Math.round((Number(value) || 0) / 500000) * 500000));
+  }
+
+  function renderProposalFeeRows(items) {
+    return (items || []).map(function(item, index){
+      return '<div class="proposal-line" data-proposal-row="' + index + '">' +
+        '<input name="proposal_kind" value="' + escapeHtmlAttr(item.kind || 'Thiết kế') + '" placeholder="Loại">' +
+        '<input name="proposal_item" value="' + escapeHtmlAttr(item.item || '') + '" placeholder="Hạng mục / không gian thực hiện">' +
+        '<input name="proposal_qty" value="' + escapeHtmlAttr(item.qty || '1') + '" placeholder="SL / đơn vị">' +
+        '<input name="proposal_price" value="' + escapeHtmlAttr(item.price || '') + '" placeholder="Đơn giá (VNĐ)">' +
+        '<button type="button" aria-label="Xóa hạng mục" onclick="this.parentElement.remove();calculateProposalTotal()">✕</button>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Tạo báo giá local theo template chuẩn. Dữ liệu đầu vào là Brief, khảo sát
+  // và free text; không lấy ngân sách thi công làm Design Fee một cách máy móc.
+  function buildAIDesignFeeItems(brief, survey, freeText) {
+    brief = brief || {};
+    survey = survey || {};
+    var source = [
+      freeText || '', brief.project_name || '', brief.project_type || '', brief.project_area || '',
+      brief.project_style || '', brief.project_brief_detail || '', survey.survey_notes || '',
+      survey.survey_drawings || ''
+    ].join(' ');
+    var lower = source.toLowerCase();
+    var type = String(brief.project_type || '').toLowerCase();
+    if (lower.indexOf('văn phòng') !== -1 || lower.indexOf('office') !== -1) type = 'office';
+    else if (lower.indexOf('biệt thự') !== -1 || lower.indexOf('villa') !== -1) type = 'villa';
+    else if (lower.indexOf('nhà phố') !== -1 || lower.indexOf('townhouse') !== -1 || lower.indexOf('nhà ống') !== -1) type = 'townhouse';
+    else if (lower.indexOf('quán') !== -1 || lower.indexOf('cafe') !== -1 || lower.indexOf('nhà hàng') !== -1 || lower.indexOf('f&b') !== -1) type = 'fnb';
+    else if (lower.indexOf('căn hộ') !== -1 || lower.indexOf('chung cư') !== -1 || lower.indexOf('apartment') !== -1) type = 'apartment';
+
+    var areaMatch = source.match(/(\d{2,4}(?:[.,]\d+)?)\s*(?:m2|m²|mét vuông)/i);
+    var area = areaMatch ? Number(areaMatch[1].replace(',', '.')) : (parseFloat(String(brief.project_area || '').replace(',', '.')) || 100);
+    var factor = area >= 400 ? 1.35 : area >= 280 ? 1.22 : area >= 180 ? 1.12 : area <= 80 ? .86 : 1;
+    if (type === 'villa') factor *= 1.08;
+    if (type === 'office' || type === 'fnb') factor *= 1.05;
+
+    var spaces = [];
+    function addSpace(label, keys) {
+      if (!keys.some(function(key){ return lower.indexOf(key) !== -1; })) return;
+      if (spaces.indexOf(label) === -1) spaces.push(label);
+    }
+    addSpace('Phòng khách', ['phòng khách', 'living room', 'tiếp khách']);
+    addSpace('Bếp & phòng ăn', ['bếp', 'phòng ăn', 'kitchen', 'dining']);
+    addSpace('Phòng Master', ['master', 'phòng ngủ chính']);
+    addSpace('Phòng ngủ', ['phòng ngủ', 'bedroom', 'phòng con']);
+    addSpace('Phòng làm việc', ['phòng làm việc', 'home office', 'study']);
+    addSpace('Phòng thay đồ', ['walk-in', 'thay đồ', 'dressing']);
+    addSpace('Phòng tắm', ['phòng tắm', 'toilet', 'wc', 'bathroom']);
+    addSpace('Ban công / sân vườn', ['ban công', 'sân vườn', 'sân thượng', 'landscape']);
+    addSpace('Lễ tân & pantry', ['lễ tân', 'reception', 'pantry', 'quầy cafe']);
+    addSpace('Open office & phòng họp', ['open office', 'khu làm việc', 'phòng họp', 'booth họp']);
+    if (!spaces.length) {
+      if (type === 'office') spaces = ['Lễ tân & pantry', 'Open office & phòng họp'];
+      else if (type === 'fnb') spaces = ['Khu khách', 'Quầy bar / bếp', 'Khu phụ trợ'];
+      else spaces = ['Phòng khách', 'Bếp & phòng ăn', 'Phòng ngủ'];
+    }
+    var bedroomMatch = source.match(/(\d+)\s*(?:phòng ngủ|bedroom)/i);
+    if (bedroomMatch && Number(bedroomMatch[1]) > 1 && spaces.indexOf('Phòng ngủ') !== -1) {
+      spaces[spaces.indexOf('Phòng ngủ')] = 'Phòng ngủ (x' + bedroomMatch[1] + ')';
+    }
+
+    var base = type === 'villa' ? { concept:18000000, layout:26000000, perspective:9000000, material:18000000, docs:12000000 } :
+      type === 'townhouse' ? { concept:15000000, layout:22000000, perspective:7500000, material:15000000, docs:10000000 } :
+      type === 'office' ? { concept:20000000, layout:30000000, perspective:8500000, material:16000000, docs:12000000 } :
+      type === 'fnb' ? { concept:18000000, layout:28000000, perspective:8500000, material:17000000, docs:12000000 } :
+      { concept:12000000, layout:17000000, perspective:6500000, material:12000000, docs:8000000 };
+    var spaceSummary = spaces.join(', ');
+    var perspectiveCount = Math.max(2, spaces.length);
+    var items = [
+      { kind:'Concept', item:'Concept & Ambiance Moodboard — ' + brief.project_name, qty:'1 gói', price:roundDesignFee(base.concept * factor) },
+      { kind:'Layout', item:'Layout mặt bằng công năng — ' + spaceSummary, qty:'1 gói', price:roundDesignFee(base.layout * factor) },
+      { kind:'Phối cảnh', item:'Phối cảnh 3D — ' + spaceSummary, qty:perspectiveCount + ' view', price:roundDesignFee(base.perspective * perspectiveCount * factor) },
+      { kind:'Vật liệu', item:'Bảng vật liệu, màu sắc & tư vấn ánh sáng', qty:'1 gói', price:roundDesignFee(base.material * factor) },
+      { kind:'Hồ sơ', item:'Hồ sơ Proposal & thuyết trình phương án', qty:'1 gói', price:roundDesignFee(base.docs * factor) }
+    ];
+    if (lower.indexOf('hồ sơ kỹ thuật') !== -1 || lower.indexOf('bản vẽ kỹ thuật') !== -1 || lower.indexOf('thi công') !== -1) {
+      items.push({ kind:'Kỹ thuật', item:'Hồ sơ kỹ thuật / triển khai theo phạm vi Brief', qty:'1 gói', price:roundDesignFee((type === 'villa' ? 28000000 : 18000000) * factor) });
+    }
+    return items;
+  }
+
+  function generateAIDesignFee() {
+    var data = getActiveProjectData();
+    if (!data || !data.brief) {
+      showToast('Chưa có dự án để AI lập báo giá.');
+      return;
+    }
+    var freeTextEl = document.getElementById('proposal_free_text');
+    var items = buildAIDesignFeeItems(data.brief, data.survey, freeTextEl ? freeTextEl.value.trim() : '');
+    var holder = document.getElementById('proposal-line-items');
+    if (!holder) return;
+    holder.innerHTML = renderProposalFeeRows(items);
+    calculateProposalTotal();
+    showToast('✨ AI đã sắp xếp ' + items.length + ' hạng mục báo giá từ Brief và khảo sát. Kiểm tra lại trước khi Lưu.');
+  }
+
   function addProposalItem() {
     var holder = document.getElementById('proposal-line-items');
     if (!holder) return;
@@ -4654,7 +4750,7 @@
     var row = document.createElement('div');
     row.className = 'proposal-line';
     row.setAttribute('data-proposal-row', index);
-    row.innerHTML = '<input name="proposal_item" placeholder="Hạng mục / không gian thực hiện"><input name="proposal_qty" value="1" placeholder="SL / đơn vị"><input name="proposal_price" placeholder="Đơn giá (VNĐ)"><button type="button" onclick="this.parentElement.remove();calculateProposalTotal()">✕</button>';
+    row.innerHTML = '<input name="proposal_kind" value="Thiết kế" placeholder="Loại"><input name="proposal_item" placeholder="Hạng mục / không gian thực hiện"><input name="proposal_qty" value="1" placeholder="SL / đơn vị"><input name="proposal_price" placeholder="Đơn giá (VNĐ)"><button type="button" aria-label="Xóa hạng mục" onclick="this.parentElement.remove();calculateProposalTotal()">✕</button>';
     holder.appendChild(row);
   }
 
@@ -4746,34 +4842,8 @@
       '• Thời gian triển khai dự kiến: 15 - 20 ngày làm việc sau khi duyệt phương án sơ bộ.\n' +
       '• Số lần chỉnh sửa phương án: Tối đa 03 lần theo phản hồi trực tiếp từ khách hàng.';
 
-    // 6. Tính toán hạng mục báo giá phù hợp
-    var items = [];
-    var numericArea = parseFloat(detectedArea) || 100;
-    if (detectedType.indexOf('Biệt thự') !== -1 || detectedType.indexOf('Villa') !== -1) {
-      items = [
-        { item: 'Concept định hướng & Ambiance Moodboard', qty: '1 gói', price: '18000000' },
-        { item: 'Mặt bằng bố trí công năng 2D (Toàn bộ biệt thự)', qty: '1 gói', price: '22000000' },
-        { item: 'Phối cảnh 3D không gian phòng khách, bếp đảo, đại sảnh', qty: '1 gói', price: '38000000' },
-        { item: 'Phối cảnh 3D các phòng ngủ (Master Suite, phòng con, phòng khách)', qty: '1 gói', price: '32000000' },
-        { item: 'Hồ sơ thuyết minh vật liệu & tư vấn ánh sáng cao cấp', qty: '1 gói', price: '15000000' }
-      ];
-    } else if (detectedType.indexOf('Văn phòng') !== -1) {
-      items = [
-        { item: 'Khảo sát concept & Layout mặt bằng không gian làm việc', qty: '1 gói', price: '20000000' },
-        { item: 'Phối cảnh 3D khu lễ tân, sảnh đón & pantry sáng tạo', qty: '1 gói', price: '25000000' },
-        { item: 'Phối cảnh 3D Open Office & Phòng họp hội nghị', qty: '1 gói', price: '30000000' },
-        { item: 'Bảng spec vật liệu sàn, trần lộ & thiết bị công sở', qty: '1 gói', price: '12000000' }
-      ];
-    } else {
-      items = [
-        { item: 'Concept thiết kế & Ambiance Moodboard phong cách', qty: '1 gói', price: '12000000' },
-        { item: 'Bản vẽ mặt bằng phân bổ công năng 2D chi tiết', qty: '1 gói', price: '15000000' },
-        { item: 'Phối cảnh 3D các không gian chính (Khách, Bếp, Ăn)', qty: '1 gói', price: '24000000' },
-        { item: 'Phối cảnh 3D không gian phòng ngủ & khu phụ trợ', qty: '1 gói', price: '18000000' },
-        { item: 'Hồ sơ thuyết trình Proposal & bảng mẫu vật liệu', qty: '1 gói', price: '8000000' }
-      ];
-    }
-
+    // 6. AI sắp xếp báo giá theo hạng mục thực tế trong Brief + Free Text.
+    var items = buildAIDesignFeeItems(b, s, freeText);
     var totalFee = items.reduce(function(sum, it){ return sum + Number(it.price || 0); }, 0);
 
     var proposal = proposals.find(function(item){ return item.project_name === b.project_name; }) || {};
@@ -4827,7 +4897,7 @@
     var itemRows = (proposal.items || []).map(function(item, idx){
       return '<tr>' +
         '<td style="text-align:center;width:40px;color:var(--muted);">' + (idx + 1) + '</td>' +
-        '<td><b>' + escapeHtml(item.item) + '</b></td>' +
+        '<td><b>' + (item.kind ? ('<span style="color:var(--blue);font-size:11px;font-weight:700;display:block;margin-bottom:2px;">' + escapeHtml(item.kind) + '</span>') : '') + escapeHtml(item.item) + '</b></td>' +
         '<td style="text-align:center;width:90px;">' + escapeHtml(item.qty || '1') + '</td>' +
         '<td style="text-align:right;width:160px;font-weight:700;">' + formatCurrency(item.price || 0) + '</td>' +
       '</tr>';
@@ -4938,6 +5008,7 @@ function saveWorkspaceProposal(e) {
     if (!b) return;
     var items = Array.from(document.querySelectorAll('#proposal-line-items .proposal-line')).map(function(row){
       return {
+        kind: (row.querySelector('[name=proposal_kind]') || {}).value || 'Thiết kế',
         item: (row.querySelector('[name=proposal_item]') || {}).value || '',
         qty: (row.querySelector('[name=proposal_qty]') || {}).value || '1',
         price: (row.querySelector('[name=proposal_price]') || {}).value || ''
