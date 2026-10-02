@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quản lý Thiết kế Nội thất — FORMWORK</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2318222b'/%3E%3Cpath d='M18 18h28v8H26v8h16v8H26v12h-8V18Z' fill='%23c9f36a'/%3E%3C/svg%3E">
@@ -32,8 +33,10 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body, button, input, select, textarea {
-      /* Font hệ thống có đầy đủ bộ ký tự tiếng Việt, kể cả khi chạy local/offline. */
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Arial, sans-serif;
+      /* Font phổ biến có đầy đủ dấu tiếng Việt trên Windows và khi xuất PDF. */
+      font-family: Arial, "Segoe UI", "Helvetica Neue", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
     }
     body {
       background: var(--paper);
@@ -1360,10 +1363,12 @@
         border: none !important;
         padding: 0 !important;
         box-shadow: none !important;
-        font-family: "Segoe UI", Arial, sans-serif !important;
+        font-family: Arial, "Segoe UI", "Helvetica Neue", sans-serif !important;
       }
       #modal-proposal-doc, #modal-proposal-doc * {
-        font-family: "Segoe UI", Arial, sans-serif !important;
+        font-family: Arial, "Segoe UI", "Helvetica Neue", sans-serif !important;
+        font-synthesis: none !important;
+        text-rendering: optimizeLegibility !important;
       }
     }
 
@@ -1942,7 +1947,7 @@
     body {
       background: var(--paper);
       color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      font-family: Arial, "Segoe UI", "Helvetica Neue", sans-serif;
       font-size: 14px;
       letter-spacing: -.01em;
       -webkit-font-smoothing: antialiased;
@@ -2648,8 +2653,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-ghost" onclick="closeProposalDocModal()">Đóng</button>
-      <button type="button" class="btn btn-navy" onclick="printProposalDoc()">📄 Xuất PDF báo giá / In</button>
-      <button type="button" class="btn btn-blue" onclick="confirmSendProposalFromModal()">📤 Xác nhận gửi khách & cập nhật Milestone</button>
+      <button type="button" class="btn btn-navy" onclick="printProposalDoc()">📄 Xuất PDF Proposal / In</button>
     </div>
   </div>
 </div>
@@ -4586,7 +4590,7 @@
               '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá sẽ tự động cập nhật khi chỉnh sửa.</span></div>' +
               '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">' +
                 '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
-                '<button type="button" class="btn btn-navy" onclick="generateAIDesignFeeAndOpenPdf()">📄 Xuất PDF báo giá từ AI</button>' +
+                '<button type="button" class="btn btn-navy" onclick="generateAIDesignFeeAndOpenPdf()">📄 Xuất PDF Proposal & báo giá từ AI</button>' +
               '</div>' +
             '</div>' +
             '<div class="attachment-card attachment-unified-card" style="margin:0 0 16px">' +
@@ -4599,7 +4603,7 @@
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
           '</div>' +
-          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem & Xuất PDF báo giá</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
+          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem & Xuất PDF Proposal</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
         '</form>';
       calculateProposalTotal();
       bindRealtimeForms();
@@ -5409,7 +5413,7 @@
   function printProposalDoc() {
     var b = briefs.find(function(item){ return item.project_name === activeProjectName; });
     var previousTitle = document.title;
-    if (b && b.project_name) document.title = 'Bao-gia-Design-Fee-' + b.project_name.replace(/[^a-z0-9\u00C0-\u024F]+/gi, '-');
+    if (b && b.project_name) document.title = 'Proposal-Design-Fee-' + b.project_name.replace(/[^a-z0-9\u00C0-\u024F]+/gi, '-');
     window.print();
     setTimeout(function(){ document.title = previousTitle; }, 1500);
   }
