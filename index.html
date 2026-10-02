@@ -1108,6 +1108,7 @@
     .toast.actionable #toast-text { flex: 1 1 280px; line-height: 1.45; }
     .toast-action { border: 1px solid rgba(255,255,255,.45); border-radius: 8px; padding: 7px 10px; background: #fff; color: #172333; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
     .toast-action:hover { background: #eff6ff; }
+    .realtime-save-status { display:inline-flex; align-items:center; gap:6px; color:var(--green); font-size:12px; font-weight:750; }
     .toast.show {
       transform: translateY(0);
       opacity: 1;
@@ -2272,7 +2273,7 @@
         </div>
       </div>
 
-      <form id="form-brief" onsubmit="saveBrief(event)">
+      <form id="form-brief" onsubmit="event.preventDefault(); return false;">
         <!-- BLOCK 1: THÔNG TIN NGƯỜI LẤY BRIEF & NGÀY LẤY BRIEF -->
         <div class="block-card">
           <div class="block-header">
@@ -2393,11 +2394,11 @@
         <!-- ACTION BAR -->
         <div class="action-bar">
           <div style="font-size: 13px; color: var(--muted);">
-            Nhấn <b>Lưu lại Brief</b> để ghi nhận dữ liệu và load ngay vào Workspace.
+            Dữ liệu được tự động lưu khi bạn nhập và sẽ load ngay vào Workspace.
           </div>
           <div style="display: flex; gap: 12px;">
             <button type="reset" class="btn btn-ghost">Làm mới form</button>
-            <button type="submit" class="btn btn-lime">💾 Lưu lại Brief</button>
+            <span class="realtime-save-status">✓ Tự động lưu khi nhập</span>
           </div>
         </div>
       </form>
@@ -2442,7 +2443,7 @@
         </div>
       </div>
 
-      <form id="form-survey" onsubmit="saveSurvey(event)">
+      <form id="form-survey" onsubmit="event.preventDefault(); return false;">
         <!-- BLOCK 1: THÔNG TIN CHUNG BUỔI KHẢO SÁT -->
         <div class="block-card">
           <div class="block-header">
@@ -2517,11 +2518,7 @@
             </button>
             <button type="reset" class="btn btn-ghost">Làm mới form</button>
           </div>
-          <div>
-            <button type="submit" class="btn btn-navy" style="padding: 12px 26px; font-weight: 800;">
-              💾 Lưu lại biên bản khảo sát hiện trạng
-            </button>
-          </div>
+          <div><span class="realtime-save-status">✓ Tự động lưu khi nhập</span></div>
         </div>
       </form>
 
@@ -3046,7 +3043,7 @@
     showToast('✅ Đã hoàn tất ' + stageName + ' và cập nhật milestone.');
   }
 
-  function saveDesignStageLink(stageName) {
+  function saveDesignStageLink(stageName, silent) {
     var data = getActiveProjectData();
     var input = document.getElementById('design-link-' + stageName);
     if (!data || !data.brief || !input) return;
@@ -3055,7 +3052,21 @@
     persistDesignFiles();
     var list = document.getElementById('design-files-' + stageName);
     if (list) list.innerHTML = renderDesignStageFiles(data.brief.project_name, stageName);
-    showToast(record.link ? '🔗 Đã lưu link hồ sơ thiết kế.' : 'Đã xóa link hồ sơ thiết kế.');
+    if (!silent) showToast(record.link ? '🔗 Đã lưu link hồ sơ thiết kế.' : 'Đã xóa link hồ sơ thiết kế.');
+  }
+
+  function bindDesignStageRealtime(stageName) {
+    var input = document.getElementById('design-link-' + stageName);
+    if (!input || input.dataset.realtimeBound === 'true') return;
+    input.dataset.realtimeBound = 'true';
+    var timer = null;
+    var save = function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){ saveDesignStageLink(stageName, true); }, 220);
+    };
+    input.addEventListener('input', save);
+    input.addEventListener('change', save);
+    input.addEventListener('blur', save);
   }
 
   function removeDesignStageFile(stageName, index) {
@@ -3083,6 +3094,8 @@
     selected.forEach(function(file){ proposalPendingAttachments.files.push({ name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }); });
     var holder = document.getElementById('proposal-files');
     if (holder) holder.innerHTML = renderProposalAttachmentChips();
+    var form = document.getElementById('wp-proposal-form');
+    if (form) saveWorkspaceProposalRealtime(form);
     showToast('📎 Đã đính kèm ' + selected.length + ' tệp Proposal.');
     event.target.value = '';
   }
@@ -3091,6 +3104,8 @@
     if (proposalPendingAttachments.files) proposalPendingAttachments.files.splice(index, 1);
     var holder = document.getElementById('proposal-files');
     if (holder) holder.innerHTML = renderProposalAttachmentChips();
+    var form = document.getElementById('wp-proposal-form');
+    if (form) saveWorkspaceProposalRealtime(form);
     showToast('Đã xóa tệp Proposal.');
   }
 
@@ -3118,6 +3133,8 @@
     });
     var holder = document.getElementById('proposal-fee-pdf-files');
     if (holder) holder.innerHTML = renderProposalFeePdfChips();
+    var form = document.getElementById('wp-proposal-form');
+    if (form) saveWorkspaceProposalRealtime(form);
     showToast('📎 Đã đính kèm ' + selected.length + ' PDF báo giá.');
     event.target.value = '';
   }
@@ -3126,6 +3143,8 @@
     if (proposalPendingAttachments.feePdfs) proposalPendingAttachments.feePdfs.splice(index, 1);
     var holder = document.getElementById('proposal-fee-pdf-files');
     if (holder) holder.innerHTML = renderProposalFeePdfChips();
+    var form = document.getElementById('wp-proposal-form');
+    if (form) saveWorkspaceProposalRealtime(form);
     showToast('Đã xóa PDF báo giá đính kèm.');
   }
 
@@ -3197,6 +3216,235 @@
       drawings: Array.isArray(source.drawings) ? source.drawings.map(function(x){ return Object.assign({}, x); }) : [],
       documents: Array.isArray(source.documents) ? source.documents.map(function(x){ return Object.assign({}, x); }) : []
     };
+  }
+
+  function bindRealtimeForm(formId, handler) {
+    var form = document.getElementById(formId);
+    if (!form || form.dataset.realtimeBound === 'true') return;
+    form.dataset.realtimeBound = 'true';
+    var timer = null;
+    var schedule = function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){ handler(form); }, 220);
+    };
+    form.addEventListener('input', schedule);
+    form.addEventListener('change', schedule);
+    form.addEventListener('blur', schedule, true);
+    form.addEventListener('reset', function(){ setTimeout(schedule, 0); });
+  }
+
+  function ensureRealtimeStatus(form, message) {
+    if (!form) return;
+    var status = form.querySelector('.realtime-save-status');
+    if (!status) {
+      status = document.createElement('span');
+      status.className = 'realtime-save-status';
+      var action = form.querySelector('.action-bar > div:last-child');
+      if (action) action.insertBefore(status, action.firstChild);
+    }
+    status.textContent = '✓ ' + (message || 'Đã tự động lưu');
+  }
+
+  function formValue(form, id) {
+    var el = form && form.querySelector('#' + id);
+    return el ? String(el.value || '').trim() : '';
+  }
+
+  function saveWorkspaceBriefRealtime(form) {
+    var b = briefs.find(function(item){ return item.project_name === activeProjectName; });
+    if (!b) return;
+    b.brief_staff = formValue(form, 'wp_brief_staff');
+    b.brief_date = formValue(form, 'wp_brief_date');
+    b.client_name = formValue(form, 'wp_client_name');
+    b.client_phone = formValue(form, 'wp_client_phone');
+    b.client_email = formValue(form, 'wp_client_email');
+    b.client_address = formValue(form, 'wp_client_address');
+    b.client_notes = formValue(form, 'wp_client_notes');
+    b.project_type = formValue(form, 'wp_project_type');
+    b.project_address = formValue(form, 'wp_project_address');
+    b.project_area = formValue(form, 'wp_project_area');
+    b.project_style = formValue(form, 'wp_project_style');
+    b.project_budget = formValue(form, 'wp_project_budget');
+    b.project_brief_detail = formValue(form, 'wp_project_brief_detail');
+    b.savedAt = new Date().toISOString();
+    localStorage.setItem('formwork_briefs', JSON.stringify(briefs));
+    updateCounts();
+    ensureRealtimeStatus(form, 'Đã tự động lưu Brief');
+  }
+
+  function saveWorkspaceSurveyRealtime(form) {
+    var b = briefs.find(function(item){ return item.project_name === activeProjectName; });
+    if (!b) return;
+    var s = surveys.find(function(item){ return item.survey_project_ref === b.project_name; });
+    if (!s) {
+      s = { id:'SV-' + Date.now(), survey_project_ref:b.project_name };
+      surveys.unshift(s);
+    }
+    s.survey_project_ref = b.project_name;
+    s.surveyor_name = formValue(form, 'wp_surveyor_name');
+    s.survey_time = formValue(form, 'wp_survey_time');
+    s.survey_location = formValue(form, 'wp_survey_location');
+    s.survey_notes = formValue(form, 'wp_survey_notes');
+    s.survey_photos = formValue(form, 'wp_survey_photos');
+    s.survey_videos = formValue(form, 'wp_survey_videos');
+    s.survey_drawings = formValue(form, 'wp_survey_drawings');
+    s.survey_documents = formValue(form, 'wp_survey_documents');
+    s.attachments = cloneAttachmentState(pendingAttachments);
+    s.status = 'draft';
+    s.savedAt = new Date().toISOString();
+    localStorage.setItem('formwork_surveys', JSON.stringify(surveys));
+    updateCounts();
+    ensureRealtimeStatus(form, 'Đã tự động lưu khảo sát');
+  }
+
+  function saveWorkspaceProposalRealtime(form) {
+    var b = briefs.find(function(item){ return item.project_name === activeProjectName; });
+    if (!b || !form) return;
+    var items = Array.from(form.querySelectorAll('#proposal-line-items .proposal-line')).map(function(row){
+      return {
+        kind: (row.querySelector('[name=proposal_kind]') || {}).value || 'Thiết kế',
+        item: (row.querySelector('[name=proposal_item]') || {}).value || '',
+        qty: (row.querySelector('[name=proposal_qty]') || {}).value || '1',
+        price: (row.querySelector('[name=proposal_price]') || {}).value || ''
+      };
+    });
+    var existing = proposals.find(function(item){ return item.project_name === b.project_name; }) || {};
+    var data = Object.assign({}, existing, {
+      project_name: b.project_name,
+      free_text: formValue(form, 'proposal_free_text'),
+      scope: formValue(form, 'proposal_scope'),
+      concept: formValue(form, 'proposal_concept'),
+      notes: formValue(form, 'proposal_notes'),
+      items: items,
+      attachments: cloneProposalAttachmentState(Object.assign({}, proposalPendingAttachments, { link: formValue(form, 'proposal_attachment_link') })),
+      total: calculateProposalTotal(),
+      status: existing.status === 'submitted' ? existing.status : 'draft',
+      savedAt: new Date().toISOString()
+    });
+    var index = proposals.findIndex(function(item){ return item.project_name === b.project_name; });
+    if (index >= 0) proposals[index] = data; else proposals.unshift(data);
+    proposalPendingAttachments = cloneProposalAttachmentState(data.attachments);
+    localStorage.setItem('formwork_proposals', JSON.stringify(proposals));
+    updateCounts();
+    ensureRealtimeStatus(form, 'Đã tự động lưu Proposal & Design Fee');
+  }
+
+  function saveStandaloneBriefRealtime(form) {
+    if (!form) return;
+    var data = {
+      id: 'BR-' + Date.now(),
+      brief_staff: (form.brief_staff || {}).value || '', brief_date: (form.brief_date || {}).value || '',
+      client_name: (form.client_name || {}).value || '', client_phone: (form.client_phone || {}).value || '',
+      client_email: (form.client_email || {}).value || '', client_address: (form.client_address || {}).value || '',
+      client_notes: (form.client_notes || {}).value || '', project_name: (form.project_name || {}).value || '',
+      project_type: (form.project_type || {}).value || '', project_address: (form.project_address || {}).value || '',
+      project_area: (form.project_area || {}).value || '', project_style: (form.project_style || {}).value || '',
+      project_budget: (form.project_budget || {}).value || '', project_brief_detail: (form.project_brief_detail || {}).value || '',
+      savedAt: new Date().toISOString(), status: 'draft'
+    };
+    localStorage.setItem('formwork_brief_draft', JSON.stringify(data));
+    var complete = data.brief_staff.trim() && data.brief_date && data.client_name.trim() && data.client_phone.trim() && data.project_name.trim() && data.project_address.trim();
+    if (complete) {
+      data.project_name = data.project_name.trim();
+      var draftProjectName = form.dataset.autosaveProjectName || '';
+      var index = briefs.findIndex(function(item){ return item.project_name === data.project_name; });
+      var draftIndex = draftProjectName ? briefs.findIndex(function(item){ return item.project_name === draftProjectName; }) : -1;
+      if (index < 0 && draftIndex >= 0) {
+        index = draftIndex;
+        data.id = briefs[index].id || data.id;
+      }
+      if (index >= 0) briefs[index] = Object.assign({}, briefs[index], data);
+      else briefs.unshift(data);
+      form.dataset.autosaveProjectName = data.project_name;
+      persistActiveProject(data.project_name);
+      localStorage.setItem('formwork_briefs', JSON.stringify(briefs));
+      updateCounts();
+      updateProjectSelect();
+    }
+    ensureRealtimeStatus(form, complete ? 'Đã tự động lưu Brief' : 'Đang tự động lưu nháp');
+  }
+
+  function saveStandaloneSurveyRealtime(form) {
+    if (!form) return;
+    var data = {
+      id: 'SV-' + Date.now(), surveyor_name: (form.surveyor_name || {}).value || '', survey_time: (form.survey_time || {}).value || '',
+      survey_project_ref: (form.survey_project_ref || {}).value || '', survey_location: (form.survey_location || {}).value || '',
+      survey_notes: (form.survey_notes || {}).value || '', survey_photos: (form.survey_photos || {}).value || '',
+      survey_videos: (form.survey_videos || {}).value || '', survey_drawings: (form.survey_drawings || {}).value || '',
+      survey_documents: (form.survey_documents || {}).value || '', attachments: cloneAttachmentState(pendingAttachments),
+      savedAt: new Date().toISOString(), status: 'draft'
+    };
+    localStorage.setItem('formwork_survey_draft', JSON.stringify(data));
+    var complete = data.surveyor_name.trim() && data.survey_time && data.survey_location.trim() && data.survey_project_ref;
+    if (complete) {
+      var index = surveys.findIndex(function(item){ return item.survey_project_ref === data.survey_project_ref; });
+      if (index < 0 && data.survey_project_ref) {
+        var draftProject = String((form.dataset.autosaveProjectName || '')).trim();
+        if (draftProject) index = surveys.findIndex(function(item){ return item.survey_project_ref === draftProject; });
+      }
+      if (index >= 0) surveys[index] = Object.assign({}, surveys[index], data);
+      else surveys.unshift(data);
+      form.dataset.autosaveProjectName = data.survey_project_ref;
+      persistActiveProject(data.survey_project_ref);
+      localStorage.setItem('formwork_surveys', JSON.stringify(surveys));
+      updateCounts();
+    }
+    ensureRealtimeStatus(form, complete ? 'Đã tự động lưu khảo sát' : 'Đang tự động lưu nháp');
+  }
+
+  function bindRealtimeForms() {
+    bindRealtimeForm('form-brief', saveStandaloneBriefRealtime);
+    bindRealtimeForm('form-survey', saveStandaloneSurveyRealtime);
+    bindRealtimeForm('wp-brief-form', saveWorkspaceBriefRealtime);
+    bindRealtimeForm('wp-survey-form', saveWorkspaceSurveyRealtime);
+    bindRealtimeForm('wp-proposal-form', saveWorkspaceProposalRealtime);
+  }
+
+  function setFormField(form, name, value) {
+    if (!form || !form[name] || value === undefined || value === null) return;
+    form[name].value = value;
+  }
+
+  function loadActiveProjectIntoBriefForm() {
+    var form = document.getElementById('form-brief');
+    if (!form) return;
+    var project = activeProjectName ? briefs.find(function(item){ return item.project_name === activeProjectName; }) : null;
+    var draft = null;
+    try { draft = JSON.parse(localStorage.getItem('formwork_brief_draft') || 'null'); } catch(e) { draft = null; }
+    var data = project || draft;
+    if (!data) {
+      setFormField(form, 'brief_date', new Date().toISOString().slice(0, 10));
+      return;
+    }
+    ['brief_staff','brief_date','client_name','client_phone','client_email','client_address','client_notes','project_name','project_type','project_address','project_area','project_style','project_budget','project_brief_detail']
+      .forEach(function(name){ setFormField(form, name, data[name] || ''); });
+    form.dataset.autosaveProjectName = project ? project.project_name : '';
+    populateBriefTeamMemberSelects(data.brief_staff || '');
+  }
+
+  function loadActiveProjectIntoSurveyForm() {
+    var form = document.getElementById('form-survey');
+    if (!form) return;
+    var survey = findActiveSurvey();
+    var draft = null;
+    try { draft = JSON.parse(localStorage.getItem('formwork_survey_draft') || 'null'); } catch(e) { draft = null; }
+    var data = survey || (draft && (!activeProjectName || !draft.survey_project_ref || draft.survey_project_ref === activeProjectName) ? draft : null);
+    if (activeProjectName) {
+      updateProjectSelect();
+      setFormField(form, 'survey_project_ref', activeProjectName);
+    }
+    if (data) {
+      ['surveyor_name','survey_time','survey_project_ref','survey_location','survey_notes','survey_photos','survey_videos','survey_drawings','survey_documents']
+        .forEach(function(name){ setFormField(form, name, data[name] || ''); });
+      pendingAttachments = cloneAttachmentState(data.attachments);
+      form.dataset.autosaveProjectName = data.survey_project_ref || '';
+    }
+    populateSurveyTeamMemberSelect(data && data.surveyor_name ? data.surveyor_name : '');
+    if (!form.survey_time.value) form.survey_time.value = new Date().toISOString().slice(0, 10);
+    if (!form.survey_location.value && activeProjectName) {
+      var project = briefs.find(function(item){ return item.project_name === activeProjectName; });
+      if (project) form.survey_location.value = project.project_address || '';
+    }
   }
 
   function syncPendingAttachments(survey, projectName) {
@@ -3283,6 +3531,11 @@
     var survey = findActiveSurvey();
     if (survey) survey.attachments = cloneAttachmentState(pendingAttachments);
     if (survey) localStorage.setItem('formwork_surveys', JSON.stringify(surveys));
+    var activeSurveyForm = document.getElementById(scope === 'wp' ? 'wp-survey-form' : 'form-survey');
+    if (activeSurveyForm) {
+      if (scope === 'wp') saveWorkspaceSurveyRealtime(activeSurveyForm);
+      else saveStandaloneSurveyRealtime(activeSurveyForm);
+    }
     var list = document.getElementById((scope === 'wp' ? 'list-wp-' : 'list-main-') + type);
     if (type === 'all') {
       var unifiedList = document.getElementById(scope === 'wp' ? 'list-wp-photos' : 'list-main-photos');
@@ -3298,6 +3551,11 @@
     if (survey) {
       survey.attachments = cloneAttachmentState(pendingAttachments);
       localStorage.setItem('formwork_surveys', JSON.stringify(surveys));
+    }
+    var activeSurveyForm = document.getElementById('wp-survey-form') || document.getElementById('form-survey');
+    if (activeSurveyForm) {
+      if (activeSurveyForm.id === 'wp-survey-form') saveWorkspaceSurveyRealtime(activeSurveyForm);
+      else saveStandaloneSurveyRealtime(activeSurveyForm);
     }
     ['main', 'wp'].forEach(function(scope){
       var list = document.getElementById('list-' + scope + '-' + type);
@@ -3340,11 +3598,14 @@
       if (btnBrief) btnBrief.classList.add('active');
       loadActiveProjectIntoBriefForm();
       populateBriefTeamMemberSelects(activeProjectName ? ((briefs.find(function(item){ return item.project_name === activeProjectName; }) || {}).brief_staff || '') : '');
+      bindRealtimeForms();
     } else if (viewName === 'survey') {
       if (viewSurvey) viewSurvey.style.display = 'block';
       if (btnSurvey) btnSurvey.classList.add('active');
       updateProjectSelect();
       populateSurveyTeamMemberSelect(activeProjectName ? ((findActiveSurvey() || {}).surveyor_name || '') : '');
+      loadActiveProjectIntoSurveyForm();
+      bindRealtimeForms();
     } else if (viewName === 'milestones') {
       if (viewMilestones) viewMilestones.style.display = 'block';
       if (btnMilestones) btnMilestones.classList.add('active');
@@ -3420,7 +3681,7 @@
     var auto = {
       meeting: brief && brief.brief_date ? { status:'done', date: brief.brief_date } : {},
       brief: brief && brief.brief_date ? { status:'done', date: brief.brief_date } : {},
-      survey: survey && survey.survey_time ? { status:'done', date: String(survey.survey_time).slice(0,10) } : {}
+      survey: survey && survey.survey_time && survey.status !== 'draft' ? { status:'done', date: String(survey.survey_time).slice(0,10) } : {}
     };
     list.forEach(function(item){
       if (auto[item.id] && !(saved[item.id] && saved[item.id].status === 'done')) Object.assign(item, auto[item.id]);
@@ -3475,11 +3736,11 @@
     var requirements = {
       meeting: 'Ghi nhận cuộc gặp đầu tiên và nhu cầu tổng quát của khách hàng.',
       brief: 'Điền đủ người lấy Brief, ngày lấy Brief, thông tin khách hàng và thông tin dự án.',
-      brief_submit: 'Lưu hồ sơ Brief hoàn chỉnh, sau đó xác nhận đã gửi hồ sơ cho khách hàng.',
+      brief_submit: 'Hoàn tất các trường Brief, sau đó xác nhận đã gửi hồ sơ cho khách hàng.',
       brief_comment: 'Nhập nội dung comment/phản hồi của khách hàng vào milestone.',
       brief_approve: 'Ghi nhận khách hàng đã duyệt Brief và phạm vi trước khi khảo sát.',
-      survey: 'Lưu hồ sơ khảo sát hiện trạng, người khảo sát, địa điểm và các file attachment.',
-      proposal_submit: 'Lưu Proposal và Design Fee, xuất PDF báo giá rồi xác nhận đã gửi khách hàng.',
+      survey: 'Hoàn tất người khảo sát, địa điểm, ngày khảo sát và các file attachment cần thiết.',
+      proposal_submit: 'Hoàn tất nội dung Proposal và Design Fee, xuất PDF báo giá rồi xác nhận đã gửi khách hàng.',
       proposal_comment: 'Nhập các phản hồi hoặc yêu cầu chỉnh sửa Proposal của khách hàng.',
       proposal_approve: 'Chỉ xác nhận khi khách hàng đồng ý phương án và chi phí Design Fee.',
       design_concept: 'Đính kèm hồ sơ Concept, moodboard, phối cảnh/layout liên quan rồi xác nhận hoàn tất.',
@@ -3648,13 +3909,25 @@
     return !!(saved.proposal_approve && saved.proposal_approve.status === 'done');
   }
 
+  function isSurveyReady(survey) {
+    return !!(survey && String(survey.surveyor_name || '').trim() && survey.survey_time && String(survey.survey_location || '').trim());
+  }
+
+  function isProposalReady(proposal) {
+    if (!proposal) return false;
+    var hasContent = String(proposal.free_text || '').trim() || String(proposal.scope || '').trim() || String(proposal.concept || '').trim() || String(proposal.notes || '').trim();
+    var hasFee = Array.isArray(proposal.items) && proposal.items.some(function(item){ return String(item.item || '').trim() || Number(item.price || 0) > 0; });
+    var attachments = cloneProposalAttachmentState(proposal.attachments);
+    return !!(hasContent || hasFee || attachments.files.length || attachments.link || attachments.feePdfs.length);
+  }
+
   function approveProposalAndAdvanceToDesign(projectName) {
     var pName = projectName || activeProjectName;
     if (!pName) return;
     var data = getActiveProjectData();
     var saved = milestonesByProject[pName] || {};
-    if (!data || !data.proposal) {
-      showToast('Vui lòng lưu Proposal trước khi xác nhận khách hàng duyệt.');
+    if (!data || !isProposalReady(data.proposal)) {
+      showToast('Vui lòng hoàn tất nội dung Proposal và Design Fee trước khi xác nhận khách hàng duyệt.');
       return;
     }
     if (!saved.proposal_submit || saved.proposal_submit.status !== 'done') {
@@ -3700,12 +3973,12 @@
       else showMilestoneBlockedToast(getProjectMilestones(data.brief.project_name, data.brief, data.survey, data.proposal).find(function(item){ return item.status === 'active'; }));
       return;
     }
-    if (id === 'survey' && !data.survey) {
-      showToast('Vui lòng lưu hồ sơ khảo sát hiện trạng trước.');
+    if (id === 'survey' && !isSurveyReady(data.survey)) {
+      showToast('Vui lòng hoàn tất người khảo sát, ngày và địa điểm trước khi xác nhận.');
       return;
     }
-    if (id === 'proposal_submit' && !data.proposal) {
-      showToast('Vui lòng lưu Proposal trước khi xác nhận đã gửi khách.');
+    if (id === 'proposal_submit' && !isProposalReady(data.proposal)) {
+      showToast('Vui lòng nhập nội dung Proposal hoặc báo giá trước khi xác nhận đã gửi khách.');
       return;
     }
     if (!saveMilestoneCompletion(data.brief.project_name, id, note)) return;
@@ -4036,6 +4309,7 @@
       '</div>' +
       '<!-- END OVERVIEW DETAIL -->' +
       '<div style="display:none"></div>';
+      bindRealtimeForms();
       return;
     }
 
@@ -4053,7 +4327,7 @@
     // ==========================================
     if (activeSubTab === 'brief') {
       body.innerHTML = 
-        '<form onsubmit="saveWorkspaceBrief(event)">' +
+        '<form id="wp-brief-form" onsubmit="event.preventDefault(); return false;">' +
           '<!-- BLOCK 1: THÔNG TIN NGƯỜI LẤY BRIEF & NGÀY LẤY BRIEF -->' +
           '<div class="block-card">' +
             '<div class="block-header">' +
@@ -4154,12 +4428,13 @@
             '<div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div>' +
             '<div style="display:flex;gap:12px;">' +
               '<button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'overview\')">← Về Tổng quan</button>' +
-              '<button type="submit" class="btn btn-lime">💾 Lưu cập nhật Brief</button>' +
+              '<span class="realtime-save-status">✓ Tự động lưu khi nhập</span>' +
               '<button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'brief_submit\',\'Đã gửi hồ sơ Brief cho khách hàng\')">📤 Xác nhận đã gửi khách</button>' +
               '<button type="button" class="btn btn-navy" onclick="switchWorkspaceSubTab(\'survey\')">Sang Khảo sát →</button>' +
             '</div>' +
           '</div>' +
         '</form>';
+      bindRealtimeForms();
       return;
     }
 
@@ -4177,7 +4452,7 @@
       var sDocs = (s && s.survey_documents) ? s.survey_documents : '';
 
       body.innerHTML = 
-        '<form onsubmit="saveWorkspaceSurvey(event)">' +
+        '<form id="wp-survey-form" onsubmit="event.preventDefault(); return false;">' +
           '<!-- BLOCK 1: THÔNG TIN KHẢO SÁT (NGƯỜI, ĐỊA ĐIỂM, THỜI GIAN) -->' +
           '<div class="block-card">' +
             '<div class="block-header">' +
@@ -4238,12 +4513,13 @@
             '<div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div>' +
             '<div style="display:flex;gap:12px;">' +
               '<button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'brief\')">← Về Brief</button>' +
-              '<button type="submit" class="btn btn-navy">💾 Lưu hồ sơ Khảo sát hiện trạng</button>' +
+              '<span class="realtime-save-status">✓ Tự động lưu khi nhập</span>' +
               '<button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'survey\',\'Đã xác nhận hoàn tất khảo sát hiện trạng\')">✓ Xác nhận đã thực hiện</button>' +
               '<button type="button" class="btn btn-lime" onclick="switchWorkspaceSubTab(\'overview\')">Xem Tổng quan →</button>' +
             '</div>' +
           '</div>' +
         '</form>';
+      bindRealtimeForms();
       return;
     }
 
@@ -4254,7 +4530,7 @@
       var proposalData = proposal || { project_name: b.project_name, scope: '', concept: '', notes: '', free_text: '', items: [], total: 0, savedAt: '', attachments: emptyProposalAttachmentState() };
       var rows = renderProposalFeeRows(proposalData.items || []);
       body.innerHTML =
-        '<form onsubmit="saveWorkspaceProposal(event)">' +
+        '<form id="wp-proposal-form" onsubmit="event.preventDefault(); return false;">' +
           '<!-- BLOCK NHẬP DỮ LIỆU DẠNG FREE ĐỂ AI TỔNG HỢP PROPOSAL -->' +
           '<div class="proposal-free-box">' +
             '<div class="proposal-free-head">' +
@@ -4307,7 +4583,7 @@
           '<div class="block-card">' +
             '<div class="block-header"><span class="block-badge blue">DESIGN FEE</span><div class="block-title"><h3>Báo giá Thiết kế theo hạng mục</h3><p>AI đọc Brief, khảo sát và nhu cầu không gian để sắp xếp báo giá theo template chuẩn</p></div></div>' +
             '<div class="proposal-ai-pricing">' +
-              '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá vẫn có thể chỉnh sửa trước khi lưu.</span></div>' +
+              '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá sẽ tự động cập nhật khi chỉnh sửa.</span></div>' +
               '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">' +
                 '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
                 '<button type="button" class="btn btn-navy" onclick="generateAIDesignFeeAndOpenPdf()">📄 Xuất PDF báo giá từ AI</button>' +
@@ -4323,9 +4599,10 @@
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
           '</div>' +
-          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><button type="submit" class="btn btn-lime">💾 Lưu Design Proposal & Design Fee</button><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem & Xuất PDF báo giá</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
+          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem & Xuất PDF báo giá</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
         '</form>';
       calculateProposalTotal();
+      bindRealtimeForms();
       return;
     }
 
@@ -4509,7 +4786,7 @@
               '<div id="design-files-' + curr.uploadType + '" class="file-chip-list" style="margin-top:12px;">' + renderDesignStageFiles(b.project_name, curr.uploadType) + '</div>' +
             '</div>' +
             '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">' +
-              '<button type="button" class="btn btn-ghost" style="font-size:12.5px;padding:8px 14px;" onclick="saveDesignStageLink(\'' + curr.uploadType + '\')">💾 Lưu hồ sơ</button>' +
+              '<span class="realtime-save-status">✓ Tự động lưu link khi nhập</span>' +
               '<button type="button" class="btn btn-lime" style="font-size:12.5px;padding:8px 14px;" onclick="markDesignStageDone(\'' + activeSubTab + '\')">✓ Hoàn tất giai đoạn & cập nhật milestone</button>' +
               '<button type="button" class="btn btn-navy" style="font-size:12.5px;padding:8px 14px;" onclick="openProposalDocModal()">📄 Xem lại Proposal đã duyệt</button>' +
             '</div>' +
@@ -4556,6 +4833,7 @@
             '<button type="button" class="btn btn-navy" onclick="switchView(\'milestones\')">🏁 Xem Milestone tiến trình</button>' +
           '</div>' +
         '</div>';
+      bindDesignStageRealtime(curr.uploadType);
       return;
     }
 
@@ -4774,7 +5052,7 @@
         '<input name="proposal_item" value="' + escapeHtmlAttr(item.item || '') + '" placeholder="Hạng mục / không gian thực hiện">' +
         '<input name="proposal_qty" value="' + escapeHtmlAttr(item.qty || '1') + '" placeholder="SL / đơn vị">' +
         '<input name="proposal_price" value="' + escapeHtmlAttr(item.price || '') + '" placeholder="Đơn giá (VNĐ)">' +
-        '<button type="button" aria-label="Xóa hạng mục" onclick="this.parentElement.remove();calculateProposalTotal()">✕</button>' +
+        '<button type="button" aria-label="Xóa hạng mục" onclick="this.parentElement.remove();calculateProposalTotal();saveWorkspaceProposalRealtime(document.getElementById(\'wp-proposal-form\'))">✕</button>' +
       '</div>';
     }).join('');
   }
@@ -4860,7 +5138,8 @@
     if (!holder) return;
     holder.innerHTML = renderProposalFeeRows(items);
     calculateProposalTotal();
-    showToast('✨ AI đã sắp xếp ' + items.length + ' hạng mục báo giá từ Brief và khảo sát. Kiểm tra lại trước khi Lưu.');
+    saveWorkspaceProposalRealtime(document.getElementById('wp-proposal-form'));
+    showToast('✨ AI đã sắp xếp ' + items.length + ' hạng mục báo giá từ Brief và khảo sát. Dữ liệu đã tự động cập nhật.');
   }
 
   function generateAIDesignFeeAndOpenPdf() {
@@ -4870,8 +5149,8 @@
       return;
     }
     generateAIDesignFee();
-    // Lưu bản báo giá AI vừa tạo trước khi mở bản xem trước để PDF luôn có đủ dữ liệu.
-    saveWorkspaceProposal({ preventDefault: function() {} });
+    // Tự động cập nhật bản báo giá AI trước khi mở bản xem trước để PDF luôn có đủ dữ liệu.
+    saveWorkspaceProposalRealtime(document.getElementById('wp-proposal-form'));
     openProposalDocModal();
   }
 
@@ -4882,8 +5161,9 @@
     var row = document.createElement('div');
     row.className = 'proposal-line';
     row.setAttribute('data-proposal-row', index);
-    row.innerHTML = '<input name="proposal_kind" value="Thiết kế" placeholder="Loại"><input name="proposal_item" placeholder="Hạng mục / không gian thực hiện"><input name="proposal_qty" value="1" placeholder="SL / đơn vị"><input name="proposal_price" placeholder="Đơn giá (VNĐ)"><button type="button" aria-label="Xóa hạng mục" onclick="this.parentElement.remove();calculateProposalTotal()">✕</button>';
+    row.innerHTML = '<input name="proposal_kind" value="Thiết kế" placeholder="Loại"><input name="proposal_item" placeholder="Hạng mục / không gian thực hiện"><input name="proposal_qty" value="1" placeholder="SL / đơn vị"><input name="proposal_price" placeholder="Đơn giá (VNĐ)"><button type="button" aria-label="Xóa hạng mục" onclick="this.parentElement.remove();calculateProposalTotal();saveWorkspaceProposalRealtime(document.getElementById(\'wp-proposal-form\'))">✕</button>';
     holder.appendChild(row);
+    saveWorkspaceProposalRealtime(document.getElementById('wp-proposal-form'));
   }
 
   function calculateProposalTotal() {
@@ -5562,15 +5842,18 @@ function saveWorkspaceProposal(e) {
     f.project_style.value = sample.style;
     f.project_budget.value = sample.budget;
     f.project_brief_detail.value = sample.detail;
-    showToast('⚡ Đã điền một bộ dữ liệu Brief ngẫu nhiên. Kiểm tra rồi bấm Lưu lại Brief.');
+    saveStandaloneBriefRealtime(f);
+    showToast('⚡ Đã điền một bộ dữ liệu Brief ngẫu nhiên. Dữ liệu sẽ tự động lưu khi nhập.');
   }
 
   function fillAndSaveDemoBrief() {
     fillDemoBrief();
     setTimeout(function() {
       var form = document.getElementById('form-brief');
-      if (form && form.checkValidity()) form.requestSubmit();
-      else showToast('Kiểm tra các trường bắt buộc trước khi lưu Brief.');
+      if (form && form.checkValidity()) {
+        saveStandaloneBriefRealtime(form);
+        showToast('✅ Đã khởi tạo Brief mẫu; dữ liệu sẽ tiếp tục tự động lưu khi chỉnh sửa.');
+      } else showToast('Kiểm tra các trường bắt buộc để hệ thống tự động lưu Brief.');
     }, 80);
   }
 
@@ -5612,6 +5895,8 @@ function saveWorkspaceProposal(e) {
       var el = document.getElementById('list-main-' + type);
       if (el) el.innerHTML = renderAttachmentChips({ attachments: pendingAttachments }, type);
     });
+
+    saveStandaloneSurveyRealtime(f);
 
     showToast('⚡ Đã giả lập điền thông tin và đính kèm đầy đủ tệp khảo sát!');
   }
