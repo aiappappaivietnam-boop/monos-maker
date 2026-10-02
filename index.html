@@ -942,6 +942,32 @@
       padding: 8px 10px;
       background: #ffffff;
     }
+    .attachment-unified-card {
+      grid-column: 1 / -1;
+      border-style: solid;
+      border-color: #d2d2d7;
+      background: #fbfbfd;
+    }
+    .attachment-unified-card .attachment-head { margin-bottom: 4px; }
+    .attachment-unified-card .attachment-head p { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .attachment-unified-upload {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 92px;
+      margin: 4px 0 8px;
+      border: 1.5px dashed #b8b8be;
+      border-radius: 11px;
+      background: #fff;
+      color: var(--muted);
+      text-align: center;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .attachment-unified-upload:hover { border-color: var(--blue); background: var(--blue-subtle); color: var(--blue); }
+    .attachment-unified-upload strong { display:block; color:var(--ink); font-size:13px; }
+    .attachment-unified-upload span { display:block; margin-top:3px; font-size:11px; }
+    .attachment-unified-upload input { display:none; }
 
     /* MODAL POPUP THÊM DỰ ÁN MỚI */
     .modal-overlay {
@@ -2434,82 +2460,20 @@
           <div class="block-header">
             <span class="block-badge highlight">BLOCK 2</span>
             <div class="block-title">
-              <h3>Hồ sơ đính kèm hiện trạng</h3>
-              <p>Attachment trực tiếp các loại tệp: Hình ảnh, Video, Bản vẽ kỹ thuật và Giấy tờ pháp lý</p>
+              <h3>Tệp đính kèm hiện trạng</h3>
+              <p>Đính kèm tất cả file khảo sát trong một khu vực duy nhất</p>
             </div>
           </div>
 
-          <div class="grid-2">
-            <!-- 1. HÌNH ẢNH HIỆN TRẠNG -->
-            <div class="attachment-card" id="card-attach-photos">
-              <div class="attachment-head">
-                <label>📸 1. Hình ảnh hiện trạng</label>
-                <label class="upload-btn-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  📎 Đính kèm ảnh
-                  <input type="file" multiple accept="image/*" style="display:none" onchange="handleFileUpload(event, 'photos', 'main')">
-                </label>
-              </div>
-              <div class="file-chip-list" id="list-main-photos">
-                <div class="empty-attachment-placeholder">Chưa có tệp ảnh nào được đính kèm</div>
-              </div>
-              <div class="attachment-extra-link">
-                <input type="text" id="survey_photos" name="survey_photos" placeholder="Hoặc dán Link Google Drive / Dropbox ảnh hiện trạng...">
-              </div>
-            </div>
-
-            <!-- 2. VIDEO HIỆN TRẠNG -->
-            <div class="attachment-card" id="card-attach-videos">
-              <div class="attachment-head">
-                <label>🎥 2. Video hiện trạng</label>
-                <label class="upload-btn-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  📎 Đính kèm video
-                  <input type="file" multiple accept="video/*" style="display:none" onchange="handleFileUpload(event, 'videos', 'main')">
-                </label>
-              </div>
-              <div class="file-chip-list" id="list-main-videos">
-                <div class="empty-attachment-placeholder">Chưa có video nào được đính kèm</div>
-              </div>
-              <div class="attachment-extra-link">
-                <input type="text" id="survey_videos" name="survey_videos" placeholder="Hoặc dán Link video quay walkthrough hiện trường...">
-              </div>
-            </div>
-
-            <!-- 3. CÁC LOẠI BẢN VẼ -->
-            <div class="attachment-card" id="card-attach-drawings">
-              <div class="attachment-head">
-                <label>📐 3. Các loại bản vẽ công trình</label>
-                <label class="upload-btn-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  📎 Đính kèm bản vẽ (CAD/PDF)
-                  <input type="file" multiple accept=".dwg,.dxf,.pdf,.dwf" style="display:none" onchange="handleFileUpload(event, 'drawings', 'main')">
-                </label>
-              </div>
-              <div class="file-chip-list" id="list-main-drawings">
-                <div class="empty-attachment-placeholder">Chưa có bản vẽ nào được đính kèm (.dwg, .pdf)</div>
-              </div>
-              <div class="attachment-extra-link">
-                <input type="text" id="survey_drawings" name="survey_drawings" placeholder="Hoặc nhập tên mã bản vẽ CAD, link bản vẽ...">
-              </div>
-            </div>
-
-            <!-- 4. GIẤY TỜ CỦA CÔNG TRÌNH -->
-            <div class="attachment-card" id="card-attach-documents">
-              <div class="attachment-head">
-                <label>📄 4. Giấy tờ của công trình</label>
-                <label class="upload-btn-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  📎 Đính kèm giấy tờ
-                  <input type="file" multiple accept=".pdf,.doc,.docx,.jpg,.png" style="display:none" onchange="handleFileUpload(event, 'documents', 'main')">
-                </label>
-              </div>
-              <div class="file-chip-list" id="list-main-documents">
-                <div class="empty-attachment-placeholder">Chưa có giấy tờ/hồ sơ pháp lý nào được đính kèm</div>
-              </div>
-              <div class="attachment-extra-link">
-                <input type="text" id="survey_documents" name="survey_documents" placeholder="Hoặc nhập thông tin biên bản bàn giao, cam kết PCCC...">
-              </div>
+          <div class="attachment-card attachment-unified-card">
+            <div class="attachment-head"><div><label>📎 Tệp đính kèm hiện trạng</label><p>Chọn nhiều loại file cùng lúc: ảnh, video, bản vẽ CAD/PDF và giấy tờ công trình.</p></div><span class="tag blue">Attachment</span></div>
+            <label class="attachment-unified-upload"><input type="file" multiple accept="image/*,video/*,.dwg,.dxf,.dwf,.pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="handleFileUpload(event, 'all', 'main')"><span><strong>＋ Chọn file để đính kèm</strong><span>Kéo thả hoặc chọn nhiều file từ máy tính</span></span></label>
+            <div class="file-chip-list" id="list-main-photos"><div class="empty-attachment-placeholder">Chưa có tệp nào được đính kèm</div></div>
+            <div class="grid-2" style="margin-top:10px;gap:10px;">
+              <input type="text" id="survey_photos" name="survey_photos" placeholder="Link ảnh hiện trạng (Drive / Dropbox)">
+              <input type="text" id="survey_videos" name="survey_videos" placeholder="Link video walkthrough hiện trường">
+              <input type="text" id="survey_drawings" name="survey_drawings" placeholder="Mã / link bản vẽ CAD, PDF">
+              <input type="text" id="survey_documents" name="survey_documents" placeholder="Thông tin giấy tờ, biên bản, quy định công trình">
             </div>
           </div>
         </div>
@@ -3205,6 +3169,29 @@
     }).join('');
   }
 
+  function attachmentTypeForFile(file) {
+    var name = String((file && file.name) || '').toLowerCase();
+    var mime = String((file && file.type) || '').toLowerCase();
+    if (mime.indexOf('image/') === 0 || /\.(jpg|jpeg|png|gif|webp|heic|svg)$/.test(name)) return 'photos';
+    if (mime.indexOf('video/') === 0 || /\.(mp4|mov|avi|mkv|webm|m4v)$/.test(name)) return 'videos';
+    if (/\.(dwg|dxf|dwf|cad)$/.test(name)) return 'drawings';
+    return 'documents';
+  }
+
+  function renderAllAttachmentChips(survey) {
+    var source = survey && survey.attachments ? survey.attachments : pendingAttachments;
+    var files = [];
+    ['photos', 'videos', 'drawings', 'documents'].forEach(function(type) {
+      (source && Array.isArray(source[type]) ? source[type] : []).forEach(function(file) {
+        files.push(Object.assign({}, file, { attachmentType: type }));
+      });
+    });
+    if (!files.length) return '<div class="empty-attachment-placeholder">Chưa có tệp nào được đính kèm</div>';
+    return files.map(function(file) {
+      return '<div class="file-chip"><div class="file-chip-info"><span>' + attachmentIcon(file.attachmentType) + ' ' + escapeHtml(file.name || 'Tệp đính kèm') + '</span><span class="file-chip-size">(' + formatBytes(file.size) + ')</span></div><span class="tag" style="font-size:10px">' + escapeHtml(file.attachmentType) + '</span></div>';
+    }).join('');
+  }
+
   function findActiveSurvey() {
     var project = briefs.find(function(item){ return item.project_name === activeProjectName; });
     if (!project) return null;
@@ -3218,13 +3205,18 @@
     var selected = Array.from((event && event.target && event.target.files) || []);
     if (!selected.length) return;
     selected.forEach(function(file){
-      pendingAttachments[type].push({ name: file.name, size: file.size, type: file.type, lastModified: file.lastModified });
+      var targetType = type === 'all' ? attachmentTypeForFile(file) : type;
+      if (!pendingAttachments[targetType]) pendingAttachments[targetType] = [];
+      pendingAttachments[targetType].push({ name: file.name, size: file.size, type: file.type, lastModified: file.lastModified });
     });
     var survey = findActiveSurvey();
     if (survey) survey.attachments = cloneAttachmentState(pendingAttachments);
     if (survey) localStorage.setItem('formwork_surveys', JSON.stringify(surveys));
     var list = document.getElementById((scope === 'wp' ? 'list-wp-' : 'list-main-') + type);
-    if (list) list.innerHTML = renderAttachmentChips(survey, type);
+    if (type === 'all') {
+      var unifiedList = document.getElementById(scope === 'wp' ? 'list-wp-photos' : 'list-main-photos');
+      if (unifiedList) unifiedList.innerHTML = renderAllAttachmentChips(survey);
+    } else if (list) list.innerHTML = renderAttachmentChips(survey, type);
     showToast('📎 Đã đính kèm ' + selected.length + ' tệp.');
     event.target.value = '';
   }
@@ -3239,6 +3231,8 @@
     ['main', 'wp'].forEach(function(scope){
       var list = document.getElementById('list-' + scope + '-' + type);
       if (list) list.innerHTML = renderAttachmentChips(survey, type);
+      var unifiedList = document.getElementById('list-' + scope + '-photos');
+      if (unifiedList && unifiedList.closest('.attachment-unified-card')) unifiedList.innerHTML = renderAllAttachmentChips(survey);
     });
     showToast('Đã xóa tệp đính kèm.');
   }
@@ -4110,77 +4104,15 @@
                 '<p>Tải lên và đính kèm các tệp hình ảnh, video, bản vẽ CAD/PDF và giấy tờ pháp lý</p>' +
               '</div>' +
             '</div>' +
-            '<div class="grid-2">' +
-              '<!-- 1. HÌNH ẢNH -->' +
-              '<div class="attachment-card">' +
-                '<div class="attachment-head">' +
-                  '<label>📸 1. Hình ảnh hiện trạng</label>' +
-                  '<label class="upload-btn-label">' +
-                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
-                    'Tải ảnh lên' +
-                    '<input type="file" multiple accept="image/*" style="display:none" onchange="handleFileUpload(event, \'photos\', \'wp\')">' +
-                  '</label>' +
-                '</div>' +
-                '<div class="file-chip-list" id="list-wp-photos">' +
-                  renderAttachmentChips(s, 'photos') +
-                '</div>' +
-                '<div class="attachment-extra-link">' +
-                  '<input type="text" id="wp_survey_photos" value="' + escapeHtmlAttr(sPhotos) + '" placeholder="Hoặc dán Link Google Drive / Dropbox ảnh hiện trạng...">' +
-                '</div>' +
-              '</div>' +
-
-              '<!-- 2. VIDEO -->' +
-              '<div class="attachment-card">' +
-                '<div class="attachment-head">' +
-                  '<label>🎥 2. Video hiện trạng</label>' +
-                  '<label class="upload-btn-label">' +
-                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
-                    'Tải video lên' +
-                    '<input type="file" multiple accept="video/*" style="display:none" onchange="handleFileUpload(event, \'videos\', \'wp\')">' +
-                  '</label>' +
-                '</div>' +
-                '<div class="file-chip-list" id="list-wp-videos">' +
-                  renderAttachmentChips(s, 'videos') +
-                '</div>' +
-                '<div class="attachment-extra-link">' +
-                  '<input type="text" id="wp_survey_videos" value="' + escapeHtmlAttr(sVideos) + '" placeholder="Hoặc dán Link video quay walkthrough hiện trường...">' +
-                '</div>' +
-              '</div>' +
-
-              '<!-- 3. BẢN VẼ -->' +
-              '<div class="attachment-card">' +
-                '<div class="attachment-head">' +
-                  '<label>📐 3. Các loại bản vẽ công trình</label>' +
-                  '<label class="upload-btn-label">' +
-                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
-                    'Tải bản vẽ (CAD/PDF)' +
-                    '<input type="file" multiple accept=".dwg,.dxf,.pdf,.dwf" style="display:none" onchange="handleFileUpload(event, \'drawings\', \'wp\')">' +
-                  '</label>' +
-                '</div>' +
-                '<div class="file-chip-list" id="list-wp-drawings">' +
-                  renderAttachmentChips(s, 'drawings') +
-                '</div>' +
-                '<div class="attachment-extra-link">' +
-                  '<input type="text" id="wp_survey_drawings" value="' + escapeHtmlAttr(sDrawings) + '" placeholder="Hoặc nhập tên mã bản vẽ, link tải CAD/PDF...">' +
-                '</div>' +
-              '</div>' +
-
-              '<!-- 4. GIẤY TỜ -->' +
-              '<div class="attachment-card">' +
-                '<div class="attachment-head">' +
-                  '<label>📄 4. Giấy tờ của công trình</label>' +
-                  '<label class="upload-btn-label">' +
-                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
-                    'Tải giấy tờ lên' +
-                    '<input type="file" multiple accept=".pdf,.doc,.docx,.jpg,.png" style="display:none" onchange="handleFileUpload(event, \'documents\', \'wp\')">' +
-                  '</label>' +
-                '</div>' +
-                '<div class="file-chip-list" id="list-wp-documents">' +
-                  renderAttachmentChips(s, 'documents') +
-                '</div>' +
-                '<div class="attachment-extra-link">' +
-                  '<input type="text" id="wp_survey_documents" value="' + escapeHtmlAttr(sDocs) + '" placeholder="Hoặc nhập thông tin biên bản bàn giao, quy định tòa nhà...">' +
-                '</div>' +
+            '<div class="attachment-card attachment-unified-card">' +
+              '<div class="attachment-head"><div><label>📎 Tệp đính kèm hiện trạng</label><p>Chọn nhiều loại file cùng lúc: ảnh, video, bản vẽ CAD/PDF và giấy tờ công trình.</p></div><span class="tag blue">Attachment</span></div>' +
+              '<label class="attachment-unified-upload"><input type="file" multiple accept="image/*,video/*,.dwg,.dxf,.dwf,.pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="handleFileUpload(event, \'all\', \'wp\')"><span><strong>＋ Chọn file để đính kèm</strong><span>Kéo thả hoặc chọn nhiều file từ máy tính</span></span></label>' +
+              '<div class="file-chip-list" id="list-wp-photos">' + renderAllAttachmentChips(s) + '</div>' +
+              '<div class="grid-2" style="margin-top:10px;gap:10px;">' +
+                '<input type="text" id="wp_survey_photos" value="' + escapeHtmlAttr(sPhotos) + '" placeholder="Link ảnh hiện trạng (Drive / Dropbox)">' +
+                '<input type="text" id="wp_survey_videos" value="' + escapeHtmlAttr(sVideos) + '" placeholder="Link video walkthrough hiện trường">' +
+                '<input type="text" id="wp_survey_drawings" value="' + escapeHtmlAttr(sDrawings) + '" placeholder="Mã / link bản vẽ CAD, PDF">' +
+                '<input type="text" id="wp_survey_documents" value="' + escapeHtmlAttr(sDocs) + '" placeholder="Thông tin giấy tờ, biên bản, quy định công trình">' +
               '</div>' +
             '</div>' +
           '</div>' +
