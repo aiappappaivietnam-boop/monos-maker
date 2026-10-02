@@ -468,11 +468,18 @@
     .milestone-actions .btn { padding:6px 9px; font-size:11px; min-height:30px; }
     .milestone-head-tools { display:flex; flex-direction:column; align-items:flex-end; gap:11px; min-width:230px; }
     .next-requirement-card { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:0 0 20px; padding:14px 16px; border:1px solid #bfdbfe; border-radius:13px; background:linear-gradient(135deg,#eff6ff,#f8fbff); }
+    .next-requirement-card.compact { gap:12px; margin:0 0 14px; padding:10px 12px; border-radius:10px; }
     .next-requirement-copy { min-width:0; }
     .next-requirement-kicker { color:#2563eb; font-size:10.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
     .next-requirement-copy strong { display:block; margin-top:3px; color:#172554; font-size:14px; }
     .next-requirement-copy p { margin-top:3px; color:#475569; font-size:12px; line-height:1.45; }
     .next-requirement-card .btn { flex-shrink:0; }
+    .project-progress-card .next-requirement-card { border-color:rgba(191,219,254,.35); background:rgba(255,255,255,.08); }
+    .project-progress-card .next-requirement-kicker { color:#bfdbfe; }
+    .project-progress-card .next-requirement-copy strong { color:#fff; font-size:13px; }
+    .project-progress-card .next-requirement-copy p { color:#cbd5e1; }
+    .project-progress-card .next-requirement-copy p b { color:#e0f2fe; }
+    .project-progress-card .next-requirement-card .btn { padding:7px 10px; font-size:11px; }
     .milestone-view-switch { display:inline-flex; padding:3px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; gap:3px; }
     .milestone-view-switch button { border:0; background:transparent; color:var(--muted); border-radius:7px; padding:7px 11px; font-size:11.5px; font-weight:800; cursor:pointer; transition:all .18s ease; }
     .milestone-view-switch button:hover { color:var(--ink); background:#fff; }
@@ -532,6 +539,9 @@
       .milestone-calendar-weekdays div{padding:7px 2px;font-size:9px}
       .milestone-unscheduled-item{align-items:flex-start;flex-direction:column}
       .next-requirement-card{align-items:flex-start;flex-direction:column}
+    }
+    @media (max-width:980px) and (min-width:761px){
+      .project-progress-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
 
     .proposal-link-input { border-top:1px dashed var(--line); padding-top:10px; margin-top:2px; }
@@ -3473,12 +3483,12 @@
     return requirements[item.id] || item.subtitle || 'Hoàn tất nội dung của mốc này rồi xác nhận.';
   }
 
-  function renderNextRequirement(progress) {
+  function renderNextRequirement(progress, compact) {
     var current = (progress && progress.list || []).find(function(item){ return item.status === 'active'; });
     if (!current) {
-      return '<div class="next-requirement-card"><div class="next-requirement-copy"><div class="next-requirement-kicker">Tiến trình</div><strong>Đã hoàn tất toàn bộ milestone</strong><p>Tất cả các giai đoạn của dự án đã được xác nhận.</p></div></div>';
+      return '<div class="next-requirement-card' + (compact ? ' compact' : '') + '"><div class="next-requirement-copy"><div class="next-requirement-kicker">Tiến trình</div><strong>Đã hoàn tất toàn bộ milestone</strong><p>Tất cả các giai đoạn của dự án đã được xác nhận.</p></div></div>';
     }
-    return '<div class="next-requirement-card"><div class="next-requirement-copy"><div class="next-requirement-kicker">Cần hoàn tất tiếp theo</div><strong>' + escapeHtml(current.title) + '</strong><p><b>Cần làm:</b> ' + escapeHtml(milestoneRequirement(current)) + '</p></div><button type="button" class="btn btn-blue" onclick="openMilestoneRequirement(\'' + escapeHtmlAttr(current.id) + '\')">Mở & thực hiện</button></div>';
+    return '<div class="next-requirement-card' + (compact ? ' compact' : '') + '"><div class="next-requirement-copy"><div class="next-requirement-kicker">Cần hoàn tất tiếp theo</div><strong>' + escapeHtml(current.title) + '</strong><p><b>Cần làm:</b> ' + escapeHtml(milestoneRequirement(current)) + '</p></div><button type="button" class="btn btn-blue" onclick="openMilestoneRequirement(\'' + escapeHtmlAttr(current.id) + '\')">Mở & thực hiện</button></div>';
   }
 
   function openMilestoneRequirement(id) {
@@ -3855,7 +3865,7 @@
         '<div class="project-progress-card">' +
           '<div class="project-progress-head"><div><div class="project-progress-kicker">Trạng thái dự án đang chọn</div><h3>' + escapeHtml(b.project_name) + '</h3><p>' + (currentProjectMilestone ? 'Cần hoàn tất: ' + escapeHtml(currentProjectMilestone.title) : 'Đã hoàn tất toàn bộ tiến trình') + '</p></div><div class="project-progress-percent"><strong>' + projectProgress.pct + '%</strong><span>' + projectProgress.done + '/' + projectProgress.total + ' mốc hoàn tất</span></div></div>' +
           '<div class="project-progress-bar"><i style="width:' + projectProgress.pct + '%"></i></div>' +
-          renderNextRequirement(projectProgress) +
+          renderNextRequirement(projectProgress, true) +
           '<div class="project-progress-steps">' + progressStepMarkup + '</div>' +
         '</div>' +
         '<!-- THỐNG KÊ NHANH CHO DỰ ÁN NÀY -->' +
