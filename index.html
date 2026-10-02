@@ -4232,7 +4232,10 @@
             '<div class="block-header"><span class="block-badge blue">DESIGN FEE</span><div class="block-title"><h3>Báo giá Thiết kế theo hạng mục</h3><p>AI đọc Brief, khảo sát và nhu cầu không gian để sắp xếp báo giá theo template chuẩn</p></div></div>' +
             '<div class="proposal-ai-pricing">' +
               '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá vẫn có thể chỉnh sửa trước khi lưu.</span></div>' +
-              '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
+              '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">' +
+                '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
+                '<button type="button" class="btn btn-navy" onclick="generateAIDesignFeeAndOpenPdf()">📄 Xuất PDF báo giá từ AI</button>' +
+              '</div>' +
             '</div>' +
             '<div class="attachment-card attachment-unified-card" style="margin:0 0 16px">' +
               '<div class="attachment-head"><div><label>📄 PDF báo giá đã xuất</label><p>Sau khi bấm Xuất PDF, tải file báo giá vào đây để lưu cùng hồ sơ Proposal của dự án.</p></div><span class="tag blue">Quotation PDF</span></div>' +
@@ -4784,6 +4787,18 @@
     showToast('✨ AI đã sắp xếp ' + items.length + ' hạng mục báo giá từ Brief và khảo sát. Kiểm tra lại trước khi Lưu.');
   }
 
+  function generateAIDesignFeeAndOpenPdf() {
+    var data = getActiveProjectData();
+    if (!data || !data.brief) {
+      showToast('Chưa có dự án để AI lập báo giá.');
+      return;
+    }
+    generateAIDesignFee();
+    // Lưu bản báo giá AI vừa tạo trước khi mở bản xem trước để PDF luôn có đủ dữ liệu.
+    saveWorkspaceProposal({ preventDefault: function() {} });
+    openProposalDocModal();
+  }
+
   function addProposalItem() {
     var holder = document.getElementById('proposal-line-items');
     if (!holder) return;
@@ -5036,7 +5051,11 @@
   }
 
   function printProposalDoc() {
+    var b = briefs.find(function(item){ return item.project_name === activeProjectName; });
+    var previousTitle = document.title;
+    if (b && b.project_name) document.title = 'Bao-gia-Design-Fee-' + b.project_name.replace(/[^a-z0-9\u00C0-\u024F]+/gi, '-');
     window.print();
+    setTimeout(function(){ document.title = previousTitle; }, 1500);
   }
 
   function confirmSendProposalFromModal() {
