@@ -4603,7 +4603,7 @@
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
           '</div>' +
-          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onclick="switchWorkspaceSubTab(\'survey\')">← Về Khảo sát</button><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-navy" onclick="openProposalDocModal()">📄 Xem & Xuất PDF Proposal</button><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button><button type="button" class="btn btn-lime" onclick="approveProposalAndAdvanceToDesign(\'' + escapeHtmlAttr(b.project_name) + '\')">🎉 Khách duyệt Proposal & Chi phí → Sang Thiết kế Concept</button></div></div>' +
+          '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><span class="realtime-save-status">✓ Tự động lưu khi nhập</span><button type="button" class="btn btn-blue" onclick="confirmWorkspaceMilestone(\'proposal_submit\',\'Đã gửi Proposal và Design Fee cho khách hàng\')">📤 Xác nhận đã gửi khách</button></div></div>' +
         '</form>';
       calculateProposalTotal();
       bindRealtimeForms();
