@@ -2157,6 +2157,90 @@
     @media (max-width: 980px) { .all-projects-summary { grid-template-columns:repeat(2, minmax(0, 1fr)); } .all-project-card-meta { grid-template-columns:1fr 1fr; } }
     @media (max-width: 620px) { .all-projects-summary { grid-template-columns:1fr 1fr; } .all-project-card-head, .all-project-card-foot { align-items:flex-start; flex-direction:column; } .all-project-card-meta { grid-template-columns:1fr; } }
     @media (max-width: 980px) { .sidebar { background: #fbfbfd; } .main { padding: 26px 22px 60px; } }
+
+    /* FINAL APPLE POLISH: apply one visual language to every view, form and overlay. */
+    :root {
+      --paper: #f5f5f7;
+      --surface: #ffffff;
+      --ink: #1d1d1f;
+      --muted: #6e6e73;
+      --line: #d2d2d7;
+      --line-soft: #e5e5ea;
+      --blue: #0071e3;
+      --blue-subtle: #eaf3ff;
+      --green: #34c759;
+      --green-subtle: #e9f9ee;
+      --amber: #ff9f0a;
+      --purple: #af52de;
+      --navy: #1d1d1f;
+      --lime: #0071e3;
+      --lime-hover: #0077ed;
+      --shadow: 0 4px 18px rgba(0,0,0,.055);
+      --shadow-hover: 0 10px 28px rgba(0,0,0,.09);
+    }
+    html, body { background: var(--paper); color: var(--ink); }
+    body { font-size: 15px; letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea { font-family: inherit; }
+    :where(.block-card, .history-card, .milestone-panel, .pipeline-container, .action-bar, .concept-viewer-panel, .all-project-card, .all-projects-stat, .all-projects-toolbar, .wp-active-project-bar, .modal-card, .lightbox-content) {
+      border-color: var(--line-soft);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    :where(.block-card, .history-card, .milestone-panel, .pipeline-container, .concept-viewer-panel, .all-project-card, .all-projects-stat, .all-projects-toolbar) { background: var(--surface); }
+    :where(.field input, .field select, .field textarea, .project-select, .proposal-line input, .proposal-link-input input, .all-projects-search, .all-projects-filter, #design-link-concept_files, #design-link-schematic_files, #design-link-development_files, #design-link-construction_files) {
+      border-color: var(--line);
+      border-radius: 10px;
+      background: #f5f5f7;
+      color: var(--ink);
+      box-shadow: none;
+    }
+    :where(.field input, .field select, .field textarea, .project-select, .proposal-line input, .proposal-link-input input, .all-projects-search, .all-projects-filter, input[type="url"]) { min-height: 42px; }
+    :where(.field input, .field select, .field textarea, .project-select, .proposal-line input, .proposal-link-input input, .all-projects-search, .all-projects-filter, input[type="url"]):focus {
+      border-color: var(--blue); background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(0,113,227,.12);
+    }
+    textarea { resize: vertical; }
+    :where(.btn, .wp-tab-btn.stage-tab, .concept-filter-btn, .concept-mode-btn, .milestone-view-switch button) { transition: background .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease, transform .16s ease; }
+    .btn { border-radius: 10px; font-weight: 600; box-shadow: none; }
+    .btn-lime, .btn-blue { background: var(--blue); color: #fff; box-shadow: 0 3px 10px rgba(0,113,227,.18); }
+    .btn-lime:hover, .btn-blue:hover { background: var(--lime-hover); transform: translateY(-1px); }
+    .btn-navy { background: #1d1d1f; color: #fff; }
+    .btn-navy:hover { background: #2c2c2e; }
+    .btn-ghost { background: #fff; border-color: var(--line); color: var(--ink); }
+    .btn-ghost:hover { background: #f5f5f7; border-color: #a1a1a6; }
+    :where(.tag, .project-quick-badge, .all-project-status, .wp-stage-status) { border-radius: 999px; }
+    .wp-active-project-bar { background: rgba(255,255,255,.9); }
+    .wp-stage-block { border-color: var(--line-soft); box-shadow: 0 2px 10px rgba(0,0,0,.025); }
+    .wp-stage-block.active-stage { border-color: #b8d7f7; background: #f7fbff; }
+    .wp-tab-btn.stage-tab { color: var(--muted); }
+    .wp-tab-btn.stage-tab:hover { background: #f2f2f7; color: var(--ink); }
+    .wp-tab-btn.stage-tab.active { background: var(--blue); color: #fff; box-shadow: 0 3px 9px rgba(0,113,227,.2); }
+    .project-progress-card { background: linear-gradient(135deg,#fff 0%,#f2f8ff 100%); border-color: #d7eaff; color: var(--ink); }
+    .project-progress-head h3, .project-progress-step strong { color: var(--ink); }
+    .project-progress-head p, .project-progress-percent span, .project-progress-step span { color: var(--muted); }
+    .project-progress-percent strong, .project-progress-kicker { color: var(--blue); }
+    .project-progress-step { border-color: var(--line-soft); background: rgba(255,255,255,.75); }
+    .project-progress-step.active { background: var(--blue-subtle); border-color: #9dc8f2; box-shadow: inset 0 -2px 0 var(--blue); }
+    .project-progress-step.done { background: var(--green-subtle); border-color: #b7e5c2; }
+    .project-progress-card .next-requirement-card { border-color: #bfdbfe; background: rgba(255,255,255,.75); }
+    .project-progress-card .next-requirement-kicker { color: var(--blue); }
+    .project-progress-card .next-requirement-copy strong { color: var(--ink); }
+    .project-progress-card .next-requirement-copy p { color: var(--muted); }
+    .design-stage-banner, .proposal-ai-pricing { border-color: #d7eaff; background: linear-gradient(135deg,#fff 0%,#f2f8ff 100%); box-shadow: var(--shadow); }
+    .attachment-card, .proposal-check, .design-spec-box { border-color: var(--line); border-radius: 11px; background: #fbfbfd; }
+    .attachment-unified-upload:hover { border-color: var(--blue); background: var(--blue-subtle); color: var(--blue); }
+    .milestone-view-switch, .concept-view-mode-toggle, .concept-filter-tabs { background: #f5f5f7; border-color: var(--line); }
+    .milestone-view-switch button.active, .concept-mode-btn.active, .concept-filter-btn.active { background: #fff; color: var(--ink); box-shadow: 0 2px 5px rgba(0,0,0,.08); }
+    .milestone-calendar-card, .concept-list-table-wrap { border-color: var(--line-soft); }
+    .milestone-calendar-toolbar, .milestone-calendar-weekdays, .concept-list-table th { background: #f5f5f7; }
+    .concept-file-card { border-color: var(--line-soft); background: #fff; box-shadow: none; }
+    .concept-file-card:hover { border-color: #9dc8f2; box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .modal-overlay { background: rgba(0,0,0,.38); backdrop-filter: blur(12px); }
+    .modal-card, .lightbox-content { border-radius: 16px; }
+    .modal-header, .modal-footer, .lightbox-header { background: #fbfbfd; border-color: var(--line-soft); }
+    .modal-close { border-radius: 50%; background: #e5e5ea; }
+    .toast { border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,.16); }
+    @media (max-width: 980px) { .main { padding: 26px 22px 60px; } }
+    @media (max-width: 620px) { .main { padding: 22px 16px 50px; } .topbar h1 { font-size: 27px; } }
 </style>
 </head>
 <body>
