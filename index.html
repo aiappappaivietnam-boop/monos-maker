@@ -2148,6 +2148,12 @@
     .all-project-card-foot span { color:var(--muted); font-size:12px; }
     .all-project-empty { background:#fff; border:1.5px dashed #d2d2d7; border-radius:14px; padding:56px 24px; text-align:center; color:var(--muted); }
     .all-project-empty strong { display:block; color:var(--ink); font-size:17px; margin-bottom:6px; }
+    .all-projects-toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px; padding:12px; background:#fff; border:1px solid #e5e5ea; border-radius:14px; box-shadow:var(--shadow); }
+    .all-projects-search { flex:1 1 280px; min-width:220px; border:1px solid #d2d2d7; border-radius:9px; padding:10px 12px; background:#f5f5f7; color:var(--ink); font:inherit; outline:none; }
+    .all-projects-search:focus, .all-projects-filter:focus { border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(0,113,227,.12); }
+    .all-projects-filter { border:1px solid #d2d2d7; border-radius:9px; padding:10px 12px; background:#f5f5f7; color:var(--ink); font:inherit; outline:none; min-width:190px; }
+    .all-projects-filter-label { color:var(--muted); font-size:12px; font-weight:650; }
+    .all-project-filter-empty { display:none; background:#fff; border:1.5px dashed #d2d2d7; border-radius:14px; padding:30px 20px; text-align:center; color:var(--muted); }
     @media (max-width: 980px) { .all-projects-summary { grid-template-columns:repeat(2, minmax(0, 1fr)); } .all-project-card-meta { grid-template-columns:1fr 1fr; } }
     @media (max-width: 620px) { .all-projects-summary { grid-template-columns:1fr 1fr; } .all-project-card-head, .all-project-card-foot { align-items:flex-start; flex-direction:column; } .all-project-card-meta { grid-template-columns:1fr; } }
     @media (max-width: 980px) { .sidebar { background: #fbfbfd; } .main { padding: 26px 22px 60px; } }
@@ -2932,6 +2938,7 @@
   var proposalAttachmentProject = null;
   var activeProjectName = null;
   var activeSubTab = 'overview';
+  var allProjectsFilter = { query: '', status: 'all' };
   var milestoneDisplayMode = 'timeline';
   var milestoneCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   var toastActionHandler = null;
@@ -3819,14 +3826,21 @@
       body.innerHTML = '<div class="all-project-empty"><div style="font-size:36px;margin-bottom:10px">📁</div><strong>Chưa có dự án nào</strong><p>Thêm dự án mới để theo dõi tình trạng và tiến độ tại đây.</p><button type="button" class="btn btn-lime" style="margin-top:16px" onclick="openAddProjectModal()">+ Thêm dự án mới</button></div>';
       return;
     }
-    var rows = briefs.map(function(project) {
+    var projectEntries = briefs.map(function(project) {
       var survey = surveys.find(function(item){ return item.survey_project_ref === project.project_name; });
       var proposal = proposals.find(function(item){ return item.project_name === project.project_name; });
       var progress = milestoneProgress(project.project_name, project, survey, proposal);
       var status = allProjectStatusLabel(progress, { brief:project, survey:survey, proposal:proposal });
+      return { project:project, progress:progress, status:status };
+    });
+    var rows = projectEntries.map(function(entry) {
+      var project = entry.project;
+      var progress = entry.progress;
+      var status = entry.status;
       var current = progress.list.find(function(item){ return item.status === 'active'; });
       var isActive = activeProjectName === project.project_name;
-      return '<article class="all-project-card">' +
+      var searchText = [project.project_name, project.client_name, project.project_address, project.brief_staff, status.detail].join(' ').toLocaleLowerCase('vi-VN');
+      return '<article class="all-project-card" data-status="' + status.className + '" data-search="' + escapeHtmlAttr(searchText) + '">' +
         '<div class="all-project-card-head">' +
           '<div class="all-project-card-title"><h3>' + escapeHtml(project.project_name) + '</h3><p>' + escapeHtml(project.client_name || 'Chưa cập nhật khách hàng') + ' · ' + escapeHtml(project.project_address || 'Chưa cập nhật địa điểm') + '</p></div>' +
           '<span class="all-project-status ' + status.className + '">' + (status.className === 'done' ? '✓' : '●') + ' ' + status.label + '</span>' +
@@ -3842,23 +3856,57 @@
       '</article>';
     }).join('');
     var total = briefs.length;
-    var contact = briefs.filter(function(project){
-      var survey = surveys.find(function(item){ return item.survey_project_ref === project.project_name; });
-      var proposal = proposals.find(function(item){ return item.project_name === project.project_name; });
-      return allProjectStatusLabel(milestoneProgress(project.project_name, project, survey, proposal), {}).className === 'contact';
-    }).length;
-    var design = briefs.filter(function(project){
-      var survey = surveys.find(function(item){ return item.survey_project_ref === project.project_name; });
-      var proposal = proposals.find(function(item){ return item.project_name === project.project_name; });
-      return allProjectStatusLabel(milestoneProgress(project.project_name, project, survey, proposal), {}).className === 'design';
-    }).length;
+    var contact = projectEntries.filter(function(entry){ return entry.status.className === 'contact'; }).length;
+    var design = projectEntries.filter(function(entry){ return entry.status.className === 'design'; }).length;
     var done = total - contact - design;
     body.innerHTML = '<div class="all-projects-summary">' +
       '<div class="all-projects-stat blue"><small>Tổng số dự án</small><strong>' + total + '</strong><span>Đang quản lý</span></div>' +
       '<div class="all-projects-stat"><small>Tiếp xúc khách hàng</small><strong>' + contact + '</strong><span>Brief · Khảo sát · Proposal</span></div>' +
       '<div class="all-projects-stat purple"><small>Đang thiết kế</small><strong>' + design + '</strong><span>Đã qua Proposal</span></div>' +
       '<div class="all-projects-stat green"><small>Đã hoàn tất</small><strong>' + done + '</strong><span>Hoàn thành toàn bộ</span></div>' +
-    '</div><div class="all-projects-list">' + rows + '</div>';
+    '</div>' +
+    '<div class="all-projects-toolbar">' +
+      '<input id="all-projects-search" class="all-projects-search" type="search" value="' + escapeHtmlAttr(allProjectsFilter.query) + '" placeholder="Tìm theo tên dự án, khách hàng, địa điểm, nhân sự..." aria-label="Tìm dự án" oninput="setAllProjectsQuery(this.value)">' +
+      '<label class="all-projects-filter-label" for="all-projects-status-filter">Tình trạng</label>' +
+      '<select id="all-projects-status-filter" class="all-projects-filter" onchange="setAllProjectsStatus(this.value)">' +
+        '<option value="all"' + (allProjectsFilter.status === 'all' ? ' selected' : '') + '>Tất cả tình trạng</option>' +
+        '<option value="contact"' + (allProjectsFilter.status === 'contact' ? ' selected' : '') + '>Tiếp xúc khách hàng</option>' +
+        '<option value="design"' + (allProjectsFilter.status === 'design' ? ' selected' : '') + '>Đang thiết kế</option>' +
+        '<option value="done"' + (allProjectsFilter.status === 'done' ? ' selected' : '') + '>Đã hoàn tất</option>' +
+      '</select>' +
+      '<span id="all-projects-filter-count" class="all-projects-filter-label" aria-live="polite"></span>' +
+    '</div><div class="all-projects-list" id="all-projects-list">' + rows + '</div>' +
+    '<div id="all-project-filter-empty" class="all-project-filter-empty">Không tìm thấy dự án phù hợp với bộ lọc.</div>';
+    applyAllProjectsFilter();
+  }
+
+  function setAllProjectsQuery(value) {
+    allProjectsFilter.query = String(value || '');
+    applyAllProjectsFilter();
+  }
+
+  function setAllProjectsStatus(value) {
+    allProjectsFilter.status = ['all', 'contact', 'design', 'done'].indexOf(value) >= 0 ? value : 'all';
+    applyAllProjectsFilter();
+  }
+
+  function applyAllProjectsFilter() {
+    var list = document.getElementById('all-projects-list');
+    if (!list) return;
+    var query = allProjectsFilter.query.trim().toLocaleLowerCase('vi-VN');
+    var visible = 0;
+    var cards = list.querySelectorAll('.all-project-card');
+    cards.forEach(function(card) {
+      var matchesQuery = !query || String(card.dataset.search || '').indexOf(query) !== -1;
+      var matchesStatus = allProjectsFilter.status === 'all' || card.dataset.status === allProjectsFilter.status;
+      var matches = matchesQuery && matchesStatus;
+      card.style.display = matches ? '' : 'none';
+      if (matches) visible += 1;
+    });
+    var count = document.getElementById('all-projects-filter-count');
+    if (count) count.textContent = 'Hiển thị ' + visible + '/' + cards.length + ' dự án';
+    var empty = document.getElementById('all-project-filter-empty');
+    if (empty) empty.style.display = visible ? 'none' : 'block';
   }
 
   function loadProjectFromAllProjects(projectName) {
