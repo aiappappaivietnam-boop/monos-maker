@@ -2816,9 +2816,9 @@
   }
 
   function onModalOverlayClick(e) {
-    if (e.target && e.target.id === 'modal-add-project') {
-      closeAddProjectModal();
-    }
+    if (!e.target) return;
+    if (e.target.id === 'modal-add-project') closeAddProjectModal();
+    if (e.target.id === 'modal-proposal-doc') closeProposalDocModal();
   }
 
   function saveQuickAddProject(e) {
@@ -3280,8 +3280,8 @@
     var milestoneMap = {};
     (milestoneData.list || []).forEach(function(item) { milestoneMap[item.id] = item; });
     var hasBrief = !!(data && data.brief);
-    var hasSurvey = !!(data && data.survey);
-    var hasProposal = !!(data && data.proposal);
+    var hasSurvey = !!(data && data.survey && isSurveyCompleted(data.brief.project_name, data.survey));
+    var hasProposal = !!(data && data.proposal && isProposalReady(data.proposal));
     var approved = hasBrief && isProposalApproved(data.brief.project_name);
     var statusFor = function(id) {
       if (id === 'brief') return hasBrief ? 'done' : 'active';
@@ -3953,7 +3953,7 @@
     var auto = {
       meeting: brief && brief.brief_date ? { status:'done', date: brief.brief_date } : {},
       brief: brief && brief.brief_date ? { status:'done', date: brief.brief_date } : {},
-      survey: survey && survey.survey_time && survey.status !== 'draft' ? { status:'done', date: String(survey.survey_time).slice(0,10) } : {}
+      survey: survey && isSurveyCompleted(projectName, survey) ? { status:'done', date: String(survey.survey_time).slice(0,10) } : {}
     };
     list.forEach(function(item){
       if (auto[item.id] && !(saved[item.id] && saved[item.id].status === 'done')) Object.assign(item, auto[item.id]);
@@ -4185,6 +4185,12 @@
     return !!(survey && String(survey.surveyor_name || '').trim() && survey.survey_time && String(survey.survey_location || '').trim());
   }
 
+  function isSurveyCompleted(projectName, survey) {
+    if (!isSurveyReady(survey)) return false;
+    var saved = milestonesByProject[projectName] || {};
+    return survey.status !== 'draft' || !!(saved.survey && saved.survey.status === 'done');
+  }
+
   function isProposalReady(proposal) {
     if (!proposal) return false;
     var hasContent = String(proposal.free_text || '').trim() || String(proposal.scope || '').trim() || String(proposal.concept || '').trim() || String(proposal.notes || '').trim();
@@ -4381,6 +4387,9 @@
     var b = data.brief;
     var s = data.survey;
     var proposal = data.proposal;
+    var surveyCompleted = isSurveyCompleted(b.project_name, s);
+    var proposalReady = isProposalReady(proposal);
+    // Trạng thái hiển thị luôn phản ánh hồ sơ hiện tại: draft không được tính là đã hoàn tất.
     syncPendingAttachments(s, b.project_name);
     syncProposalAttachments(proposal, b.project_name);
 
@@ -4390,7 +4399,7 @@
     var projectProgress = milestoneProgress(b.project_name, b, s, proposal);
     var currentProjectMilestone = projectProgress.list.find(function(item) { return item.status === 'active'; });
     var progressStepData = [
-      { label:'Tiếp xúc khách hàng', status: approvedProposal ? 'done' : (proposal ? 'active' : 'active'), detail: approvedProposal ? 'Đã duyệt Proposal' : (proposal ? 'Chờ khách duyệt' : s ? 'Đang hoàn thiện Proposal' : 'Đang thu thập thông tin') },
+      { label:'Tiếp xúc khách hàng', status: approvedProposal ? 'done' : 'active', detail: approvedProposal ? 'Đã duyệt Proposal' : (proposalReady ? 'Chờ khách duyệt' : surveyCompleted ? 'Đang hoàn thiện Proposal' : 'Đang thu thập thông tin') },
       { label:'Thiết kế Concept', status: approvedProposal ? (projectProgress.list.find(function(item){ return item.id === 'design_concept'; }) || {}).status || 'active' : 'pending', detail: approvedProposal ? 'Bước triển khai đầu tiên' : 'Chờ duyệt Proposal' },
       { label:'Thiết kế Sơ phát', status: (projectProgress.list.find(function(item){ return item.id === 'design_schematic'; }) || {}).status || 'pending', detail: approvedProposal ? 'Sau khi hoàn tất Concept' : 'Chưa mở' },
       { label:'Thiết kế Khai triển / Thi công', status: (projectProgress.list.find(function(item){ return item.id === 'design_development'; }) || {}).status === 'done' ? 'done' : 'pending', detail: 'Các giai đoạn tiếp theo' }
@@ -4403,9 +4412,9 @@
     if (badge) {
       var progress = milestoneProgress(b.project_name, b, s, proposal);
       var currentMilestone = progress.list.find(function(item) { return item.status === 'active'; });
-      var badgeDone = approvedProposal ? '✓ Đã chuyển sang Thiết kế' : (proposal ? '✓ Đã có Proposal' : (s ? '✓ Đã khảo sát' : '✓ Đã có Brief'));
+      var badgeDone = approvedProposal ? '✓ Đã chuyển sang Thiết kế' : (proposalReady ? '✓ Đã có Proposal' : (surveyCompleted ? '✓ Đã khảo sát' : '✓ Đã có Brief'));
       badge.textContent = badgeDone;
-      badge.className = 'project-quick-badge tag ' + (approvedProposal || proposal || s ? 'green' : 'amber');
+      badge.className = 'project-quick-badge tag ' + (approvedProposal || proposalReady || surveyCompleted ? 'green' : 'amber');
       var statusDetail = document.getElementById('wp-status-detail');
       if (statusDetail) statusDetail.textContent = currentMilestone ? 'Cần hoàn tất: ' + currentMilestone.title : 'Đã hoàn tất toàn bộ tiến trình';
     }
@@ -4440,8 +4449,8 @@
           '</div>' +
           '<div class="stat-box">' +
             '<small>Tiến trình thực hiện</small>' +
-            '<b style="color:' + (proposal ? 'var(--green)' : (s ? 'var(--blue)' : 'var(--amber)')) + '">' + (proposal ? '100% Hoàn tất' : (s ? '75% Đang lập Proposal' : '50% Đang làm')) + '</b>' +
-            '<span>' + (proposal ? 'Đã có phương án & báo giá' : (s ? 'Đã khảo sát, chờ Proposal' : 'Chờ khảo sát hiện trạng')) + '</span>' +
+            '<b style="color:' + (approvedProposal ? 'var(--green)' : (proposalReady || surveyCompleted ? 'var(--blue)' : 'var(--amber)')) + '">' + projectProgress.pct + '% ' + (approvedProposal ? 'Đang thiết kế' : (proposalReady ? 'Đã có Proposal' : (surveyCompleted ? 'Đang lập Proposal' : 'Đang tiếp nhận'))) + '</b>' +
+            '<span>' + (currentProjectMilestone ? 'Tiếp theo: ' + escapeHtml(currentProjectMilestone.title) : 'Đã hoàn tất toàn bộ tiến trình') + '</span>' +
           '</div>' +
         '</div>' +
         '<!-- BANNER TIẾN TRÌNH: TỔNG QUAN -> BRIEF -> KHẢO SÁT -> PROPOSAL -->' +
@@ -4451,7 +4460,7 @@
               '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>' +
               'Dòng tiến trình của dự án: ' + escapeHtml(b.project_name) +
             '</h3>' +
-            '<span style="font-size:12.5px;color:var(--muted);">' + (proposal ? '✓ Đã hoàn thành đến Proposal' : (s ? 'Bước tiếp theo: Proposal' : 'Bước tiếp theo: Khảo sát')) + '</span>' +
+            '<span style="font-size:12.5px;color:var(--muted);">' + (approvedProposal ? '✓ Đã chuyển sang Thiết kế' : (proposalReady ? 'Chờ khách duyệt Proposal' : (surveyCompleted ? 'Bước tiếp theo: Proposal' : 'Bước tiếp theo: Khảo sát'))) + '</span>' +
           '</div>' +
 
           '<div class="pipeline-steps-4">' +
@@ -4488,9 +4497,9 @@
               '<div class="step-num survey">03</div>' +
               '<div class="step-info">' +
                 '<b>3. Khảo sát hiện trạng</b>' +
-                '<p>' + (s ? ('Hoàn tất bởi ' + escapeHtml(s.surveyor_name)) : 'Chưa có dữ liệu khảo sát') + '</p>' +
+            '<p>' + (surveyCompleted ? ('Hoàn tất bởi ' + escapeHtml(s.surveyor_name)) : (s ? 'Đang nhập hồ sơ khảo sát' : 'Chưa có dữ liệu khảo sát')) + '</p>' +
                 '<div style="margin-top:6px;">' +
-                  (s ? '<span class="tag green">✓ Đã khảo sát</span>' : '<span class="tag amber">⏳ Cần khảo sát</span>') +
+                  (surveyCompleted ? '<span class="tag green">✓ Đã khảo sát</span>' : '<span class="tag amber">⏳ Cần hoàn tất khảo sát</span>') +
                 '</div>' +
               '</div>' +
             '</div>' +
@@ -4503,8 +4512,8 @@
               '<div class="step-num proposal">04</div>' +
               '<div class="step-info">' +
                 '<b>4. Proposal</b>' +
-                '<p>' + (proposal ? 'Đã có phương án sơ bộ & báo giá' : 'Lập phương án sơ bộ và báo giá') + '</p>' +
-                '<div style="margin-top:6px;">' + (proposal ? '<span class="tag green">✓ Đã lập</span>' : '<span class="tag amber">⏳ Tiếp theo</span>') + '</div>' +
+                '<p>' + (proposalReady ? 'Đã có phương án sơ bộ & báo giá' : proposal ? 'Đang nhập phương án sơ bộ & báo giá' : 'Lập phương án sơ bộ và báo giá') + '</p>' +
+                '<div style="margin-top:6px;">' + (proposalReady ? '<span class="tag green">✓ Đã lập</span>' : proposal ? '<span class="tag blue">• Đang soạn</span>' : '<span class="tag amber">⏳ Tiếp theo</span>') + '</div>' +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -4560,7 +4569,7 @@
           '</div>' +
         '</div>' +
 
-        (proposal ? (
+        (proposalReady ? (
           '<div class="block-card" style="grid-column:1/-1;border-color:#c7d2fe;background:linear-gradient(135deg,#fff 0%,#f5f3ff 100%);">' +
             '<div class="block-header">' +
               '<span class="block-badge" style="background:var(--purple);">PROPOSAL GỬI KHÁCH</span>' +
