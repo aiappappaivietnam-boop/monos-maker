@@ -4621,36 +4621,6 @@
       var rows = renderProposalFeeRows(proposalData.items || []);
       body.innerHTML =
         '<form id="wp-proposal-form" onsubmit="event.preventDefault(); return false;">' +
-          '<!-- BLOCK NHẬP DỮ LIỆU DẠNG FREE ĐỂ AI TỔNG HỢP PROPOSAL -->' +
-          '<div class="proposal-free-box">' +
-            '<div class="proposal-free-head">' +
-              '<div>' +
-                '<h3>' +
-                  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>' +
-                  'Nhập dữ liệu tự do (Free Text) — AI tự động tổng hợp Proposal gửi khách' +
-                '</h3>' +
-                '<p>Gõ nhanh ý tưởng, ghi chú trao đổi, yêu cầu vật liệu hoặc phác thảo ngân sách. AI sẽ trích xuất và điền trọn bộ phương án sơ bộ, hồ sơ và báo giá chuẩn.</p>' +
-              '</div>' +
-              '<div style="display:flex;gap:8px;align-items:center;">' +
-                '<button type="button" class="btn btn-lime" style="padding:9px 16px;font-size:13px;font-weight:800;" onclick="synthesizeProposalFromFreeText()">' +
-                  '✨ AI tổng hợp thành Proposal chuẩn' +
-                '</button>' +
-              '</div>' +
-            '</div>' +
-            '<textarea id="proposal_free_text" class="proposal-free-textarea" placeholder="Ví dụ: Khách thích phong cách Japandi ấm áp, tông gỗ sồi và sơn hiệu ứng bê tông. Căn hộ 3 phòng ngủ 115m2 tại Masteri Centre Point. Cần làm phòng khách liền bếp đảo đá quartz, master bedroom có walk-in closet, 2 phòng ngủ cho con. Ngân sách thiết kế khoảng 65 - 80 triệu, tiến độ 20 ngày...">' + escapeHtml(proposalData.free_text || '') + '</textarea>' +
-            '<div class="proposal-free-actions">' +
-              '<div class="proposal-free-tags">' +
-                '<span style="font-size:12px;color:var(--muted);font-weight:700;">Gợi ý mẫu:</span>' +
-                '<span class="proposal-sample-tag" onclick="insertFreeSample(\'luxury\')">✨ Biệt thự Luxury hiện đại</span>' +
-                '<span class="proposal-sample-tag" onclick="insertFreeSample(\'japandi\')">🌿 Căn hộ Japandi tối giản</span>' +
-                '<span class="proposal-sample-tag" onclick="insertFreeSample(\'office\')">🏢 Văn phòng Studio sáng tạo</span>' +
-              '</div>' +
-              '<button type="button" class="btn btn-ghost" style="padding:6px 12px;font-size:12px;" onclick="generateStandardProposal()">' +
-                '⚡ Dùng dữ liệu từ Brief & Khảo sát có sẵn' +
-              '</button>' +
-            '</div>' +
-          '</div>' +
-
           '<div class="proposal-summary">' +
             '<div class="stat-box"><small>Giai đoạn</small><b>Proposal</b><span>Design proposal & Design Fee</span></div>' +
             '<div class="stat-box"><small>Khảo sát</small><b style="color:var(--green)">' + (s ? 'Đã hoàn thành' : 'Chưa hoàn thành') + '</b><span>Điều kiện để lập Proposal</span></div>' +
