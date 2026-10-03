@@ -2120,6 +2120,36 @@
     .milestone-calendar-card, .concept-list-table-wrap { border-color: #e5e5ea; border-radius: 12px; }
     .milestone-calendar-toolbar, .milestone-calendar-weekdays, .concept-list-table th { background: #f5f5f7; }
     .toast { border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,.16); }
+    .all-projects-summary { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin-bottom:18px; }
+    .all-projects-stat { background:#fff; border:1px solid #e5e5ea; border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); }
+    .all-projects-stat small { display:block; color:var(--muted); font-size:12px; font-weight:650; }
+    .all-projects-stat strong { display:block; margin-top:6px; color:var(--ink); font-size:28px; line-height:1.1; letter-spacing:-.04em; }
+    .all-projects-stat span { display:block; margin-top:5px; color:var(--muted); font-size:12px; }
+    .all-projects-stat.blue strong { color:var(--blue); }
+    .all-projects-stat.green strong { color:var(--green); }
+    .all-projects-stat.purple strong { color:var(--purple); }
+    .all-projects-list { display:grid; gap:12px; }
+    .all-project-card { background:#fff; border:1px solid #e5e5ea; border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); }
+    .all-project-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+    .all-project-card-title { min-width:0; }
+    .all-project-card-title h3 { color:var(--ink); font-size:17px; font-weight:700; letter-spacing:-.02em; }
+    .all-project-card-title p { margin-top:3px; color:var(--muted); font-size:12.5px; }
+    .all-project-status { display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:5px 10px; border-radius:99px; font-size:11.5px; font-weight:700; background:#f5f5f7; color:var(--muted); }
+    .all-project-status.contact { background:#fff4df; color:#b45309; }
+    .all-project-status.design { background:#eaf3ff; color:var(--blue); }
+    .all-project-status.done { background:#e9f9ee; color:var(--green); }
+    .all-project-card-meta { display:grid; grid-template-columns:1.2fr 1fr 1fr 1.4fr; gap:12px; margin-top:16px; padding-top:14px; border-top:1px solid #e5e5ea; }
+    .all-project-card-meta small { display:block; color:var(--muted); font-size:11px; }
+    .all-project-card-meta b { display:block; margin-top:3px; color:var(--ink); font-size:13px; font-weight:650; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .all-project-progress { height:7px; margin-top:14px; overflow:hidden; background:#e5e5ea; border-radius:99px; }
+    .all-project-progress i { display:block; height:100%; background:var(--blue); border-radius:inherit; }
+    .all-project-progress.done i { background:var(--green); }
+    .all-project-card-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:10px; }
+    .all-project-card-foot span { color:var(--muted); font-size:12px; }
+    .all-project-empty { background:#fff; border:1.5px dashed #d2d2d7; border-radius:14px; padding:56px 24px; text-align:center; color:var(--muted); }
+    .all-project-empty strong { display:block; color:var(--ink); font-size:17px; margin-bottom:6px; }
+    @media (max-width: 980px) { .all-projects-summary { grid-template-columns:repeat(2, minmax(0, 1fr)); } .all-project-card-meta { grid-template-columns:1fr 1fr; } }
+    @media (max-width: 620px) { .all-projects-summary { grid-template-columns:1fr 1fr; } .all-project-card-head, .all-project-card-foot { align-items:flex-start; flex-direction:column; } .all-project-card-meta { grid-template-columns:1fr; } }
     @media (max-width: 980px) { .sidebar { background: #fbfbfd; } .main { padding: 26px 22px 60px; } }
 </style>
 </head>
@@ -2145,6 +2175,15 @@
         </span>
         <span>Workspace (1 dự án)</span>
         <span class="badge" id="workplace-badge">Active</span>
+      </button>
+
+      <!-- TỔNG QUAN TẤT CẢ DỰ ÁN -->
+      <button class="nav-item" id="btn-menu-projects" onclick="switchView('projects')">
+        <span class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M3 12h18M3 17h18"></path><circle cx="6" cy="7" r="1"></circle><circle cx="6" cy="12" r="1"></circle><circle cx="6" cy="17" r="1"></circle></svg>
+        </span>
+        <span>Tất cả dự án</span>
+        <span class="badge" id="all-projects-badge">0</span>
       </button>
 
       <!-- MILESTONE: MỤC THEO DÕI RIÊNG TOÀN BỘ TIẾN TRÌNH -->
@@ -2175,6 +2214,23 @@
 
   <!-- MAIN VIEW AREA -->
   <main class="main">
+
+    <!-- ============================================== -->
+    <!-- VIEW: TẤT CẢ DỰ ÁN -->
+    <!-- ============================================== -->
+    <section id="view-projects" style="display: none;">
+      <div class="topbar">
+        <div>
+          <h1>Tất cả dự án</h1>
+          <p>Xem nhanh số lượng dự án, tình trạng hiện tại và bước đang thực hiện của từng dự án.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button type="button" class="btn btn-ghost" onclick="simulateInitProject()">⚡ Giả lập thêm dự án</button>
+          <button type="button" class="btn btn-lime" onclick="openAddProjectModal()">+ Thêm dự án mới</button>
+        </div>
+      </div>
+      <div id="all-projects-body"></div>
+    </section>
 
     <!-- ============================================== -->
     <!-- VIEW: WORKSPACE (DÀNH CHO 1 DỰ ÁN DUY NHẤT ĐƯỢC LOAD) -->
@@ -3612,21 +3668,25 @@
   // CHUYỂN MENU CHÍNH
   function switchView(viewName, preserveWorkspaceTab) {
     var viewWorkplace = document.getElementById('view-workplace');
+    var viewProjects = document.getElementById('view-projects');
     var viewBrief = document.getElementById('view-brief');
     var viewSurvey = document.getElementById('view-survey');
     var viewMilestones = document.getElementById('view-milestones');
 
     var btnWorkplace = document.getElementById('btn-menu-workplace');
+    var btnProjects = document.getElementById('btn-menu-projects');
     var btnBrief = document.getElementById('btn-menu-brief');
     var btnSurvey = document.getElementById('btn-menu-survey');
     var btnMilestones = document.getElementById('btn-menu-milestones');
 
     viewWorkplace.style.display = 'none';
+    if (viewProjects) viewProjects.style.display = 'none';
     viewBrief.style.display = 'none';
     viewSurvey.style.display = 'none';
     if (viewMilestones) viewMilestones.style.display = 'none';
 
     if (btnWorkplace) btnWorkplace.classList.remove('active');
+    if (btnProjects) btnProjects.classList.remove('active');
     if (btnBrief) btnBrief.classList.remove('active');
     if (btnSurvey) btnSurvey.classList.remove('active');
     if (btnMilestones) btnMilestones.classList.remove('active');
@@ -3636,6 +3696,10 @@
       if (viewWorkplace) viewWorkplace.style.display = 'block';
       if (btnWorkplace) btnWorkplace.classList.add('active');
       renderSingleProjectWorkspace();
+    } else if (viewName === 'projects') {
+      if (viewProjects) viewProjects.style.display = 'block';
+      if (btnProjects) btnProjects.classList.add('active');
+      renderAllProjectsView();
     } else if (viewName === 'brief') {
       if (viewBrief) viewBrief.style.display = 'block';
       if (btnBrief) btnBrief.classList.add('active');
@@ -3733,6 +3797,75 @@
         '🏠 ' + escapeHtml(b.project_name) + ' (' + escapeHtml(b.client_name) + ')' +
       '</option>';
     }).join('');
+  }
+
+  function allProjectStatusLabel(progress, data) {
+    var current = (progress.list || []).find(function(item){ return item.status === 'active'; });
+    if (!current) return { label:'Đã hoàn tất', className:'done', detail:'Hoàn tất toàn bộ tiến trình' };
+    var designStarted = progress.list.some(function(item){ return item.id === 'proposal_approve' && item.status === 'done'; }) || progress.list.some(function(item){ return item.id.indexOf('design_') === 0 && item.status === 'done'; });
+    return {
+      label: designStarted ? 'Đang thiết kế' : 'Đang tiếp xúc khách hàng',
+      className: designStarted ? 'design' : 'contact',
+      detail: current.title
+    };
+  }
+
+  function renderAllProjectsView() {
+    var body = document.getElementById('all-projects-body');
+    var badge = document.getElementById('all-projects-badge');
+    if (!body) return;
+    if (badge) badge.textContent = briefs.length;
+    if (!briefs.length) {
+      body.innerHTML = '<div class="all-project-empty"><div style="font-size:36px;margin-bottom:10px">📁</div><strong>Chưa có dự án nào</strong><p>Thêm dự án mới để theo dõi tình trạng và tiến độ tại đây.</p><button type="button" class="btn btn-lime" style="margin-top:16px" onclick="openAddProjectModal()">+ Thêm dự án mới</button></div>';
+      return;
+    }
+    var rows = briefs.map(function(project) {
+      var survey = surveys.find(function(item){ return item.survey_project_ref === project.project_name; });
+      var proposal = proposals.find(function(item){ return item.project_name === project.project_name; });
+      var progress = milestoneProgress(project.project_name, project, survey, proposal);
+      var status = allProjectStatusLabel(progress, { brief:project, survey:survey, proposal:proposal });
+      var current = progress.list.find(function(item){ return item.status === 'active'; });
+      var isActive = activeProjectName === project.project_name;
+      return '<article class="all-project-card">' +
+        '<div class="all-project-card-head">' +
+          '<div class="all-project-card-title"><h3>' + escapeHtml(project.project_name) + '</h3><p>' + escapeHtml(project.client_name || 'Chưa cập nhật khách hàng') + ' · ' + escapeHtml(project.project_address || 'Chưa cập nhật địa điểm') + '</p></div>' +
+          '<span class="all-project-status ' + status.className + '">' + (status.className === 'done' ? '✓' : '●') + ' ' + status.label + '</span>' +
+        '</div>' +
+        '<div class="all-project-card-meta">' +
+          '<div><small>Bước hiện tại</small><b>' + escapeHtml(status.detail) + '</b></div>' +
+          '<div><small>Người phụ trách</small><b>' + escapeHtml(project.brief_staff || 'Chưa cập nhật') + '</b></div>' +
+          '<div><small>Ngày lấy Brief</small><b>' + escapeHtml(formatDateOnly(project.brief_date) || 'Chưa cập nhật') + '</b></div>' +
+          '<div><small>Tiến độ</small><b>' + progress.done + '/' + progress.total + ' milestone (' + progress.pct + '%)</b></div>' +
+        '</div>' +
+        '<div class="all-project-progress ' + (status.className === 'done' ? 'done' : '') + '"><i style="width:' + progress.pct + '%"></i></div>' +
+        '<div class="all-project-card-foot"><span>' + (current ? 'Cần hoàn tất: ' + escapeHtml(current.title) : 'Đã hoàn tất toàn bộ milestone') + '</span><button type="button" class="btn ' + (isActive ? 'btn-blue' : 'btn-ghost') + '" style="padding:7px 13px;font-size:12px" onclick="loadProjectFromAllProjects(\'' + escapeHtmlAttr(project.project_name) + '\')">' + (isActive ? 'Đang mở Workspace' : 'Mở Workspace') + '</button></div>' +
+      '</article>';
+    }).join('');
+    var total = briefs.length;
+    var contact = briefs.filter(function(project){
+      var survey = surveys.find(function(item){ return item.survey_project_ref === project.project_name; });
+      var proposal = proposals.find(function(item){ return item.project_name === project.project_name; });
+      return allProjectStatusLabel(milestoneProgress(project.project_name, project, survey, proposal), {}).className === 'contact';
+    }).length;
+    var design = briefs.filter(function(project){
+      var survey = surveys.find(function(item){ return item.survey_project_ref === project.project_name; });
+      var proposal = proposals.find(function(item){ return item.project_name === project.project_name; });
+      return allProjectStatusLabel(milestoneProgress(project.project_name, project, survey, proposal), {}).className === 'design';
+    }).length;
+    var done = total - contact - design;
+    body.innerHTML = '<div class="all-projects-summary">' +
+      '<div class="all-projects-stat blue"><small>Tổng số dự án</small><strong>' + total + '</strong><span>Đang quản lý</span></div>' +
+      '<div class="all-projects-stat"><small>Tiếp xúc khách hàng</small><strong>' + contact + '</strong><span>Brief · Khảo sát · Proposal</span></div>' +
+      '<div class="all-projects-stat purple"><small>Đang thiết kế</small><strong>' + design + '</strong><span>Đã qua Proposal</span></div>' +
+      '<div class="all-projects-stat green"><small>Đã hoàn tất</small><strong>' + done + '</strong><span>Hoàn thành toàn bộ</span></div>' +
+    '</div><div class="all-projects-list">' + rows + '</div>';
+  }
+
+  function loadProjectFromAllProjects(projectName) {
+    persistActiveProject(projectName);
+    activeSubTab = 'overview';
+    switchView('workplace');
+    showToast('Đã load dự án: ' + projectName + ' vào Workspace.');
   }
 
   // SỰ KIỆN KHI CHỌN LOAD 1 DỰ ÁN CỤ THỂ
@@ -5639,6 +5772,9 @@ function saveWorkspaceProposal(e) {
 
   function updateCounts() {
     updateSidebarNote();
+    var allProjectsBadge = document.getElementById('all-projects-badge');
+    if (allProjectsBadge) allProjectsBadge.textContent = briefs.length;
+    if (document.getElementById('view-projects') && document.getElementById('view-projects').style.display !== 'none') renderAllProjectsView();
     var briefCount = document.getElementById('brief-count');
     var surveyCount = document.getElementById('survey-count');
     var briefTagCount = document.getElementById('brief-tag-count');
@@ -5871,6 +6007,7 @@ function saveWorkspaceProposal(e) {
     renderBriefList();
     renderSurveyList();
     renderSingleProjectWorkspace();
+    renderAllProjectsView();
     showToast('⚡ Đã khởi tạo dữ liệu mẫu cho Workspace.');
   }
 
