@@ -566,6 +566,7 @@
     .proposal-line input { width:100%; border:1px solid var(--line); border-radius:9px; padding:9px 10px; background:#fafbfc; color:var(--ink); }
     .proposal-line button { border:0; background:#fee2e2; color:#b91c1c; border-radius:8px; height:34px; cursor:pointer; }
     .proposal-total { display:flex; justify-content:flex-end; gap:18px; align-items:center; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:16px; font-weight:800; }
+    .proposal-after-pricing-actions { display:flex; justify-content:flex-end; margin-top:16px; padding-top:16px; border-top:1px solid var(--line); }
     .proposal-total span { color:var(--blue); }
     .proposal-checklist { display:grid; gap:9px; }
     .proposal-check { display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fafbfc; }
@@ -4646,18 +4647,20 @@
               '<div class="proposal-ai-pricing-copy"><strong>✨ AI Pricing Template</strong><span>Nhận diện loại công trình, diện tích, phong cách và từng không gian trong Brief để đề xuất Concept, Layout, Phối cảnh, Vật liệu và Hồ sơ kỹ thuật phù hợp. Các dòng giá sẽ tự động cập nhật khi chỉnh sửa.</span></div>' +
               '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">' +
                 '<button type="button" class="btn btn-blue" onclick="generateAIDesignFee()">✨ AI sắp xếp báo giá từ Brief</button>' +
-                '<button type="button" class="btn btn-navy" onclick="generateAIDesignFeeAndOpenPdf()">📄 Xuất PDF Proposal & báo giá từ AI</button>' +
               '</div>' +
-            '</div>' +
-            '<div class="attachment-card attachment-unified-card" style="margin:0 0 16px">' +
-              '<div class="attachment-head"><div><label>📄 PDF báo giá đã xuất</label><p>Sau khi bấm Xuất PDF, tải file báo giá vào đây để lưu cùng hồ sơ Proposal của dự án.</p></div><span class="tag blue">Quotation PDF</span></div>' +
-              '<label class="attachment-unified-upload" style="min-height:72px"><input type="file" multiple accept="application/pdf,.pdf" onchange="handleProposalFeePdfUpload(event)"><span><strong>＋ Đính kèm PDF báo giá</strong><span>Chỉ nhận file .pdf · Có thể chọn nhiều phiên bản</span></span></label>' +
-              '<div class="file-chip-list" id="proposal-fee-pdf-files">' + renderProposalFeePdfChips() + '</div>' +
             '</div>' +
             '<div class="proposal-fee-head"><span>Loại</span><span>Hạng mục thiết kế</span><span>Số lượng / đơn vị</span><span>Đơn giá (VNĐ)</span><span></span></div>' +
             '<div id="proposal-line-items" class="proposal-line-items">' + rows + '</div>' +
             '<button type="button" class="btn btn-ghost" style="margin-top:12px" onclick="addProposalItem()">+ Thêm hạng mục Design Fee</button>' +
             '<div class="proposal-total">Tổng Design Fee: <span id="proposal-total-display">' + formatCurrency(proposalData.total || 0) + '</span></div>' +
+            '<div class="proposal-after-pricing-actions">' +
+              '<button type="button" class="btn btn-navy" onclick="generateAIDesignFeeAndOpenPdf()">📄 Xuất PDF Proposal & báo giá từ AI</button>' +
+            '</div>' +
+            '<div class="attachment-card attachment-unified-card" style="margin-top:16px">' +
+              '<div class="attachment-head"><div><label>📄 PDF báo giá đã xuất</label><p>Sau khi bấm Xuất PDF, tải file báo giá vào đây để lưu cùng hồ sơ Proposal của dự án.</p></div><span class="tag blue">Quotation PDF</span></div>' +
+              '<label class="attachment-unified-upload" style="min-height:72px"><input type="file" multiple accept="application/pdf,.pdf" onchange="handleProposalFeePdfUpload(event)"><span><strong>＋ Đính kèm PDF báo giá</strong><span>Chỉ nhận file .pdf · Có thể chọn nhiều phiên bản</span></span></label>' +
+              '<div class="file-chip-list" id="proposal-fee-pdf-files">' + renderProposalFeePdfChips() + '</div>' +
+            '</div>' +
           '</div>' +
           '<div class="action-bar"><div><span class="tag green">Dự án: ' + escapeHtml(b.project_name) + '</span></div><div><span class="realtime-save-status">✓ Tự động lưu khi nhập</span></div></div>' +
         '</form>';
