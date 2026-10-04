@@ -2330,6 +2330,47 @@
       }
       .wp-tab-btn.stage-tab { flex: none; }
     }
+
+    /* FLOW BUILDER */
+    .workflow-topbar { align-items: flex-start; }
+    .workflow-top-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .workflow-setup-bar { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; gap:12px; align-items:end; padding:16px 18px; margin-bottom:18px; border:1px solid var(--line-soft); border-radius:14px; background:rgba(255,255,255,.82); box-shadow:var(--shadow); }
+    .workflow-setup-field { display:grid; gap:6px; min-width:0; }
+    .workflow-setup-field label { color:var(--muted); font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.04em; }
+    .workflow-assignment-status { align-self:center; max-width:230px; padding:9px 12px; color:var(--muted); background:#f5f5f7; border:1px solid var(--line); border-radius:10px; font-size:12px; font-weight:700; text-align:center; }
+    .workflow-layout { display:grid; grid-template-columns:290px minmax(0,1fr); gap:18px; align-items:start; }
+    .workflow-library-card, .workflow-editor-card { min-width:0; padding:20px; border:1px solid var(--line-soft); border-radius:14px; background:var(--surface); box-shadow:var(--shadow); }
+    .workflow-card-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .workflow-card-heading h3 { margin-top:3px; font-size:16px; }
+    .eyebrow { color:var(--blue); font-size:10px; font-weight:800; letter-spacing:.08em; }
+    .workflow-library-count { display:grid; place-items:center; width:28px; height:28px; border-radius:50%; color:var(--blue); background:var(--blue-subtle); font-size:11px; font-weight:800; }
+    .workflow-helper { margin:10px 0 16px; color:var(--muted); font-size:12px; line-height:1.5; }
+    .workflow-template-list { display:grid; gap:8px; }
+    .workflow-template-item { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:10px; background:#fbfbfd; color:var(--ink); cursor:pointer; text-align:left; }
+    .workflow-template-item:hover, .workflow-template-item.active { border-color:#9dc8f2; background:var(--blue-subtle); }
+    .workflow-template-item strong { display:block; font-size:12.5px; }
+    .workflow-template-item span { display:block; margin-top:3px; color:var(--muted); font-size:10.5px; }
+    .workflow-editor-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:15px; margin-bottom:16px; }
+    .workflow-editor-heading h2 { font-size:20px; letter-spacing:-.02em; }
+    .workflow-editor-heading p { margin-top:4px; color:var(--muted); font-size:12px; }
+    .workflow-editor-actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .workflow-meta-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:12px; margin-bottom:18px; }
+    .workflow-field { display:grid; gap:6px; min-width:0; }
+    .workflow-field label { color:var(--muted); font-size:11px; font-weight:700; }
+    .workflow-field input, .workflow-field textarea, .workflow-field select { width:100%; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#f5f5f7; color:var(--ink); }
+    .workflow-field textarea { min-height:72px; resize:vertical; }
+    .workflow-stages { display:grid; gap:10px; }
+    .workflow-stage-row { display:grid; grid-template-columns:34px minmax(0,1fr) 130px 34px; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:11px; background:#fbfbfd; }
+    .workflow-stage-number { display:grid; place-items:center; width:30px; height:30px; border-radius:9px; color:var(--blue); background:var(--blue-subtle); font-size:12px; font-weight:800; }
+    .workflow-stage-row input, .workflow-stage-row select { width:100%; min-width:0; padding:9px 10px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font-size:12.5px; }
+    .workflow-stage-info { min-width:0; }
+    .workflow-stage-info small { display:block; margin-bottom:4px; color:var(--muted); font-size:10px; font-weight:700; }
+    .workflow-stage-remove { display:grid; place-items:center; width:30px; height:30px; border:1px solid #fecaca; border-radius:50%; background:#fff; color:#dc2626; cursor:pointer; }
+    .workflow-module-note { margin:16px 0 0; padding:12px 14px; border-radius:10px; background:#f5f5f7; color:var(--muted); font-size:12px; line-height:1.55; }
+    .workflow-module-note b { color:var(--ink); }
+    .workflow-empty { padding:42px 20px; border:1px dashed var(--line); border-radius:12px; color:var(--muted); text-align:center; }
+    @media (max-width: 980px) { .workflow-layout { grid-template-columns:1fr; } .workflow-library-card { order:2; } .workflow-editor-card { order:1; } }
+    @media (max-width: 620px) { .workflow-setup-bar, .workflow-meta-grid { grid-template-columns:1fr; } .workflow-assignment-status { max-width:none; } .workflow-stage-row { grid-template-columns:30px minmax(0,1fr) 30px; } .workflow-stage-row select { grid-column:2 / -1; } .workflow-editor-heading { flex-direction:column; } .workflow-editor-actions { justify-content:flex-start; } }
 </style>
 </head>
 <body>
@@ -2372,6 +2413,15 @@
         </span>
         <span>Milestone tiến trình</span>
         <span class="badge" id="milestone-count">0%</span>
+      </button>
+
+      <!-- THIẾT KẾ FLOW: CẤU HÌNH QUY TRÌNH VÀ MODULE CHO TỪNG DOANH NGHIỆP -->
+      <button class="nav-item" id="btn-menu-workflows" onclick="switchView('workflows')">
+        <span class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="5" r="2.5"></circle><circle cx="19" cy="12" r="2.5"></circle><circle cx="5" cy="19" r="2.5"></circle><path d="M7.5 5h5a4 4 0 0 1 4 4v.5M7.5 19h5a4 4 0 0 0 4-4v-.5"></path></svg>
+        </span>
+        <span>Thiết kế quy trình</span>
+        <span class="badge" id="workflow-count">Flow</span>
       </button>
     </nav>
 
@@ -2524,6 +2574,49 @@
       </div>
 
       <div id="milestone-standalone-body"></div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- VIEW: THIẾT KẾ FLOW / MODULE CHO TỪNG CÔNG TY -->
+    <!-- ============================================== -->
+    <section id="view-workflows" style="display: none;">
+      <div class="topbar workflow-topbar">
+        <div>
+          <h1>Thiết kế quy trình</h1>
+          <p>Tạo flow riêng cho từng công ty, sau đó gán flow đó vào dự án. Các module có sẵn sẽ chạy theo đúng thứ tự và điều kiện của flow.</p>
+        </div>
+        <div class="workflow-top-actions">
+          <button type="button" class="btn btn-ghost" onclick="createWorkflowTemplate()">+ Tạo flow mới</button>
+          <button type="button" class="btn btn-lime" onclick="assignWorkflowToSelectedProject()">Áp dụng cho dự án</button>
+        </div>
+      </div>
+
+      <div class="workflow-setup-bar">
+        <div class="workflow-setup-field">
+          <label for="workflow-project-select">Dự án áp dụng</label>
+          <select id="workflow-project-select" class="project-select" onchange="onWorkflowProjectChange(this.value)"></select>
+        </div>
+        <div class="workflow-setup-field">
+          <label for="workflow-template-select">Flow đang chỉnh sửa</label>
+          <select id="workflow-template-select" class="project-select" onchange="selectWorkflowTemplate(this.value)"></select>
+        </div>
+        <div class="workflow-assignment-status" id="workflow-assignment-status">Chưa chọn flow</div>
+      </div>
+
+      <div class="workflow-layout">
+        <aside class="workflow-library-card">
+          <div class="workflow-card-heading">
+            <div><span class="eyebrow">THƯ VIỆN</span><h3>Flow templates</h3></div>
+            <span class="workflow-library-count" id="workflow-library-count">0</span>
+          </div>
+          <p class="workflow-helper">Mỗi công ty có thể dùng một flow khác nhau. Flow được lưu riêng trên trình duyệt này.</p>
+          <div id="workflow-template-list" class="workflow-template-list"></div>
+        </aside>
+
+        <div class="workflow-editor-card">
+          <div id="workflow-editor-body"></div>
+        </div>
+      </div>
     </section>
 
     <!-- ============================================== -->
@@ -3114,6 +3207,10 @@
   var allProjectsFilter = { query: '', status: 'all' };
   var milestoneDisplayMode = 'timeline';
   var milestoneCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  var workflowTemplates = [];
+  var workflowAssignments = {};
+  var activeWorkflowTemplateId = null;
+  var workflowProjectName = null;
   var toastActionHandler = null;
   var pendingAttachments = { photos: [], videos: [], drawings: [], documents: [] };
   var pendingAttachmentProject = null;
@@ -3124,6 +3221,73 @@
     { id: 'TM-04', name: 'Trần Linh', role: 'FF&E Designer' },
     { id: 'TM-05', name: 'Ngọc Anh', role: 'Project Manager' }
   ];
+
+  // Thư viện flow mẫu. Mỗi stage chỉ mô tả việc phải làm và module sẽ xử lý
+  // form/attachment/approval tương ứng. Flow mới có thể thay đổi thứ tự hoặc
+  // bỏ thêm stage mà không làm thay đổi dữ liệu Brief, Survey, Proposal cũ.
+  var defaultWorkflowTemplates = [
+    {
+      id: 'wf-interior-build',
+      name: 'Interior Design & Build',
+      owner: 'Mẫu theo quy trình sơ đồ',
+      description: 'Flow mẫu cho công ty thiết kế nội thất có đầy đủ thiết kế, mua hàng, thi công và bàn giao.',
+      stages: [
+        { id:'request', title:'Tiếp nhận yêu cầu khách hàng', module:'brief', type:'auto', subtitle:'Ghi nhận nhu cầu, bối cảnh và mục tiêu thiết kế.' },
+        { id:'charter', title:'Project Charter', module:'brief', type:'auto', subtitle:'Chốt phạm vi, ngân sách, mục tiêu và bên liên quan.' },
+        { id:'site-survey', title:'Khảo sát hiện trạng', module:'survey', type:'auto', subtitle:'Đo đạc và tập hợp hình ảnh, video, bản vẽ, giấy tờ.' },
+        { id:'layout-moodboard', title:'Layout & Moodboard', module:'proposal', type:'auto', subtitle:'Xây dựng phương án sơ bộ, layout và moodboard.' },
+        { id:'estimate-ten', title:'Dự toán sơ bộ ±10%', module:'pricing', type:'auto', subtitle:'QS lập dự toán sơ bộ theo phạm vi dự kiến.' },
+        { id:'high-level-proposal', title:'High-level Proposal', module:'proposal', type:'auto', subtitle:'Tổng hợp phương án và chi phí để gửi khách hàng.' },
+        { id:'client-approve-concept', title:'Khách hàng duyệt phương án', module:'approval', type:'approve', subtitle:'Ghi nhận khách hàng đồng ý phương án và phạm vi.' },
+        { id:'detail-layout', title:'Detail Layout & 3D', module:'design', type:'auto', subtitle:'Triển khai layout chi tiết và phối cảnh 3D.' },
+        { id:'detail-boq', title:'Detail BOQ ±5%', module:'pricing', type:'auto', subtitle:'QS bóc tách khối lượng và cập nhật báo giá.' },
+        { id:'detail-proposal', title:'Detail Proposal', module:'proposal', type:'auto', subtitle:'Hoàn thiện bộ hồ sơ đề xuất chi tiết.' },
+        { id:'client-approve-detail', title:'Khách hàng duyệt hồ sơ chi tiết', module:'approval', type:'approve', subtitle:'Xác nhận hồ sơ chi tiết trước khi chốt thi công.' },
+        { id:'full-design', title:'Thiết kế đầy đủ', module:'design', type:'auto', subtitle:'Hoàn thiện hồ sơ thiết kế và các chi tiết triển khai.' },
+        { id:'sample-approval', title:'Trình duyệt mẫu', module:'approval', type:'approve', subtitle:'Duyệt vật liệu, mẫu hoàn thiện và mockup.' },
+        { id:'contract-po', title:'Hợp đồng & PO', module:'contract', type:'auto', subtitle:'Chuẩn bị hợp đồng, PO, bảo hiểm và đặt cọc.' },
+        { id:'construction-wbs', title:'Thi công, WBS & tiến độ', module:'construction', type:'auto', subtitle:'PM/Site Team triển khai WBS, tiến độ và phối hợp nhà thầu.' },
+        { id:'handover', title:'Bàn giao & Defect list', module:'handover', type:'auto', subtitle:'Lập hồ sơ bàn giao, theo dõi và đóng danh sách lỗi.' },
+        { id:'settlement', title:'Quyết toán & đóng dự án', module:'closing', type:'auto', subtitle:'Hoàn tất hồ sơ quyết toán và kết thúc dự án.' }
+      ]
+    },
+    {
+      id: 'wf-contact-to-design',
+      name: 'Contact → Design',
+      owner: 'Flow hiện tại',
+      description: 'Flow gọn cho dự án chỉ đi từ gặp khách đến Proposal rồi triển khai thiết kế.',
+      stages: [
+        { id:'meeting', title:'Gặp khách hàng lần đầu', module:'brief', type:'auto', subtitle:'Tiếp nhận nhu cầu và bối cảnh dự án.' },
+        { id:'brief', title:'Lấy Brief khách hàng', module:'brief', type:'auto', subtitle:'Hoàn tất hồ sơ Brief.' },
+        { id:'survey', title:'Khảo sát hiện trạng', module:'survey', type:'auto', subtitle:'Hoàn tất hồ sơ khảo sát và attachment.' },
+        { id:'proposal', title:'Proposal & Design Fee', module:'proposal', type:'auto', subtitle:'Hoàn thiện phương án sơ bộ và báo giá.' },
+        { id:'proposal-approval', title:'Khách hàng duyệt Proposal', module:'approval', type:'approve', subtitle:'Chốt phạm vi và chi phí để chuyển sang thiết kế.' },
+        { id:'concept', title:'Thiết kế Concept', module:'design', type:'auto', subtitle:'Đính kèm phối cảnh, layout và moodboard.' },
+        { id:'schematic', title:'Thiết kế Sơ phát', module:'design', type:'auto', subtitle:'Triển khai layout công năng.' },
+        { id:'development', title:'Thiết kế Khai triển', module:'design', type:'auto', subtitle:'Triển khai phối cảnh và hồ sơ chi tiết.' },
+        { id:'construction', title:'Thiết kế Thi công', module:'design', type:'auto', subtitle:'Hoàn thiện bộ hồ sơ bản vẽ thi công.' }
+      ]
+    },
+    {
+      id: 'wf-blank',
+      name: 'Flow trống',
+      owner: 'Tự thiết kế',
+      description: 'Bắt đầu từ một flow trống và thêm các stage/module theo quy trình riêng.',
+      stages: []
+    }
+  ];
+
+  try {
+    var storedWorkflowTemplates = localStorage.getItem('formwork_workflow_templates');
+    if (storedWorkflowTemplates) workflowTemplates = JSON.parse(storedWorkflowTemplates);
+    if (!Array.isArray(workflowTemplates) || !workflowTemplates.length) workflowTemplates = JSON.parse(JSON.stringify(defaultWorkflowTemplates));
+  } catch(e) { workflowTemplates = JSON.parse(JSON.stringify(defaultWorkflowTemplates)); }
+  try {
+    var storedWorkflowAssignments = localStorage.getItem('formwork_workflow_assignments');
+    if (storedWorkflowAssignments) workflowAssignments = JSON.parse(storedWorkflowAssignments);
+    if (!workflowAssignments || typeof workflowAssignments !== 'object') workflowAssignments = {};
+  } catch(e) { workflowAssignments = {}; }
+  activeWorkflowTemplateId = workflowTemplates[0] ? workflowTemplates[0].id : null;
 
   try {
     var storedBriefs = localStorage.getItem('formwork_briefs');
@@ -3852,24 +4016,28 @@
     var viewBrief = document.getElementById('view-brief');
     var viewSurvey = document.getElementById('view-survey');
     var viewMilestones = document.getElementById('view-milestones');
+    var viewWorkflows = document.getElementById('view-workflows');
 
     var btnWorkplace = document.getElementById('btn-menu-workplace');
     var btnProjects = document.getElementById('btn-menu-projects');
     var btnBrief = document.getElementById('btn-menu-brief');
     var btnSurvey = document.getElementById('btn-menu-survey');
     var btnMilestones = document.getElementById('btn-menu-milestones');
+    var btnWorkflows = document.getElementById('btn-menu-workflows');
 
     viewWorkplace.style.display = 'none';
     if (viewProjects) viewProjects.style.display = 'none';
     viewBrief.style.display = 'none';
     viewSurvey.style.display = 'none';
     if (viewMilestones) viewMilestones.style.display = 'none';
+    if (viewWorkflows) viewWorkflows.style.display = 'none';
 
     if (btnWorkplace) btnWorkplace.classList.remove('active');
     if (btnProjects) btnProjects.classList.remove('active');
     if (btnBrief) btnBrief.classList.remove('active');
     if (btnSurvey) btnSurvey.classList.remove('active');
     if (btnMilestones) btnMilestones.classList.remove('active');
+    if (btnWorkflows) btnWorkflows.classList.remove('active');
 
     if (viewName === 'workplace') {
       if (!preserveWorkspaceTab) activeSubTab = 'overview';
@@ -3897,6 +4065,10 @@
       if (viewMilestones) viewMilestones.style.display = 'block';
       if (btnMilestones) btnMilestones.classList.add('active');
       renderStandaloneMilestones();
+    } else if (viewName === 'workflows') {
+      if (viewWorkflows) viewWorkflows.style.display = 'block';
+      if (btnWorkflows) btnWorkflows.classList.add('active');
+      renderWorkflowBuilder();
     }
     updateFloatingDemoButton();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4099,7 +4271,177 @@
     showToast('Đã load dự án: ' + val + ' vào tất cả các tab!');
   }
 
-  function milestoneTemplate() {
+  function getWorkflowForProject(projectName) {
+    var id = projectName && workflowAssignments ? workflowAssignments[projectName] : null;
+    return (workflowTemplates || []).find(function(item){ return item.id === id; }) || null;
+  }
+
+  function persistWorkflowData() {
+    localStorage.setItem('formwork_workflow_templates', JSON.stringify(workflowTemplates || []));
+    localStorage.setItem('formwork_workflow_assignments', JSON.stringify(workflowAssignments || {}));
+  }
+
+  function workflowModuleLabel(moduleName) {
+    var labels = { brief:'Brief', survey:'Khảo sát', proposal:'Proposal', pricing:'Báo giá', approval:'Duyệt', design:'Thiết kế', contract:'Hợp đồng', construction:'Thi công', handover:'Bàn giao', closing:'Đóng dự án', other:'Module riêng' };
+    return labels[moduleName] || labels.other;
+  }
+
+  function workflowStageId(prefix) {
+    return String(prefix || 'stage').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36).slice(-5);
+  }
+
+  function getWorkflowEditorTemplate() {
+    return (workflowTemplates || []).find(function(item){ return item.id === activeWorkflowTemplateId; }) || null;
+  }
+
+  function renderWorkflowBuilder() {
+    var projectSelect = document.getElementById('workflow-project-select');
+    var templateSelect = document.getElementById('workflow-template-select');
+    if (!projectSelect || !templateSelect) return;
+    if (!workflowProjectName || !briefs.some(function(item){ return item.project_name === workflowProjectName; })) workflowProjectName = activeProjectName || (briefs[0] && briefs[0].project_name) || null;
+    projectSelect.innerHTML = briefs.length ? briefs.map(function(item){ return '<option value="' + escapeHtmlAttr(item.project_name) + '" ' + (item.project_name === workflowProjectName ? 'selected' : '') + '>' + escapeHtml(item.project_name) + '</option>'; }).join('') : '<option value="">-- Chưa có dự án --</option>';
+    if (!activeWorkflowTemplateId || !workflowTemplates.some(function(item){ return item.id === activeWorkflowTemplateId; })) activeWorkflowTemplateId = (workflowProjectName && workflowAssignments[workflowProjectName]) || (workflowTemplates[0] && workflowTemplates[0].id) || null;
+    templateSelect.innerHTML = workflowTemplates.map(function(item){ return '<option value="' + escapeHtmlAttr(item.id) + '" ' + (item.id === activeWorkflowTemplateId ? 'selected' : '') + '>' + escapeHtml(item.name) + '</option>'; }).join('');
+    renderWorkflowTemplateList();
+    renderWorkflowEditor();
+    updateWorkflowAssignmentStatus();
+  }
+
+  function renderWorkflowTemplateList() {
+    var list = document.getElementById('workflow-template-list');
+    var count = document.getElementById('workflow-library-count');
+    if (count) count.textContent = workflowTemplates.length;
+    if (!list) return;
+    list.innerHTML = workflowTemplates.map(function(item){
+      var assigned = Object.keys(workflowAssignments).filter(function(name){ return workflowAssignments[name] === item.id; }).length;
+      return '<button type="button" class="workflow-template-item ' + (item.id === activeWorkflowTemplateId ? 'active' : '') + '" onclick="selectWorkflowTemplate(\'' + escapeHtmlAttr(item.id) + '\')"><strong>' + escapeHtml(item.name) + '</strong><span>' + item.stages.length + ' stage · ' + assigned + ' dự án</span></button>';
+    }).join('');
+  }
+
+  function updateWorkflowAssignmentStatus() {
+    var status = document.getElementById('workflow-assignment-status');
+    if (!status) return;
+    var template = getWorkflowEditorTemplate();
+    var project = workflowProjectName && briefs.find(function(item){ return item.project_name === workflowProjectName; });
+    if (!project) { status.textContent = 'Chưa có dự án để áp dụng'; return; }
+    status.textContent = workflowAssignments[project.project_name] === (template && template.id) ? '✓ Đang áp dụng cho dự án này' : 'Chưa áp dụng cho dự án này';
+  }
+
+  function onWorkflowProjectChange(projectName) {
+    workflowProjectName = projectName || null;
+    var assigned = workflowProjectName && workflowAssignments[workflowProjectName];
+    if (assigned) activeWorkflowTemplateId = assigned;
+    renderWorkflowBuilder();
+  }
+
+  function selectWorkflowTemplate(templateId) {
+    if (!templateId) return;
+    activeWorkflowTemplateId = templateId;
+    renderWorkflowBuilder();
+  }
+
+  function createWorkflowTemplate() {
+    var id = 'wf-custom-' + Date.now();
+    workflowTemplates.push({ id:id, name:'Flow mới chưa đặt tên', owner:'Tự thiết kế', description:'Mô tả mục đích của quy trình này.', stages:[] });
+    activeWorkflowTemplateId = id;
+    persistWorkflowData();
+    renderWorkflowBuilder();
+    showToast('Đã tạo flow mới. Hãy thêm các stage và module.');
+  }
+
+  function updateWorkflowMeta(field, value) {
+    var template = getWorkflowEditorTemplate();
+    if (!template) return;
+    template[field] = value;
+    persistWorkflowData();
+    if (field === 'name') { renderWorkflowTemplateList(); updateWorkflowAssignmentStatus(); }
+  }
+
+  function updateWorkflowStage(index, field, value) {
+    var template = getWorkflowEditorTemplate();
+    if (!template || !template.stages[index]) return;
+    template.stages[index][field] = value;
+    persistWorkflowData();
+    if (field === 'title' || field === 'module') renderWorkflowTemplateList();
+  }
+
+  function addWorkflowStage() {
+    var template = getWorkflowEditorTemplate();
+    if (!template) return;
+    template.stages.push({ id:workflowStageId('stage'), title:'Stage mới', module:'other', type:'auto', subtitle:'Mô tả việc cần hoàn tất ở stage này.' });
+    persistWorkflowData();
+    renderWorkflowEditor();
+  }
+
+  function removeWorkflowStage(index) {
+    var template = getWorkflowEditorTemplate();
+    if (!template || !template.stages[index]) return;
+    template.stages.splice(index, 1);
+    persistWorkflowData();
+    renderWorkflowEditor();
+  }
+
+  function deleteWorkflowTemplate() {
+    var template = getWorkflowEditorTemplate();
+    if (!template || workflowTemplates.length <= 1) { showToast('Flow cuối cùng không thể xóa.'); return; }
+    if (!window.confirm('Xóa flow "' + template.name + '"?')) return;
+    workflowTemplates = workflowTemplates.filter(function(item){ return item.id !== template.id; });
+    Object.keys(workflowAssignments).forEach(function(project){ if (workflowAssignments[project] === template.id) delete workflowAssignments[project]; });
+    activeWorkflowTemplateId = workflowTemplates[0].id;
+    persistWorkflowData();
+    renderWorkflowBuilder();
+    showToast('Đã xóa flow.');
+  }
+
+  function renderWorkflowEditor() {
+    var body = document.getElementById('workflow-editor-body');
+    var template = getWorkflowEditorTemplate();
+    if (!body || !template) return;
+    var moduleOptions = ['brief','survey','proposal','pricing','approval','design','contract','construction','handover','closing','other'];
+    var stages = template.stages.map(function(stage, index){
+      var options = moduleOptions.map(function(module){ return '<option value="' + module + '" ' + (stage.module === module ? 'selected' : '') + '>' + workflowModuleLabel(module) + '</option>'; }).join('');
+      return '<div class="workflow-stage-row">' +
+        '<div class="workflow-stage-number">' + String(index + 1).padStart(2, '0') + '</div>' +
+        '<div class="workflow-stage-info"><small>Tên stage & mô tả</small><input value="' + escapeHtmlAttr(stage.title) + '" oninput="updateWorkflowStage(' + index + ',\'title\',this.value)" placeholder="Tên bước trong quy trình"><input style="margin-top:6px" value="' + escapeHtmlAttr(stage.subtitle || '') + '" oninput="updateWorkflowStage(' + index + ',\'subtitle\',this.value)" placeholder="Mô tả điều kiện hoàn tất"></div>' +
+        '<select aria-label="Module xử lý" onchange="updateWorkflowStage(' + index + ',\'module\',this.value)">' + options + '</select>' +
+        '<button type="button" class="workflow-stage-remove" title="Xóa stage" onclick="removeWorkflowStage(' + index + ')">×</button>' +
+      '</div>';
+    }).join('');
+    body.innerHTML = '<div class="workflow-editor-heading"><div><span class="eyebrow">FLOW BUILDER</span><h2>Thiết kế module theo quy trình</h2><p>Mỗi stage là một mốc trong Milestone; module quyết định khu vực xử lý và loại hành động.</p></div><div class="workflow-editor-actions"><button type="button" class="btn btn-ghost" onclick="deleteWorkflowTemplate()">Xóa flow</button><button type="button" class="btn btn-blue" onclick="assignWorkflowToSelectedProject()">Áp dụng flow</button></div></div>' +
+      '<div class="workflow-meta-grid"><div class="workflow-field"><label>Tên flow</label><input value="' + escapeHtmlAttr(template.name) + '" oninput="updateWorkflowMeta(\'name\',this.value)"></div><div class="workflow-field"><label>Đơn vị / chủ sở hữu</label><input value="' + escapeHtmlAttr(template.owner || '') + '" oninput="updateWorkflowMeta(\'owner\',this.value)"></div><div class="workflow-field" style="grid-column:1/-1"><label>Mục đích flow</label><textarea oninput="updateWorkflowMeta(\'description\',this.value)">' + escapeHtml(template.description || '') + '</textarea></div></div>' +
+      '<div class="workflow-card-heading" style="margin-bottom:10px"><div><span class="eyebrow">STAGES & MODULES</span><h3>Thứ tự thực hiện</h3></div><button type="button" class="btn btn-ghost" style="padding:7px 11px;font-size:12px" onclick="addWorkflowStage()">+ Thêm stage</button></div>' +
+      '<div class="workflow-stages">' + (stages || '<div class="workflow-empty">Flow này chưa có stage. Bấm “+ Thêm stage” để bắt đầu.</div>') + '</div>' +
+      '<div class="workflow-module-note"><b>Cách vận hành:</b> sau khi áp dụng flow, Milestone của dự án sẽ dùng đúng danh sách stage này. Các module Brief, Khảo sát, Proposal, Thiết kế, Duyệt, Thi công, Bàn giao và Đóng dự án được tái sử dụng theo flow; chỉ cần thiết kế lại thứ tự/điều kiện, không phải xây lại toàn bộ website.</div>';
+  }
+
+  function assignWorkflowToSelectedProject() {
+    var template = getWorkflowEditorTemplate();
+    var projectName = workflowProjectName || activeProjectName;
+    if (!template || !projectName) { showToast('Vui lòng tạo dự án và chọn flow trước.'); return; }
+    workflowAssignments[projectName] = template.id;
+    activeProjectName = projectName;
+    persistActiveProject(projectName);
+    persistWorkflowData();
+    updateCounts();
+    renderWorkflowBuilder();
+    renderSingleProjectWorkspace();
+    renderAllProjectsView();
+    showToast('✓ Đã áp dụng flow “' + template.name + '” cho dự án.');
+  }
+
+  function openWorkflowModule(item) {
+    var moduleName = typeof item === 'string' ? item : item && item.module;
+    if (moduleName === 'brief') { activeSubTab = 'brief'; switchView('workplace', true); return; }
+    if (moduleName === 'survey') { activeSubTab = 'survey'; switchView('workplace', true); return; }
+    if (moduleName === 'proposal' || moduleName === 'pricing') { activeSubTab = 'proposal'; switchView('workplace', true); return; }
+    if (moduleName === 'design') { activeSubTab = 'design_concept'; switchView('workplace', true); return; }
+    if (moduleName === 'approval' || moduleName === 'contract' || moduleName === 'construction' || moduleName === 'handover' || moduleName === 'closing') { switchView('milestones'); return; }
+    showToast('Module “' + workflowModuleLabel(moduleName) + '” được theo dõi tại Milestone.');
+  }
+
+  function milestoneTemplate(projectName) {
+    var workflow = getWorkflowForProject(projectName || activeProjectName);
+    if (workflow && Array.isArray(workflow.stages)) return workflow.stages.map(function(stage, index){ return { id:stage.id || workflowStageId('stage'), title:stage.title || ('Stage ' + (index + 1)), subtitle:stage.subtitle || '', module:stage.module || 'other', type:stage.type || (stage.module === 'approval' ? 'approve' : 'auto') }; });
     return [
       { id:'meeting', title:'Gặp khách hàng lần đầu', subtitle:'Tiếp nhận nhu cầu, bối cảnh và mục tiêu thiết kế', type:'auto' },
       { id:'brief', title:'Lấy Brief từ khách hàng', subtitle:'Nhập đủ thông tin nhân sự, khách hàng và dự án', type:'auto' },
@@ -4119,7 +4461,7 @@
 
   function getProjectMilestones(projectName, brief, survey, proposal) {
     var saved = milestonesByProject[projectName] || {};
-    var list = milestoneTemplate().map(function(item){
+    var list = milestoneTemplate(projectName).map(function(item){
       var stored = saved[item.id] || {};
       return Object.assign({}, item, stored);
     });
@@ -4210,12 +4552,14 @@
       showToast('Vui lòng load một dự án trước.');
       return;
     }
+    var configured = milestoneTemplate(data.brief.project_name).find(function(item){ return item.id === id; });
+    if (configured) { openWorkflowModule(configured); return; }
     if (id === 'brief') { switchWorkspaceSubTab('brief'); return; }
     if (id === 'survey') { switchWorkspaceSubTab('survey'); return; }
     if (id === 'proposal') { switchWorkspaceSubTab('proposal'); return; }
     if (id.indexOf('design_') === 0) { openDesignStageFromMilestone(id); return; }
     switchView('milestones');
-    showToast('Hãy hoàn tất: ' + (milestoneTemplate().find(function(item){ return item.id === id; }) || {}).title);
+      showToast('Hãy hoàn tất: ' + (milestoneTemplate(data.brief.project_name).find(function(item){ return item.id === id; }) || {}).title);
   }
 
   function setMilestoneDisplayMode(mode) {
@@ -4315,6 +4659,7 @@
 
   function renderMilestonePanel(projectName, brief, survey, proposal) {
     var progress = milestoneProgress(projectName, brief, survey, proposal);
+    var workflow = getWorkflowForProject(projectName);
     var items = progress.list.map(function(item, index){
       var icon = item.status === 'done' ? '✓' : item.status === 'active' ? '•' : String(index + 1);
       var badge = item.status === 'done' ? '<span class="tag green">Đã hoàn tất</span>' : item.status === 'active' ? '<span class="tag blue">Đang xử lý</span>' : '<span class="tag">Chờ thực hiện</span>';
@@ -4335,7 +4680,7 @@
     '</div>';
     var content = milestoneDisplayMode === 'calendar' ? renderMilestoneCalendar(progress.list) : '<div class="milestone-list">' + items + '</div>';
     return '<div class="milestone-panel">' +
-      '<div class="milestone-head"><div><h3>Milestone tiến trình từ đầu đến cuối</h3><p>Gặp khách hàng → Submit hồ sơ → Khách comment → Khách duyệt → Triển khai thiết kế</p></div><div class="milestone-head-tools">' + viewSwitch + '<div class="milestone-progress"><strong>' + progress.pct + '%</strong><small>' + progress.done + '/' + progress.total + ' mốc đã hoàn tất</small><div class="milestone-bar"><i style="width:' + progress.pct + '%"></i></div></div></div></div>' +
+      '<div class="milestone-head"><div><h3>Milestone tiến trình từ đầu đến cuối</h3><p>' + (workflow ? 'Flow đang áp dụng: ' + escapeHtml(workflow.name) + ' · ' + workflow.stages.length + ' stage' : 'Flow mặc định: Gặp khách hàng → Submit hồ sơ → Khách comment → Khách duyệt → Triển khai thiết kế') + '</p></div><div class="milestone-head-tools">' + viewSwitch + '<div class="milestone-progress"><strong>' + progress.pct + '%</strong><small>' + progress.done + '/' + progress.total + ' mốc đã hoàn tất</small><div class="milestone-bar"><i style="width:' + progress.pct + '%"></i></div></div></div></div>' +
       renderNextRequirement(progress) +
       content +
     '</div>';
@@ -6018,6 +6363,8 @@ function saveWorkspaceProposal(e) {
       var active = getActiveProjectData();
       milestoneBadge.textContent = active && active.brief ? milestoneProgress(active.brief.project_name, active.brief, active.survey, active.proposal).pct + '%' : '0%';
     }
+    var workflowBadge = document.getElementById('workflow-count');
+    if (workflowBadge) workflowBadge.textContent = workflowTemplates.length + ' flow';
   }
 
   function renderBriefList() {
