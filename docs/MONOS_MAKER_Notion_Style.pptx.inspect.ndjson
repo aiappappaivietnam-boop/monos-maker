@@ -1,0 +1,201 @@
+{"kind":"deck","id":"pr/bov19x","name":"Deck"}
+{"kind":"layout","layoutId":"8002cb78-4b04-41cf-9eb8-820d02aba142","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"031f3520-a1ee-46a3-8c42-72eff920ae13","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/rmkist","slide":1,"title":"MONOS MAKER","textShapes":8}
+{"kind":"textbox","id":"sh/kfat8val","slide":1,"text":"MONOS MAKER","textPreview":"MONOS MAKER","textChars":11,"textLines":1,"bbox":[70,70,500,34]}
+{"kind":"textbox","id":"sh/je1czqt0","slide":1,"text":"Nền tảng quản trị\nFurniture","textPreview":"Nền tảng quản trị | Furniture","textChars":27,"textLines":2,"bbox":[70,145,720,150]}
+{"kind":"textbox","id":"sh/it8b6lsf","slide":1,"text":"Một nền tảng • Sáu packages • Một luồng dữ liệu","textPreview":"Một nền tảng • Sáu packages • Một luồng dữ liệu","textChars":47,"textLines":1,"bbox":[74,330,650,34]}
+{"kind":"shape","id":"sh/xszuxgbu","slide":1,"bbox":[820,115,300,300]}
+{"kind":"textbox","id":"sh/wrqt4ba9","slide":1,"text":"FURNITURE","textPreview":"FURNITURE","textChars":9,"textLines":1,"bbox":[850,170,240,30]}
+{"kind":"textbox","id":"sh/vqhcv6to","slide":1,"text":"MAKER","textPreview":"MAKER","textChars":5,"textLines":1,"bbox":[850,220,240,70]}
+{"kind":"textbox","id":"sh/ap8b21s3","slide":1,"text":"Từ ý tưởng đến\nthương hiệu, sản phẩm\nvà doanh thu","textPreview":"Từ ý tưởng đến | thương hiệu, sản phẩm | và doanh thu","textChars":49,"textLines":3,"bbox":[850,320,240,70]}
+{"kind":"textbox","id":"sh/9ozutwbi","slide":1,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/8nqt0rad","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/rmkist","slide":1,"text":""}
+{"kind":"slide","id":"sl/orvk3g","slide":2,"title":"BỐI CẢNH","textShapes":20}
+{"kind":"textbox","id":"sh/q5on29wr","slide":2,"text":"BỐI CẢNH","textPreview":"BỐI CẢNH","textChars":8,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/d8f6d4v2","slide":2,"text":"Furniture không chỉ là sản phẩm — đó là một chuỗi giá trị liên kết","textPreview":"Furniture không chỉ là sản phẩm — đó là một chuỗi giá trị liên kết","textChars":66,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/c7654zex","slide":2,"text":"MONOS MAKER được thiết kế để quản trị toàn bộ chuỗi giá trị, theo đúng cách doanh nghiệp Furniture tạo ra và bán sản phẩm.","textPreview":"MONOS MAKER được thiết kế để quản trị toàn bộ chuỗi giá trị, theo đúng cách doanh nghiệp Furniture tạo ra và bán sản phẩm.","textChars":122,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/zahofed8","slide":2,"bbox":[70,225,260,230]}
+{"kind":"textbox","id":"sh/e9on69wn","slide":2,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[92,250,50,24]}
+{"kind":"textbox","id":"sh/1cz61ove","slide":2,"text":"SÁNG TẠO SẢN PHẨM","textPreview":"SÁNG TẠO SẢN PHẨM","textChars":17,"textLines":1,"bbox":[92,300,216,48]}
+{"kind":"textbox","id":"sh/0bq58jet","slide":2,"text":"Tạo ra sản phẩm có thể sản xuất và bán","textPreview":"Tạo ra sản phẩm có thể sản xuất và bán","textChars":38,"textLines":1,"bbox":[92,370,210,52]}
+{"kind":"textbox","id":"sh/nyho3ydk","slide":2,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[334,320,28,30]}
+{"kind":"shape","id":"sh/mx8natwz","slide":2,"bbox":[362,225,260,230]}
+{"kind":"textbox","id":"sh/s7650r6l","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[384,250,50,24]}
+{"kind":"textbox","id":"sh/t8f69cn6","slide":2,"text":"QUẢN TRỊ DỮ LIỆU","textPreview":"QUẢN TRỊ DỮ LIỆU","textChars":16,"textLines":1,"bbox":[384,300,216,48]}
+{"kind":"textbox","id":"sh/65onyhov","slide":2,"text":"Biến sản phẩm thành dữ liệu dùng được","textPreview":"Biến sản phẩm thành dữ liệu dùng được","textChars":37,"textLines":1,"bbox":[384,370,210,52]}
+{"kind":"textbox","id":"sh/r6x47m50","slide":2,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[626,320,28,30]}
+{"kind":"shape","id":"sh/gbq54r6x","slide":2,"bbox":[654,225,260,230]}
+{"kind":"textbox","id":"sh/1cz6dwni","slide":2,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[676,250,50,24]}
+{"kind":"textbox","id":"sh/e9on2hor","slide":2,"text":"ĐỊNH VỊ THƯƠNG HIỆU","textPreview":"ĐỊNH VỊ THƯƠNG HIỆU","textChars":19,"textLines":1,"bbox":[676,300,216,48]}
+{"kind":"textbox","id":"sh/fahobm5c","slide":2,"text":"Tạo khác biệt và giá trị cảm nhận","textPreview":"Tạo khác biệt và giá trị cảm nhận","textChars":33,"textLines":1,"bbox":[676,370,210,52]}
+{"kind":"textbox","id":"sh/ozq58b6t","slide":2,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[918,320,28,30]}
+{"kind":"shape","id":"sh/p0z6hwne","slide":2,"bbox":[946,225,260,230]}
+{"kind":"textbox","id":"sh/xwfm1wfi","slide":2,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[968,250,50,24]}
+{"kind":"textbox","id":"sh/cvm5srex","slide":2,"text":"NHU CẦU THỊ TRƯỜNG","textPreview":"NHU CẦU THỊ TRƯỜNG","textChars":18,"textLines":1,"bbox":[968,300,216,48]}
+{"kind":"textbox","id":"sh/bud4zmxc","slide":2,"text":"Đưa sản phẩm đến đúng khách hàng","textPreview":"Đưa sản phẩm đến đúng khách hàng","textChars":32,"textLines":1,"bbox":[968,370,210,52]}
+{"kind":"textbox","id":"sh/at4nq1g7","slide":2,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/lkf65gfu","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/orvk3g","slide":2,"text":""}
+{"kind":"slide","id":"sl/0818uf","slide":3,"title":"KIẾN TRÚC","textShapes":15}
+{"kind":"textbox","id":"sh/o3i943mx","slide":3,"text":"KIẾN TRÚC","textPreview":"KIẾN TRÚC","textChars":9,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/329svy5c","slide":3,"text":"Bốn năng lực cốt lõi là khung giá trị; sáu packages là cách triển khai","textPreview":"Bốn năng lực cốt lõi là khung giá trị; sáu packages là cách triển khai","textChars":70,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/210r2t47","slide":3,"text":"Mỗi package có thể bán độc lập hoặc kết hợp tùy theo mô hình kinh doanh và nhu cầu hợp tác.","textPreview":"Mỗi package có thể bán độc lập hoặc kết hợp tùy theo mô hình kinh doanh và nhu cầu hợp tác.","textChars":91,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/dsba183u","slide":3,"bbox":[70,210,530,150]}
+{"kind":"textbox","id":"sh/cr2t83m9","slide":3,"text":"SÁNG TẠO SẢN PHẨM","textPreview":"SÁNG TẠO SẢN PHẨM","textChars":17,"textLines":1,"bbox":[94,232,470,22]}
+{"kind":"textbox","id":"sh/bqtszylo","slide":3,"text":"P04  Furniture Product Development","textPreview":"P04  Furniture Product Development","textChars":34,"textLines":1,"bbox":[94,272,470,25]}
+{"kind":"textbox","id":"sh/q50r6t43","slide":3,"text":"P06  3D Interactive Sales","textPreview":"P06  3D Interactive Sales","textChars":25,"textLines":1,"bbox":[94,311,470,24]}
+{"kind":"shape","id":"sh/tw7ap4na","slide":3,"bbox":[650,210,530,150]}
+{"kind":"textbox","id":"sh/svy9wjmp","slide":3,"text":"QUẢN TRỊ DỮ LIỆU","textPreview":"QUẢN TRỊ DỮ LIỆU","textChars":16,"textLines":1,"bbox":[674,232,470,22]}
+{"kind":"textbox","id":"sh/at47idcr","slide":3,"text":"P05  Monosbase","textPreview":"P05  Monosbase","textChars":14,"textLines":1,"bbox":[674,272,470,25]}
+{"kind":"shape","id":"sh/vud8bidw","slide":3,"bbox":[70,400,530,150]}
+{"kind":"textbox","id":"sh/wvmpknuh","slide":3,"text":"ĐỊNH VỊ THƯƠNG HIỆU","textPreview":"ĐỊNH VỊ THƯƠNG HIỆU","textChars":19,"textLines":1,"bbox":[94,422,470,22]}
+{"kind":"textbox","id":"sh/xwfqdsb2","slide":3,"text":"P02  Thiết kế thương hiệu mới","textPreview":"P02  Thiết kế thương hiệu mới","textChars":29,"textLines":1,"bbox":[94,462,470,25]}
+{"kind":"shape","id":"sh/ixo7mdcn","slide":3,"bbox":[650,400,530,150]}
+{"kind":"textbox","id":"sh/jyx8fit8","slide":3,"text":"NHU CẦU THỊ TRƯỜNG","textPreview":"NHU CẦU THỊ TRƯỜNG","textChars":18,"textLines":1,"bbox":[674,422,470,22]}
+{"kind":"textbox","id":"sh/kz6ponut","slide":3,"text":"P03  Marketing & Tăng trưởng","textPreview":"P03  Marketing & Tăng trưởng","textChars":28,"textLines":1,"bbox":[674,462,470,25]}
+{"kind":"shape","id":"sh/50fqhsbe","slide":3,"bbox":[460,550,360,54]}
+{"kind":"textbox","id":"sh/6lo7qxcz","slide":3,"text":"P01  AI Management Platform","textPreview":"P01  AI Management Platform","textChars":27,"textLines":1,"bbox":[480,567,320,20]}
+{"kind":"textbox","id":"sh/7mx8j2t4","slide":3,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/3qho729c","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/0818uf","slide":3,"text":""}
+{"kind":"slide","id":"sl/ehpb2z","slide":4,"title":"PACKAGE 01","textShapes":18}
+{"kind":"textbox","id":"sh/buh4nyxc","slide":4,"text":"PACKAGE 01","textPreview":"PACKAGE 01","textChars":10,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/cvqlwjex","slide":4,"text":"AI Management Platform là lớp điều phối xuyên suốt","textPreview":"AI Management Platform là lớp điều phối xuyên suốt","textChars":50,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/xwzmpofi","slide":4,"text":"AI không chỉ trả lời. Platform tiếp nhận yêu cầu, quản trị quy trình và đưa hành động trở lại hệ thống.","textPreview":"AI không chỉ trả lời. Platform tiếp nhận yêu cầu, quản trị quy trình và đưa hành động trở lại hệ thống.","textChars":103,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/yx8nytw3","slide":4,"bbox":[80,220,390,330]}
+{"kind":"textbox","id":"sh/jyh4ryxo","slide":4,"text":"AI","textPreview":"AI","textChars":2,"textLines":1,"bbox":[155,270,240,70]}
+{"kind":"textbox","id":"sh/kza503e9","slide":4,"text":"hiểu yêu cầu\ntra cứu dữ liệu\nđề xuất phương án","textPreview":"hiểu yêu cầu | tra cứu dữ liệu | đề xuất phương án","textChars":46,"textLines":3,"bbox":[130,370,290,100]}
+{"kind":"shape","id":"sh/lkjmt8ve","slide":4,"bbox":[560,220,260,70]}
+{"kind":"textbox","id":"sh/e1o3m9wj","slide":4,"text":"Lịch họp","textPreview":"Lịch họp","textChars":8,"textLines":1,"bbox":[578,234,220,22]}
+{"kind":"textbox","id":"sh/f2x4fex4","slide":4,"text":"book & điều phối","textPreview":"book & điều phối","textChars":16,"textLines":1,"bbox":[578,260,220,18]}
+{"kind":"shape","id":"sh/v6doze14","slide":4,"bbox":[860,220,260,70]}
+{"kind":"textbox","id":"sh/u54nq90j","slide":4,"text":"Task","textPreview":"Task","textChars":4,"textLines":1,"bbox":[878,234,220,22]}
+{"kind":"textbox","id":"sh/h8v61oja","slide":4,"text":"giao & theo dõi","textPreview":"giao & theo dõi","textChars":15,"textLines":1,"bbox":[878,260,220,18]}
+{"kind":"shape","id":"sh/w7m5sjip","slide":4,"bbox":[560,314,260,70]}
+{"kind":"textbox","id":"sh/72t4ve18","slide":4,"text":"Phê duyệt","textPreview":"Phê duyệt","textChars":9,"textLines":1,"bbox":[578,328,220,22]}
+{"kind":"textbox","id":"sh/m1knm90n","slide":4,"text":"đề xuất & kiểm soát","textPreview":"đề xuất & kiểm soát","textChars":19,"textLines":1,"bbox":[578,354,220,18]}
+{"kind":"shape","id":"sh/94vmxojy","slide":4,"bbox":[860,314,260,70]}
+{"kind":"textbox","id":"sh/8325ojid","slide":4,"text":"Con người","textPreview":"Con người","textChars":9,"textLines":1,"bbox":[878,328,220,22]}
+{"kind":"textbox","id":"sh/zet4ru1w","slide":4,"text":"vai trò & hiệu suất","textPreview":"vai trò & hiệu suất","textChars":19,"textLines":1,"bbox":[878,354,220,18]}
+{"kind":"shape","id":"sh/ydknip0b","slide":4,"bbox":[560,408,260,70]}
+{"kind":"textbox","id":"sh/290nap43","slide":4,"text":"Tài nguyên","textPreview":"Tài nguyên","textChars":10,"textLines":1,"bbox":[578,422,220,22]}
+{"kind":"textbox","id":"sh/na9o3ulo","slide":4,"text":"server & quyền truy cập","textPreview":"server & quyền truy cập","textChars":23,"textLines":1,"bbox":[578,448,220,18]}
+{"kind":"textbox","id":"sh/obi5czm9","slide":4,"text":"Kết quả AI → hành động quản trị → cập nhật dữ liệu","textPreview":"Kết quả AI → hành động quản trị → cập nhật dữ liệu","textChars":50,"textLines":1,"bbox":[560,520,580,30]}
+{"kind":"textbox","id":"sh/pcb6543u","slide":4,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/adk7e94f","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/ehpb2z","slide":4,"text":""}
+{"kind":"slide","id":"sl/0c7tw8","slide":5,"title":"PACKAGES 02–04","textShapes":15}
+{"kind":"textbox","id":"sh/honmxk36","slide":5,"text":"PACKAGES 02–04","textPreview":"PACKAGES 02–04","textChars":14,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/ulw325kf","slide":5,"text":"Từ thương hiệu đến sản phẩm: tạo ra thứ thị trường muốn mua","textPreview":"Từ thương hiệu đến sản phẩm: tạo ra thứ thị trường muốn mua","textChars":59,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/fm54val0","slide":5,"text":"Ba packages đầu của chuỗi giá trị giúp doanh nghiệp hình thành bản sắc, nhu cầu và sản phẩm.","textPreview":"Ba packages đầu của chuỗi giá trị giúp doanh nghiệp hình thành bản sắc, nhu cầu và sản phẩm.","textChars":92,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/4ry58f2h","slide":5,"bbox":[70,220,350,280]}
+{"kind":"shape","id":"sh/pc7m1kj2","slide":5,"bbox":[70,220,8,280]}
+{"kind":"textbox","id":"sh/2pw36pkr","slide":5,"text":"P02","textPreview":"P02","textChars":3,"textLines":1,"bbox":[98,242,46,24]}
+{"kind":"textbox","id":"sh/3qp4za1c","slide":5,"text":"Thiết kế thương hiệu mới","textPreview":"Thiết kế thương hiệu mới","textChars":24,"textLines":1,"bbox":[148,240,246,36]}
+{"kind":"textbox","id":"sh/cfy5cz2t","slide":5,"text":"Tên • Định vị • Logo • Nhận diện • Bao bì • Ngôn ngữ thương hiệu","textPreview":"Tên • Định vị • Logo • Nhận diện • Bao bì • Ngôn ngữ thương hiệu","textChars":64,"textLines":1,"bbox":[98,288,296,192]}
+{"kind":"shape","id":"sh/dg7m54je","slide":5,"bbox":[465,220,350,280]}
+{"kind":"shape","id":"sh/h4v21cnq","slide":5,"bbox":[465,220,8,280]}
+{"kind":"textbox","id":"sh/g3m18765","slide":5,"text":"P03","textPreview":"P03","textChars":3,"textLines":1,"bbox":[493,242,46,24]}
+{"kind":"textbox","id":"sh/f2dkz2pk","slide":5,"text":"Marketing & Tăng trưởng","textPreview":"Marketing & Tăng trưởng","textChars":23,"textLines":1,"bbox":[543,240,246,36]}
+{"kind":"textbox","id":"sh/u14j6xoz","slide":5,"text":"Nghiên cứu thị trường • Nội dung • Chiến dịch • Tạo nhu cầu • Cơ hội bán hàng","textPreview":"Nghiên cứu thị trường • Nội dung • Chiến dịch • Tạo nhu cầu • Cơ hội bán hàng","textChars":77,"textLines":1,"bbox":[493,288,296,192]}
+{"kind":"shape","id":"sh/psf25wnm","slide":5,"bbox":[860,220,350,280]}
+{"kind":"shape","id":"sh/4r61cr61","slide":5,"bbox":[860,220,8,280]}
+{"kind":"textbox","id":"sh/36xk3m5g","slide":5,"text":"P04","textPreview":"P04","textChars":3,"textLines":1,"bbox":[888,242,46,24]}
+{"kind":"textbox","id":"sh/254jahov","slide":5,"text":"Furniture Product Development","textPreview":"Furniture Product Development","textChars":29,"textLines":1,"bbox":[938,240,246,36]}
+{"kind":"textbox","id":"sh/lwbits7i","slide":5,"text":"Ý tưởng • R&D • Vật liệu • Cấu tạo • Thông số • Sẵn sàng sản xuất","textPreview":"Ý tưởng • R&D • Vật liệu • Cấu tạo • Thông số • Sẵn sàng sản xuất","textChars":65,"textLines":1,"bbox":[888,288,296,192]}
+{"kind":"textbox","id":"sh/kv210n6x","slide":5,"text":"Thương hiệu rõ  →  Nhu cầu thật  →  Sản phẩm phù hợp","textPreview":"Thương hiệu rõ  →  Nhu cầu thật  →  Sản phẩm phù hợp","textChars":52,"textLines":1,"bbox":[220,580,840,30]}
+{"kind":"textbox","id":"sh/cf61gnet","slide":5,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/xgf29sfe","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/0c7tw8","slide":5,"text":""}
+{"kind":"slide","id":"sl/2d7bt3","slide":6,"title":"PACKAGES 05–06","textShapes":14}
+{"kind":"textbox","id":"sh/gruhcrax","slide":6,"text":"PACKAGES 05–06","textPreview":"PACKAGES 05–06","textChars":14,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/fq1gjm9c","slide":6,"text":"Sản phẩm chỉ tạo ra giá trị khi được số hóa và bán được","textPreview":"Sản phẩm chỉ tạo ra giá trị khi được số hóa và bán được","textChars":55,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/upsfahsr","slide":6,"text":"Monosbase biến sản phẩm thành dữ liệu chuẩn; 3D Interactive Sales biến dữ liệu đó thành trải nghiệm và đơn hàng.","textPreview":"Monosbase biến sản phẩm thành dữ liệu chuẩn; 3D Interactive Sales biến dữ liệu đó thành trải nghiệm và đơn hàng.","textChars":112,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/t4jyhwr6","slide":6,"bbox":[80,220,500,300]}
+{"kind":"textbox","id":"sh/s3ax8ral","slide":6,"text":"P05","textPreview":"P05","textChars":3,"textLines":1,"bbox":[115,255,80,30]}
+{"kind":"textbox","id":"sh/721gfm9g","slide":6,"text":"MONOSBASE","textPreview":"MONOSBASE","textChars":9,"textLines":1,"bbox":[115,305,380,40]}
+{"kind":"textbox","id":"sh/61sf6hsv","slide":6,"text":"Lõi dữ liệu sản phẩm Furniture","textPreview":"Lõi dữ liệu sản phẩm Furniture","textChars":30,"textLines":1,"bbox":[115,365,380,26]}
+{"kind":"textbox","id":"sh/d0nytgrq","slide":6,"text":"Mã SP • Hình ảnh • Vật liệu • Giá • Tồn kho\nThông số • Cấu hình • Bản vẽ • Dữ liệu 3D","textPreview":"Mã SP • Hình ảnh • Vật liệu • Giá • Tồn kho | Thông số • Cấu hình • Bản vẽ • Dữ liệu 3D","textChars":85,"textLines":2,"bbox":[115,420,390,60]}
+{"kind":"shape","id":"sh/czehkba5","slide":6,"bbox":[700,220,500,300]}
+{"kind":"textbox","id":"sh/q9ora5kj","slide":6,"text":"P06","textPreview":"P06","textChars":3,"textLines":1,"bbox":[735,255,80,30]}
+{"kind":"textbox","id":"sh/rah8jal4","slide":6,"text":"3D INTERACTIVE SALES","textPreview":"3D INTERACTIVE SALES","textChars":20,"textLines":1,"bbox":[735,305,410,40]}
+{"kind":"textbox","id":"sh/cbq9cf2p","slide":6,"text":"Trải nghiệm cấu hình và bán hàng","textPreview":"Trải nghiệm cấu hình và bán hàng","textChars":32,"textLines":1,"bbox":[735,365,420,26]}
+{"kind":"textbox","id":"sh/dczqlk3a","slide":6,"text":"Chọn không gian → Tùy chỉnh → Xem 3D\n→ Báo giá → Lưu thiết kế → Đặt hàng","textPreview":"Chọn không gian → Tùy chỉnh → Xem 3D | → Báo giá → Lưu thiết kế → Đặt hàng","textChars":72,"textLines":2,"bbox":[735,420,400,60]}
+{"kind":"textbox","id":"sh/2lo76lk7","slide":6,"text":"P04 tạo sản phẩm  →  P05 số hóa dữ liệu  →  P06 bán hàng trực quan","textPreview":"P04 tạo sản phẩm  →  P05 số hóa dữ liệu  →  P06 bán hàng trực quan","textChars":66,"textLines":1,"bbox":[180,590,920,28]}
+{"kind":"textbox","id":"sh/3mx8fqls","slide":6,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/47698v2d","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/2d7bt3","slide":6,"text":""}
+{"kind":"slide","id":"sl/y075x0","slide":7,"title":"LUỒNG DỮ LIỆU","textShapes":20}
+{"kind":"textbox","id":"sh/9wri5ovq","slide":7,"text":"LUỒNG DỮ LIỆU","textPreview":"LUỒNG DỮ LIỆU","textChars":13,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/mtgju9cz","slide":7,"text":"Một luồng dữ liệu nối toàn bộ hành trình Furniture","textPreview":"Một luồng dữ liệu nối toàn bộ hành trình Furniture","textChars":50,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/nu903edk","slide":7,"text":"Dữ liệu được tạo một lần, được chuẩn hóa một lần và được khai thác ở mọi điểm chạm.","textPreview":"Dữ liệu được tạo một lần, được chuẩn hóa một lần và được khai thác ở mọi điểm chạm.","textChars":83,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/wji103u1","slide":7,"bbox":[55,295,140,72]}
+{"kind":"textbox","id":"sh/xkr29ovm","slide":7,"text":"Ý tưởng","textPreview":"Ý tưởng","textChars":7,"textLines":1,"bbox":[65,319,120,24]}
+{"kind":"textbox","id":"sh/ah0jytcb","slide":7,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[197,315,28,30]}
+{"kind":"shape","id":"sh/vi9k7ydw","slide":7,"bbox":[223,295,140,72]}
+{"kind":"textbox","id":"sh/kn2143ud","slide":7,"text":"Thương hiệu","textPreview":"Thương hiệu","textChars":11,"textLines":1,"bbox":[233,319,120,24]}
+{"kind":"textbox","id":"sh/5ob2d8vy","slide":7,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[365,315,28,30]}
+{"kind":"shape","id":"sh/hk7e90fi","slide":7,"bbox":[391,295,140,72]}
+{"kind":"textbox","id":"sh/wzyxgvyx","slide":7,"text":"Marketing","textPreview":"Marketing","textChars":9,"textLines":1,"bbox":[401,319,120,24]}
+{"kind":"textbox","id":"sh/vypw7qxc","slide":7,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[533,315,28,30]}
+{"kind":"shape","id":"sh/axgfelgr","slide":7,"bbox":[559,295,140,72]}
+{"kind":"textbox","id":"sh/5oredkfu","slide":7,"text":"R&D sản phẩm","textPreview":"R&D sản phẩm","textChars":12,"textLines":1,"bbox":[569,319,120,24]}
+{"kind":"textbox","id":"sh/4nyxkfy9","slide":7,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[701,315,28,30]}
+{"kind":"shape","id":"sh/jmpwbaxo","slide":7,"bbox":[727,295,140,72]}
+{"kind":"textbox","id":"sh/ilgfi5g3","slide":7,"text":"Monosbase","textPreview":"Monosbase","textChars":9,"textLines":1,"bbox":[737,319,120,24]}
+{"kind":"textbox","id":"sh/lsne1gza","slide":7,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[869,315,28,30]}
+{"kind":"shape","id":"sh/0red8byp","slide":7,"bbox":[895,295,140,72]}
+{"kind":"textbox","id":"sh/cni54fax","slide":7,"text":"3D Sales","textPreview":"3D Sales","textChars":8,"textLines":1,"bbox":[905,319,120,24]}
+{"kind":"textbox","id":"sh/dob6dkbi","slide":7,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[1037,315,28,30]}
+{"kind":"shape","id":"sh/ql0n25sr","slide":7,"bbox":[1063,295,140,72]}
+{"kind":"textbox","id":"sh/bm9obatc","slide":7,"text":"Đơn hàng","textPreview":"Đơn hàng","textChars":8,"textLines":1,"bbox":[1073,319,120,24]}
+{"kind":"shape","id":"sh/0b258fat","slide":7,"bbox":[220,450,840,64]}
+{"kind":"textbox","id":"sh/lcb6hkbe","slide":7,"text":"AI Management Platform điều phối toàn bộ luồng","textPreview":"AI Management Platform điều phối toàn bộ luồng","textChars":46,"textLines":1,"bbox":[250,470,780,24]}
+{"kind":"textbox","id":"sh/ypkn6ps3","slide":7,"text":"Monosbase giữ dữ liệu chuẩn — ERP/CRM tiếp tục xử lý hệ thống lõi","textPreview":"Monosbase giữ dữ liệu chuẩn — ERP/CRM tiếp tục xử lý hệ thống lõi","textChars":65,"textLines":1,"bbox":[210,570,860,24]}
+{"kind":"textbox","id":"sh/zqtofato","slide":7,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/8fmpcza5","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/y075x0","slide":7,"text":""}
+{"kind":"slide","id":"sl/yg71ur","slide":8,"title":"MÔ HÌNH THƯƠNG MẠI","textShapes":17}
+{"kind":"textbox","id":"sh/z6lg7elo","slide":8,"text":"MÔ HÌNH THƯƠNG MẠI","textPreview":"MÔ HÌNH THƯƠNG MẠI","textChars":18,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/07uxgjmt","slide":8,"text":"Không có một cấu hình MONOS MAKER duy nhất","textPreview":"Không có một cấu hình MONOS MAKER duy nhất","textChars":42,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/l8ny9o3e","slide":8,"text":"Mỗi doanh nghiệp có thể bắt đầu từ package phù hợp rồi mở rộng dần theo năng lực và mục tiêu kinh doanh.","textPreview":"Mỗi doanh nghiệp có thể bắt đầu từ package phù hợp rồi mở rộng dần theo năng lực và mục tiêu kinh doanh.","textChars":104,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"shape","id":"sh/m9wfit4z","slide":8,"bbox":[70,205,530,150]}
+{"kind":"shape","id":"sh/na5gbylk","slide":8,"bbox":[70,205,8,150]}
+{"kind":"textbox","id":"sh/8bexk325","slide":8,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[98,227,46,24]}
+{"kind":"textbox","id":"sh/9cnyd83q","slide":8,"text":"Thương hiệu mới","textPreview":"Thương hiệu mới","textChars":15,"textLines":1,"bbox":[148,225,426,36]}
+{"kind":"textbox","id":"sh/2dsf6p4v","slide":8,"text":"P02 + P03 + P04\nTạo thương hiệu, nhu cầu và sản phẩm","textPreview":"P02 + P03 + P04 | Tạo thương hiệu, nhu cầu và sản phẩm","textChars":52,"textLines":2,"bbox":[98,273,476,62]}
+{"kind":"shape","id":"sh/3e1wzulg","slide":8,"bbox":[650,205,530,150]}
+{"kind":"shape","id":"sh/rylszy9o","slide":8,"bbox":[650,205,8,150]}
+{"kind":"textbox","id":"sh/qdcrqt83","slide":8,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[678,227,46,24]}
+{"kind":"textbox","id":"sh/d0na18re","slide":8,"text":"Nhà sản xuất","textPreview":"Nhà sản xuất","textChars":12,"textLines":1,"bbox":[728,225,426,36]}
+{"kind":"textbox","id":"sh/szets3q9","slide":8,"text":"P04 + P05 + P01\nSố hóa sản phẩm và điều hành vận hành","textPreview":"P04 + P05 + P01 | Số hóa sản phẩm và điều hành vận hành","textChars":53,"textLines":2,"bbox":[678,273,476,62]}
+{"kind":"shape","id":"sh/3alsvy9c","slide":8,"bbox":[70,395,530,150]}
+{"kind":"shape","id":"sh/i9crmt8r","slide":8,"bbox":[70,395,8,150]}
+{"kind":"textbox","id":"sh/5c3ax8ri","slide":8,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[98,417,46,24]}
+{"kind":"textbox","id":"sh/4bu9o3qx","slide":8,"text":"Nhà bán lẻ / Showroom","textPreview":"Nhà bán lẻ / Showroom","textChars":21,"textLines":1,"bbox":[148,415,426,36]}
+{"kind":"textbox","id":"sh/v61sre9g","slide":8,"text":"P05 + P06 + P03\nTăng trải nghiệm và tỷ lệ chốt đơn","textPreview":"P05 + P06 + P03 | Tăng trải nghiệm và tỷ lệ chốt đơn","textChars":50,"textLines":2,"bbox":[98,463,476,62]}
+{"kind":"shape","id":"sh/u5sri9sv","slide":8,"bbox":[650,395,530,150]}
+{"kind":"shape","id":"sh/y1sbu9cn","slide":8,"bbox":[650,395,8,150]}
+{"kind":"textbox","id":"sh/j21s3et8","slide":8,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[678,417,46,24]}
+{"kind":"textbox","id":"sh/k3atwjut","slide":8,"text":"Nền tảng toàn diện","textPreview":"Nền tảng toàn diện","textChars":18,"textLines":1,"bbox":[728,415,426,36]}
+{"kind":"textbox","id":"sh/l4ja5obe","slide":8,"text":"P01 → P06\nQuản trị trọn chuỗi giá trị Furniture","textPreview":"P01 → P06 | Quản trị trọn chuỗi giá trị Furniture","textChars":47,"textLines":2,"bbox":[678,463,476,62]}
+{"kind":"textbox","id":"sh/65sbytcz","slide":8,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/761c7ytk","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/yg71ur","slide":8,"text":""}
+{"kind":"slide","id":"sl/muo1y0","slide":9,"title":"KẾT LUẬN","textShapes":12}
+{"kind":"textbox","id":"sh/7ixwrixo","slide":9,"text":"KẾT LUẬN","textPreview":"KẾT LUẬN","textChars":8,"textLines":1,"bbox":[64,34,420,20]}
+{"kind":"textbox","id":"sh/8j6xkne9","slide":9,"text":"MONOS MAKER: một nền tảng, sáu packages, một năng lực Furniture hoàn chỉnh","textPreview":"MONOS MAKER: một nền tảng, sáu packages, một năng lực Furniture hoàn chỉnh","textChars":74,"textLines":1,"bbox":[64,62,1152,56]}
+{"kind":"textbox","id":"sh/tkfet8fu","slide":9,"text":"Giá trị không nằm ở từng package riêng lẻ, mà ở khả năng kết hợp đúng packages để tạo ra một luồng vận hành thống nhất.","textPreview":"Giá trị không nằm ở từng package riêng lẻ, mà ở khả năng kết hợp đúng packages để tạo ra một luồng vận hành thống nhất.","textChars":119,"textLines":1,"bbox":[66,122,1100,30]}
+{"kind":"textbox","id":"sh/ulofmdwf","slide":9,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[100,230,180,100]}
+{"kind":"textbox","id":"sh/vmxwvixk","slide":9,"text":"năng lực cốt lõi","textPreview":"năng lực cốt lõi","textChars":16,"textLines":1,"bbox":[80,335,220,28]}
+{"kind":"textbox","id":"sh/gn6xone5","slide":9,"text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[370,230,180,100]}
+{"kind":"textbox","id":"sh/hofyxsfq","slide":9,"text":"packages chuyên biệt","textPreview":"packages chuyên biệt","textChars":20,"textLines":1,"bbox":[350,335,220,28]}
+{"kind":"textbox","id":"sh/apkfatwv","slide":9,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[640,230,180,100]}
+{"kind":"textbox","id":"sh/bqdwjyxg","slide":9,"text":"luồng dữ liệu","textPreview":"luồng dữ liệu","textChars":13,"textLines":1,"bbox":[620,335,220,28]}
+{"kind":"shape","id":"sh/filcn2tw","slide":9,"bbox":[250,470,780,66]}
+{"kind":"textbox","id":"sh/ehsvexcb","slide":9,"text":"Từ ý tưởng Furniture đến doanh thu thực tế","textPreview":"Từ ý tưởng Furniture đến doanh thu thực tế","textChars":42,"textLines":1,"bbox":[280,491,720,26]}
+{"kind":"textbox","id":"sh/143upcb2","slide":9,"text":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textPreview":"MONOS MAKER  /  FURNITURE BUSINESS OPERATING PLATFORM","textChars":53,"textLines":1,"bbox":[64,682,600,14]}
+{"kind":"textbox","id":"sh/03udg7uh","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1190,682,26,14]}
+{"kind":"notes","id":"nt/muo1y0","slide":9,"text":""}

@@ -52,7 +52,8 @@ import {
   deleteCustomSubcategory,
   renameCategory,
   restoreDefaultCatalog,
-  DEFAULT_FURNITURE_PLACEHOLDER
+  DEFAULT_FURNITURE_PLACEHOLDER,
+  HOME_OFFICE_CATEGORY_CATALOG
 } from '../data/categoryProductsData';
 
 interface CategoryGalleryDetailViewProps {
@@ -103,8 +104,23 @@ export default function CategoryGalleryDetailView({
     // 1. Resolve default clean category name (check if it was renamed)
     const effectiveDefaultCat = categoryRenames[categoryNameClean.toLowerCase()] || categoryNameClean;
 
+    // Keep the supplied Home Office taxonomy visible even when a category
+    // does not yet have a locally uploaded product.
+    if (service.id === 'eca-home-office') {
+      HOME_OFFICE_CATEGORY_CATALOG.forEach(({ name, count }) => {
+        const renamed = categoryRenames[name.toLowerCase()] || name;
+        const lower = renamed.toLowerCase();
+        if (!deletedCatsSet.has(lower)) {
+          map.set(lower, { name: renamed, count, isCustom: false });
+        }
+      });
+    }
+
     if (effectiveDefaultCat && !deletedCatsSet.has(effectiveDefaultCat.toLowerCase())) {
-      map.set(effectiveDefaultCat.toLowerCase(), { name: effectiveDefaultCat, count: 0, isCustom: false });
+      const defaultKey = effectiveDefaultCat.toLowerCase();
+      if (!map.has(defaultKey)) {
+        map.set(defaultKey, { name: effectiveDefaultCat, count: 0, isCustom: false });
+      }
     }
 
     // 2. Include stored custom subcategories
@@ -124,7 +140,11 @@ export default function CategoryGalleryDetailView({
         if (!deletedCatsSet.has(lower)) {
           const existing = map.get(lower);
           if (existing) {
-            existing.count += 1;
+            // Home Office counts come from the supplied catalog taxonomy.
+            // Other collections continue to count their loaded products.
+            if (service.id !== 'eca-home-office') {
+              existing.count += 1;
+            }
           } else {
             map.set(lower, { name: raw, count: 1, isCustom: false });
           }

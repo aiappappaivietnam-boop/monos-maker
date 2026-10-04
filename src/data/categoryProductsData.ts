@@ -34,6 +34,41 @@ export interface GalleryProduct {
   description: string;
 }
 
+/**
+ * Catalog taxonomy supplied for the Home Office collection.
+ *
+ * These entries are kept separately from the product records so a category
+ * can be visible in the filter before its first local product is uploaded.
+ */
+export const HOME_OFFICE_CATEGORY_CATALOG: Array<{ name: string; count: number }> = [
+  { name: 'Adjustable Footrest', count: 1 },
+  { name: 'Bookcase', count: 1 },
+  { name: 'Cable Management', count: 1 },
+  { name: 'Credenza / Storage Cabinet', count: 1 },
+  { name: 'Desk Cart', count: 1 },
+  { name: 'Desk Lamp', count: 1 },
+  { name: 'Desk Mat', count: 1 },
+  { name: 'Desk Organizer', count: 1 },
+  { name: 'Desk Riser Shelf', count: 5 },
+  { name: 'Desk Tray', count: 2 },
+  { name: 'Executive Desk', count: 1 },
+  { name: 'File Holders', count: 1 },
+  { name: 'Flip-top storage desk', count: 3 },
+  { name: 'Headphone Stand', count: 1 },
+  { name: 'Home Office', count: 0 },
+  { name: 'Keyboard Tray', count: 1 },
+  { name: 'Laptop Riser', count: 2 },
+  { name: 'Modular Wall Shelves', count: 1 },
+  { name: 'Organization Deck', count: 6 },
+  { name: 'Pegboard', count: 1 },
+  { name: 'Printer Stand', count: 1 },
+  { name: 'Secretary / Drop-front Desk', count: 1 },
+  { name: 'Smart Standing Desks', count: 3 },
+  { name: 'Standing Desk Converter', count: 1 },
+  { name: 'Whiteboard / Corkboard', count: 1 },
+  { name: 'Wrist Rest', count: 1 }
+];
+
 export const CATEGORY_PRODUCTS: Record<string, GalleryProduct[]> = {
   // 1. Ecommerce A - Home Office
   'eca-home-office': [
