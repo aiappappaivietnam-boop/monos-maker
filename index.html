@@ -2365,6 +2365,12 @@
     .workflow-stage-row input, .workflow-stage-row select { width:100%; min-width:0; padding:9px 10px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font-size:12.5px; }
     .workflow-stage-info { min-width:0; }
     .workflow-stage-info small { display:block; margin-bottom:4px; color:var(--muted); font-size:10px; font-weight:700; }
+    .workflow-stage-tasks { grid-column:2 / -1; display:grid; gap:6px; margin-top:2px; padding:10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff; }
+    .workflow-stage-tasks-head { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--blue); font-size:10.5px; font-weight:800; }
+    .workflow-stage-task-row { display:grid; grid-template-columns:22px minmax(0,1fr) 28px; gap:6px; align-items:center; }
+    .workflow-stage-task-row input { padding:7px 8px; font-size:11.5px; }
+    .workflow-stage-task-row button { display:grid; place-items:center; width:26px; height:26px; border:1px solid #fecaca; border-radius:50%; background:#fff; color:#dc2626; cursor:pointer; }
+    .workflow-add-task { width:max-content; padding:5px 8px; border:1px dashed #93c5fd; border-radius:7px; background:#fff; color:var(--blue); cursor:pointer; font-size:10.5px; font-weight:750; }
     .workflow-stage-remove { display:grid; place-items:center; width:30px; height:30px; border:1px solid #fecaca; border-radius:50%; background:#fff; color:#dc2626; cursor:pointer; }
     .workflow-module-note { margin:16px 0 0; padding:12px 14px; border-radius:10px; background:#f5f5f7; color:var(--muted); font-size:12px; line-height:1.55; }
     .workflow-module-note b { color:var(--ink); }
@@ -2385,8 +2391,20 @@
     .workflow-actor-input { width:100%; min-width:0; padding:9px 10px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font-size:12.5px; }
     .workflow-actor-input:focus { border-color:var(--blue); outline:none; box-shadow:0 0 0 3px rgba(0,113,227,.1); }
     .workflow-actors-help { margin-top:12px; color:var(--muted); font-size:11px; }
+    .milestone-parallel-badge { margin-left:7px; vertical-align:middle; }
+    .milestone-task-list { display:grid; gap:6px; margin-top:9px; padding:9px 10px; border:1px solid #dbeafe; border-radius:9px; background:#f8fbff; }
+    .milestone-task-row { display:flex; align-items:center; justify-content:space-between; gap:9px; padding:6px 0; border-bottom:1px solid rgba(147,197,253,.35); }
+    .milestone-task-row:last-child { border-bottom:0; }
+    .milestone-task-label { display:flex; align-items:flex-start; gap:7px; min-width:0; color:var(--ink); font-size:11.5px; }
+    .milestone-task-label i { flex:0 0 auto; margin-top:3px; width:7px; height:7px; border-radius:50%; background:#94a3b8; }
+    .milestone-task-row.done .milestone-task-label i { background:var(--green); }
+    .milestone-task-row.active .milestone-task-label i { background:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+    .milestone-task-row.pending { opacity:.58; }
+    .milestone-task-label span { overflow-wrap:anywhere; }
+    .milestone-task-action { flex:0 0 auto; }
+    .milestone-task-action .btn { padding:5px 8px; font-size:10.5px; min-height:26px; }
     @media (max-width: 980px) { .workflow-layout { grid-template-columns:1fr; } .workflow-library-card { order:2; } .workflow-editor-card { order:1; } }
-    @media (max-width: 620px) { .workflow-setup-bar, .workflow-meta-grid { grid-template-columns:1fr; } .workflow-assignment-status { max-width:none; } .workflow-stage-row { grid-template-columns:30px minmax(0,1fr) 30px; } .workflow-stage-row select { grid-column:2 / -1; } .workflow-editor-heading, .workflow-actors-heading { flex-direction:column; } .workflow-editor-actions, .workflow-actors-actions { justify-content:flex-start; } .workflow-actors-grid { grid-template-columns:1fr; } .workflow-actor-row { grid-template-columns:1fr; gap:7px; } }
+    @media (max-width: 620px) { .workflow-setup-bar, .workflow-meta-grid { grid-template-columns:1fr; } .workflow-assignment-status { max-width:none; } .workflow-stage-row { grid-template-columns:30px minmax(0,1fr) 30px; } .workflow-stage-row select { grid-column:2 / -1; } .workflow-editor-heading, .workflow-actors-heading { flex-direction:column; } .workflow-editor-actions, .workflow-actors-actions { justify-content:flex-start; } .workflow-actors-grid { grid-template-columns:1fr; } .workflow-actor-row { grid-template-columns:1fr; gap:7px; } .milestone-task-row { align-items:flex-start; flex-direction:column; } .milestone-task-action { align-self:flex-start; } }
 </style>
 </head>
 <body>
@@ -3260,12 +3278,12 @@
       stages: [
         { id:'request', title:'Tiếp nhận yêu cầu khách hàng', module:'brief', type:'auto', subtitle:'Ghi nhận nhu cầu, bối cảnh và mục tiêu thiết kế.' },
         { id:'charter', title:'Project Charter', module:'brief', type:'auto', subtitle:'Chốt phạm vi, ngân sách, mục tiêu và bên liên quan.' },
-        { id:'site-survey', title:'Khảo sát hiện trạng', module:'survey', type:'auto', subtitle:'Đo đạc và tập hợp hình ảnh, video, bản vẽ, giấy tờ.' },
-        { id:'layout-moodboard', title:'Layout & Moodboard', module:'proposal', type:'auto', subtitle:'Xây dựng phương án sơ bộ, layout và moodboard.' },
+        { id:'site-survey', title:'Khảo sát hiện trạng', module:'survey', type:'auto', subtitle:'Đo đạc và tập hợp hình ảnh, video, bản vẽ, giấy tờ.', tasks:[{ id:'survey-design', title:'Design khảo sát mặt bằng', module:'design' }, { id:'survey-qs', title:'QS kiểm tra khối lượng hiện trạng', module:'pricing' }, { id:'survey-site', title:'PM/Site Team kiểm tra tiếp cận công trình', module:'survey' }] },
+        { id:'layout-moodboard', title:'Layout & Moodboard', module:'proposal', type:'auto', subtitle:'Xây dựng phương án sơ bộ, layout và moodboard.', tasks:[{ id:'layout', title:'Design triển khai layout', module:'design' }, { id:'moodboard', title:'Design hoàn thiện moodboard', module:'design' }, { id:'cost-check', title:'QS kiểm tra chi phí sơ bộ', module:'pricing' }] },
         { id:'estimate-ten', title:'Dự toán sơ bộ ±10%', module:'pricing', type:'auto', subtitle:'QS lập dự toán sơ bộ theo phạm vi dự kiến.' },
         { id:'high-level-proposal', title:'High-level Proposal', module:'proposal', type:'auto', subtitle:'Tổng hợp phương án và chi phí để gửi khách hàng.' },
         { id:'client-approve-concept', title:'Khách hàng duyệt phương án', module:'approval', type:'approve', subtitle:'Ghi nhận khách hàng đồng ý phương án và phạm vi.' },
-        { id:'detail-layout', title:'Detail Layout & 3D', module:'design', type:'auto', subtitle:'Triển khai layout chi tiết và phối cảnh 3D.' },
+        { id:'detail-layout', title:'Detail Layout & 3D', module:'design', type:'auto', subtitle:'Triển khai layout chi tiết và phối cảnh 3D.', tasks:[{ id:'detail-layout-task', title:'Design triển khai layout chi tiết', module:'design' }, { id:'detail-3d-task', title:'Design dựng phối cảnh 3D', module:'design' }] },
         { id:'detail-boq', title:'Detail BOQ ±5%', module:'pricing', type:'auto', subtitle:'QS bóc tách khối lượng và cập nhật báo giá.' },
         { id:'detail-proposal', title:'Detail Proposal', module:'proposal', type:'auto', subtitle:'Hoàn thiện bộ hồ sơ đề xuất chi tiết.' },
         { id:'client-approve-detail', title:'Khách hàng duyệt hồ sơ chi tiết', module:'approval', type:'approve', subtitle:'Xác nhận hồ sơ chi tiết trước khi chốt thi công.' },
@@ -4376,6 +4394,10 @@
     return String(prefix || 'stage').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36).slice(-5);
   }
 
+  function workflowTaskId(prefix) {
+    return workflowStageId(prefix || 'task');
+  }
+
   function getWorkflowEditorTemplate() {
     return (workflowTemplates || []).find(function(item){ return item.id === activeWorkflowTemplateId; }) || null;
   }
@@ -4452,6 +4474,30 @@
     if (field === 'title' || field === 'module') renderWorkflowTemplateList();
   }
 
+  function updateWorkflowTask(stageIndex, taskIndex, value) {
+    var template = getWorkflowEditorTemplate();
+    if (!template || !template.stages[stageIndex] || !template.stages[stageIndex].tasks || !template.stages[stageIndex].tasks[taskIndex]) return;
+    template.stages[stageIndex].tasks[taskIndex].title = String(value || '');
+    persistWorkflowData();
+  }
+
+  function addWorkflowTask(stageIndex) {
+    var template = getWorkflowEditorTemplate();
+    if (!template || !template.stages[stageIndex]) return;
+    if (!Array.isArray(template.stages[stageIndex].tasks)) template.stages[stageIndex].tasks = [];
+    template.stages[stageIndex].tasks.push({ id:workflowTaskId('task'), title:'Công việc song song mới', module:template.stages[stageIndex].module || 'other' });
+    persistWorkflowData();
+    renderWorkflowEditor();
+  }
+
+  function removeWorkflowTask(stageIndex, taskIndex) {
+    var template = getWorkflowEditorTemplate();
+    if (!template || !template.stages[stageIndex] || !Array.isArray(template.stages[stageIndex].tasks)) return;
+    template.stages[stageIndex].tasks.splice(taskIndex, 1);
+    persistWorkflowData();
+    renderWorkflowEditor();
+  }
+
   function addWorkflowStage() {
     var template = getWorkflowEditorTemplate();
     if (!template) return;
@@ -4487,11 +4533,13 @@
     var moduleOptions = ['brief','survey','proposal','pricing','approval','design','contract','construction','handover','closing','other'];
     var stages = template.stages.map(function(stage, index){
       var options = moduleOptions.map(function(module){ return '<option value="' + module + '" ' + (stage.module === module ? 'selected' : '') + '>' + workflowModuleLabel(module) + '</option>'; }).join('');
+      var taskMarkup = Array.isArray(stage.tasks) && stage.tasks.length ? '<div class="workflow-stage-tasks"><div class="workflow-stage-tasks-head"><span>↳ Công việc làm đồng thời (' + stage.tasks.length + ')</span><button type="button" class="workflow-add-task" onclick="addWorkflowTask(' + index + ')">+ Thêm công việc</button></div>' + stage.tasks.map(function(task, taskIndex){ return '<div class="workflow-stage-task-row"><span style="color:var(--blue);font-size:11px">' + (taskIndex + 1) + '</span><input value="' + escapeHtmlAttr(task.title || '') + '" oninput="updateWorkflowTask(' + index + ',' + taskIndex + ',this.value)" placeholder="Tên công việc song song"><button type="button" title="Xóa công việc" onclick="removeWorkflowTask(' + index + ',' + taskIndex + ')">×</button></div>'; }).join('') + '</div>' : '<div class="workflow-stage-tasks"><div class="workflow-stage-tasks-head"><span>Công việc song song</span><button type="button" class="workflow-add-task" onclick="addWorkflowTask(' + index + ')">+ Thêm công việc đồng thời</button></div></div>';
       return '<div class="workflow-stage-row">' +
         '<div class="workflow-stage-number">' + String(index + 1).padStart(2, '0') + '</div>' +
         '<div class="workflow-stage-info"><small>Tên stage & mô tả</small><input value="' + escapeHtmlAttr(stage.title) + '" oninput="updateWorkflowStage(' + index + ',\'title\',this.value)" placeholder="Tên bước trong quy trình"><input style="margin-top:6px" value="' + escapeHtmlAttr(stage.subtitle || '') + '" oninput="updateWorkflowStage(' + index + ',\'subtitle\',this.value)" placeholder="Mô tả điều kiện hoàn tất"></div>' +
         '<select aria-label="Module xử lý" onchange="updateWorkflowStage(' + index + ',\'module\',this.value)">' + options + '</select>' +
         '<button type="button" class="workflow-stage-remove" title="Xóa stage" onclick="removeWorkflowStage(' + index + ')">×</button>' +
+        taskMarkup +
       '</div>';
     }).join('');
     body.innerHTML = '<div class="workflow-editor-heading"><div><span class="eyebrow">FLOW BUILDER</span><h2>Thiết kế module theo quy trình</h2><p>Mỗi stage là một mốc trong Milestone; module quyết định khu vực xử lý và loại hành động.</p></div><div class="workflow-editor-actions"><button type="button" class="btn btn-ghost" onclick="deleteWorkflowTemplate()">Xóa flow</button><button type="button" class="btn btn-blue" onclick="assignWorkflowToSelectedProject()">Áp dụng flow</button></div></div>' +
@@ -4550,7 +4598,10 @@
     var saved = milestonesByProject[projectName] || {};
     var list = milestoneTemplate(projectName).map(function(item){
       var stored = saved[item.id] || {};
-      return Object.assign({}, item, stored);
+      var merged = Object.assign({}, item, stored);
+      if (Array.isArray(item.tasks)) merged.tasks = item.tasks.map(function(task){ return Object.assign({}, task); });
+      if (Array.isArray(stored.tasks)) merged.tasks = stored.tasks.map(function(task){ return Object.assign({}, task); });
+      return merged;
     });
     var auto = {
       meeting: brief && brief.brief_date ? { status:'done', date: brief.brief_date } : {},
@@ -4597,12 +4648,44 @@
     if (!item || item.status !== 'active') return '';
     if (item.type === 'comment') return '<button type="button" class="btn btn-ghost" onclick="updateMilestone(\'' + item.id + '\',\'comment\')">Ghi nhận comment</button>';
     if (item.id.indexOf('design_') === 0) return '<button type="button" class="btn btn-navy" onclick="openDesignStageFromMilestone(\'' + item.id + '\')">Mở hồ sơ giai đoạn</button>';
+    if (Array.isArray(item.tasks) && item.tasks.length) return '<span class="tag blue milestone-parallel-badge">Làm đồng thời bên dưới</span>';
     if (item.type === 'approve') return '<button type="button" class="btn btn-lime" onclick="updateMilestone(\'' + item.id + '\',\'approve\')">Xác nhận duyệt</button>';
     if (item.type === 'auto') {
       var label = item.id === 'brief_submit' || item.id === 'proposal_submit' ? '📤 Xác nhận đã gửi khách' : '✓ Xác nhận đã thực hiện';
       return '<button type="button" class="btn btn-blue" onclick="updateMilestone(\'' + item.id + '\',\'confirm\')">' + label + '</button>';
     }
     return '';
+  }
+
+  function milestoneTaskMarkup(item) {
+    if (!item || !Array.isArray(item.tasks) || !item.tasks.length) return '';
+    var savedTasks = item.taskStates || {};
+    var hasActive = item.status === 'active';
+    return '<div class="milestone-task-list"><div class="milestone-task-row" style="border-bottom:0;padding-top:0"><div class="milestone-task-label"><span><b>Thực hiện đồng thời</b> · ' + item.tasks.length + ' công việc</span></div><span class="tag blue">Parallel</span></div>' + item.tasks.map(function(task, index){
+      var state = savedTasks[task.id] || (item.status === 'done' ? 'done' : hasActive ? 'active' : 'pending');
+      var action = hasActive && state === 'active' ? '<button type="button" class="btn btn-blue" onclick="completeWorkflowTask(\'' + escapeHtmlAttr(item.id) + '\',\'' + escapeHtmlAttr(task.id) + '\')">Hoàn tất</button>' : '';
+      return '<div class="milestone-task-row ' + state + '"><div class="milestone-task-label"><i></i><span>' + escapeHtml(task.title || 'Công việc song song') + '</span></div><div class="milestone-task-action">' + (state === 'done' ? '<span class="tag green">✓ Xong</span>' : action || '<span class="tag">Chờ</span>') + '</div></div>';
+    }).join('') + '</div>';
+  }
+
+  function completeWorkflowTask(stageId, taskId) {
+    var data = getActiveProjectData();
+    if (!data || !data.brief) return;
+    var progress = milestoneProgress(data.brief.project_name, data.brief, data.survey, data.proposal);
+    var current = progress.list.find(function(item){ return item.id === stageId; });
+    if (!current || current.status !== 'active' || !Array.isArray(current.tasks)) return;
+    var saved = milestonesByProject[data.brief.project_name] || {};
+    var record = saved[stageId] || {};
+    record.taskStates = Object.assign({}, record.taskStates || {}, {});
+    record.taskStates[taskId] = 'done';
+    var allDone = current.tasks.every(function(task){ return record.taskStates[task.id] === 'done'; });
+    if (!milestonesByProject[data.brief.project_name]) milestonesByProject[data.brief.project_name] = {};
+    milestonesByProject[data.brief.project_name][stageId] = Object.assign({}, record, allDone ? { status:'done', date:todayDateOnly(), note:'Đã hoàn tất toàn bộ công việc đồng thời.' } : { status:'active' });
+    localStorage.setItem('formwork_milestones', JSON.stringify(milestonesByProject));
+    renderSingleProjectWorkspace();
+    renderStandaloneMilestones();
+    updateCounts();
+    showToast(allDone ? '✓ Đã hoàn tất stage và chuyển sang bước tiếp theo.' : 'Đã hoàn tất một công việc song song.');
   }
 
   function milestoneRequirement(item) {
@@ -4692,6 +4775,7 @@
       var key = milestoneDateKey(date);
       if (!eventsByDate[key]) eventsByDate[key] = [];
       eventsByDate[key].push(item);
+      (item.tasks || []).forEach(function(task){ eventsByDate[key].push(Object.assign({}, item, { title: '↳ ' + task.title })); });
     });
 
     var weekdays = weekdayNames.map(function(day) { return '<div>' + day + '</div>'; }).join('');
@@ -4755,6 +4839,7 @@
         '<div class="milestone-dot">' + icon + '</div>' +
         '<div><div class="milestone-title">' + escapeHtml(item.title) + '</div><div class="milestone-subtitle">' + escapeHtml(item.subtitle) + '</div>' +
           (item.status === 'active' ? '<div class="milestone-required"><b>Cần hoàn tất:</b> ' + escapeHtml(milestoneRequirement(item)) + '</div>' : '') +
+          milestoneTaskMarkup(item) +
           (item.note ? '<div class="milestone-note">' + escapeHtml(item.note) + '</div>' : '') +
           (action ? '<div class="milestone-actions">' + action + '</div>' : '') +
         '</div>' +
